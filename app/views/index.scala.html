@@ -3,19 +3,25 @@
 @import helper._
 
 @main("Welcome to Play") {
-	<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
 
-	<ul id="clientes"></ul>
-	<div class="form-group">
-  @form(routes.ClienteController.addCliente()) {
-		@inputText(cliente("nombre"))
-		@inputText(cliente("carnet"))
-		@inputText(cliente("id_asociacion"))
-		
-	</div>
-
-		<div class="buttons">
-			<input type="submit" value="Add Clientes"/>
-		</div>
-	}
+    <div class="table-responsive">
+        <table class="table" id="clientes">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Carnet</th>
+                    <th>Asociacion</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+   <form class="form-inline" role="form">
+        @form(routes.ClienteController.addCliente()) {
+            @inputText(cliente("nombre"))
+            @inputText(cliente("carnet"))
+            @inputText(cliente("id_asociacion"))
+            <input type="submit" value="Add Clientes"/>
+        </form>
+        }
 }
