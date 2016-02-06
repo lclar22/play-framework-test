@@ -23,7 +23,7 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
   val clienteForm: Form[CreateClienteForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
-      "carnet" -> number.verifying(min(0), max(140)),
+      "carnet" -> number.verifying(min(0), max(9999999)),
       "id_asociacion" -> number.verifying(min(0), max(140))
     )(CreateClienteForm.apply)(CreateClienteForm.unapply)
   }
