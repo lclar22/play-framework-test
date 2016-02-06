@@ -1,19 +1,19 @@
-@(person: Form[CreatePersonForm])(implicit messages: Messages)
+@(cliente: Form[CreateClienteForm])(implicit messages: Messages)
 
 @import helper._
 
 @main("Welcome to Play") {
 	<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
 
-	<ul id="persons"></ul>
+	<ul id="clientes"></ul>
 
-  @form(routes.PersonController.addPerson()) {
-		@inputText(person("name"))
-		@inputText(person("last_name"))
-		@inputText(person("age"))
+  @form(routes.ClienteController.addCliente()) {
+		@inputText(cliente("nombre"))
+		@inputText(cliente("carnet"))
+		@inputText(cliente("id_asociacion"))
 
 		<div class="buttons">
-			<input type="submit" value="Add Person"/>
+			<input type="submit" value="Add Clientes"/>
 		</div>
 	}
 }
