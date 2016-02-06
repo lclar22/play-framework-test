@@ -6,11 +6,13 @@
 	<script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
 
 	<ul id="clientes"></ul>
-
+	<div class="form-group">
   @form(routes.ClienteController.addCliente()) {
 		@inputText(cliente("nombre"))
 		@inputText(cliente("carnet"))
 		@inputText(cliente("id_asociacion"))
+		
+	</div>
 
 		<div class="buttons">
 			<input type="submit" value="Add Clientes"/>
