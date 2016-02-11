@@ -36,6 +36,20 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
   }
 
   /**
+   * The index action.
+   */
+  def cliente_view = Action {
+    Ok(views.html.cliente_index(clienteForm))
+  }
+
+  /**
+   * The index action.
+   */
+  def cliente_doctor = Action {
+    Ok(views.html.cliente_doctor(clienteForm))
+  }
+  
+  /**
    * The add person action.
    *
    * This is asynchronous, since we're invoking the asynchronous methods on PersonRepository.
@@ -47,7 +61,7 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
       // We also wrap the result in a successful future, since this action is synchronous, but we're required to return
       // a future because the person creation function returns a future.
       errorForm => {
-        Future.successful(Ok(views.html.index(errorForm)))
+        Future.successful(Ok(views.html.cliente_index(errorForm)))
       },
       // There were no errors in the from, so create the person.
       cliente => {

@@ -1,0 +1,25 @@
+@(transaccion: Form[CreateTransaccionForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Welcome to Play") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+
+    @form(routes.TransaccionController.addTransaccion()) {
+        @inputText(transaccion("monto"))
+        @inputText(transaccion("cuenta"))
+        @inputText(transaccion("cliente"))
+        <input type="submit" value="Add Transaccion"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="clientes">
+            <thead>
+                <tr>
+                    <th>Monto</th>
+                    <th>Cuenta</th>
+                    <th>Cliente</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

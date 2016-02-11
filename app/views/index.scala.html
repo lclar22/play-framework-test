@@ -9,17 +9,37 @@
         <table class="table" id="clientes">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Carnet</th>
-                    <th>Asociacion</th>
+                    <th>Form Description</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
+            <tr>
+                <td>
+                    Productores
+                </td>
+                <td>
+                    <a href="/cliente_view"><span class="glyphicon glyphicon-plus"></span></a>
+                    <a href="/cliente_view"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Doctores
+                </td>
+                <td>
+                    <a href="/cliente_doctor"><span class="glyphicon glyphicon-plus"></span></a>
+                    <a href="/cliente_view"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Transaccion
+                </td>
+                <td>
+                    <a href="/cliente_transaccion"><span class="glyphicon glyphicon-plus"></span></a>
+                    <a href="/cliente_view"><span class="glyphicon glyphicon-th-list"></span></a>
+                </td>
+            </tr>
         </table>
     </div>
-    @form(routes.ClienteController.addCliente()) {
-        @inputText(cliente("nombre"))
-        @inputText(cliente("carnet"))
-        @inputText(cliente("id_asociacion"))
-        <input type="submit" value="Add Clientes"/>
-    }
 }

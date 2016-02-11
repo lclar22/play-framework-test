@@ -3,8 +3,12 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.ClienteController.index
+GET     /                			 controllers.ClienteController.index
+GET     /cliente_view                controllers.ClienteController.cliente_view
+GET     /cliente_doctor              controllers.ClienteController.cliente_doctor
+GET     /cliente_transaccion         controllers.TransaccionController.index
 POST    /cliente                     controllers.ClienteController.addCliente
+POST    /transaccion                 controllers.TransaccionController.addTransaccion
 GET     /clientes                    controllers.ClienteController.getClientes
 
 # Map static resources from the /public folder to the /assets URL path
