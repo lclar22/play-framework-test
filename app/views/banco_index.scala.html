@@ -1,0 +1,25 @@
+@(banco: Form[CreateBancoForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Welcome to Play") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/banco_index.js")'></script>
+
+    @form(routes.BancoController.addBanco()) {
+        @inputText(banco("monto"))
+        @inputText(banco("cuenta"))
+        @inputText(banco("cliente"))
+        <input type="submit" value="Add Banco"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="bancos">
+            <thead>
+                <tr>
+                    <th>Monto</th>
+                    <th>Cuenta</th>
+                    <th>Cliente</th>
+                </tr>a
+            </thead>
+        </table>
+    </div>
+}

@@ -1,0 +1,25 @@
+@(insumo: Form[CreateInsumoForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Welcome to Play") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_index.js")'></script>
+
+    @form(routes.InsumoController.addInsumo()) {
+        @inputText(insumo("monto"))
+        @inputText(insumo("cuenta"))
+        @inputText(insumo("cliente"))
+        <input type="submit" value="Add Insumo"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="insumos">
+            <thead>
+                <tr>
+                    <th>Monto</th>
+                    <th>Cuenta</th>
+                    <th>Cliente</th>
+                </tr>a
+            </thead>
+        </table>
+    </div>
+}
