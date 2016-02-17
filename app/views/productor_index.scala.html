@@ -1,23 +1,23 @@
-@(cliente: Form[CreateClienteForm])(implicit messages: Messages)
+@(banco: Form[CreateProductorForm])(implicit messages: Messages)
 
 @import helper._
 
 @main("Welcome to Play") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
 
-    @form(routes.ClienteController.addCliente()) {
-        @inputText(cliente("nombre"))
-        @inputText(cliente("carnet"))
-        @inputText(cliente("id_asociacion"))
+    @form(routes.ProductorController.addProductor()) {
+        @inputText(banco("monto"))
+        @inputText(banco("cuenta"))
+        @inputText(banco("cliente"))
         <input type="submit" value="Add Productor"/>
     }
     <div class="table-responsive">
-        <table class="table" id="clientes">
+        <table class="table" id="productores">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Carnet</th>
-                    <th>Asociacion</th>
+                    <th>Monto</th>
+                    <th>Cuenta</th>
+                    <th>Cliente</th>
                 </tr>a
             </thead>
         </table>

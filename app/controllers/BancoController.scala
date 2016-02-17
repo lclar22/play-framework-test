@@ -29,7 +29,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     Ok(views.html.banco_index(bancoForm))
   }
 
-  def addTransaccion = Action.async { implicit request =>
+  def addBanco = Action.async { implicit request =>
     bancoForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.banco_index(errorForm)))
@@ -42,7 +42,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )
   }
 
-  def getTransacciones = Action.async {
+  def getBancos = Action.async {
   	repo.list().map { bancos =>
       Ok(Json.toJson(bancos))
     }

@@ -5,12 +5,7 @@
 @main("Welcome to Play") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/index.js")'></script>
 
-    @form(routes.ClienteController.addCliente()) {
-        @inputText(cliente("nombre"))
-        @inputText(cliente("carnet"))
-        @inputText(cliente("id_asociacion"))
-        <input type="submit" value="Add Productor"/>
-    }
+    
     <div class="table-responsive">
         <table class="table" id="clientes">
             <thead>

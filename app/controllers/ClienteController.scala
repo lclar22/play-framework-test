@@ -32,7 +32,7 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
    * The index action.
    */
   def index = Action {
-    Ok(views.html.index(clienteForm))
+    Ok(views.html.index())
   }
 
   /**
@@ -49,29 +49,6 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
     Ok(views.html.cliente_doctor(clienteForm))
   }
   
-  /**
-   * The add person action.
-   *
-   * This is asynchronous, since we're invoking the asynchronous methods on PersonRepository.
-   */
-  def addCliente = Action.async { implicit request =>
-    // Bind the form first, then fold the result, passing a function to handle errors, and a function to handle succes.
-    clienteForm.bindFromRequest.fold(
-      // The error function. We return the index page with the error form, which will render the errors.
-      // We also wrap the result in a successful future, since this action is synchronous, but we're required to return
-      // a future because the person creation function returns a future.
-      errorForm => {
-        Future.successful(Ok(views.html.cliente_index(errorForm)))
-      },
-      // There were no errors in the from, so create the person.
-      cliente => {
-        repo.create(cliente.nombre, cliente.carnet, cliente.id_asociacion).map { _ =>
-          // If successful, we simply redirect to the index page.
-          Redirect(routes.ClienteController.index)
-        }
-      }
-    )
-  }
 
   /**
    * A REST endpoint that gets all the clientes as JSON.

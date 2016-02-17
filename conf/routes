@@ -3,13 +3,28 @@
 # ~~~~
 
 # Home page
-GET     /                			 controllers.ClienteController.index
-GET     /cliente_view                controllers.ClienteController.cliente_view
-GET     /cliente_doctor              controllers.ClienteController.cliente_doctor
-GET     /cliente_transaccion         controllers.TransaccionController.index
-POST    /cliente                     controllers.ClienteController.addCliente
-POST    /transaccion                 controllers.TransaccionController.addTransaccion
-GET     /clientes                    controllers.ClienteController.getClientes
+GET     /                			 	controllers.MainController.index
+POST    /banco                 			controllers.BancoController.addBanco
+GET     /bancos         				controllers.BancoController.index
+POST    /insumo                 		controllers.InsumoController.addInsumo
+GET     /insumos         				controllers.InsumoController.getInsumos
+GET     /insumos_view         			controllers.InsumoController.index
+POST    /productor                 		controllers.ProductorController.addProductor
+GET     /productores         			controllers.ProductorController.getProductores
+GET     /productores_view         		controllers.ProductorController.index
+POST    /proveedor                 		controllers.ProveedorController.addProveedor
+GET     /proveedores         			controllers.ProveedorController.getProveedores
+GET     /proveedores_view         		controllers.ProveedorController.index
+POST    /reporte                 		controllers.ReporteController.addReporte
+GET     /reportes         				controllers.ReporteController.getReportes
+GET     /reportes_view         			controllers.ReporteController.index
+POST    /transaccion                 	controllers.TransaccionController.addTransaccion
+GET     /transacciones         			controllers.TransaccionController.getTransacciones
+GET     /transacciones_view    			controllers.TransaccionController.index
+POST    /veterinario                 	controllers.VeterinarioController.addVeterinario
+GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
+GET     /veterinarios_view     			controllers.VeterinarioController.index
+GET     /clientes                    	controllers.ClienteController.getClientes
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
