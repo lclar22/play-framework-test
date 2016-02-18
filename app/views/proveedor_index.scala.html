@@ -1,4 +1,4 @@
-@(banco: Form[CreateProveedorForm])(implicit messages: Messages)
+@(proveedor: Form[CreateProveedorForm])(implicit messages: Messages)
 
 @import helper._
 
@@ -6,18 +6,16 @@
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/proveedor_index.js")'></script>
 
     @form(routes.ProveedorController.addProveedor()) {
-        @inputText(banco("monto"))
-        @inputText(banco("cuenta"))
-        @inputText(banco("cliente"))
+        @inputText(proveedor("nombre"))
+        @inputText(proveedor("cuenta"))
         <input type="submit" value="Add Proveedor"/>
     }
     <div class="table-responsive">
         <table class="table" id="proveedores">
             <thead>
                 <tr>
-                    <th>Monto</th>
+                    <th>Nombre</th>
                     <th>Cuenta</th>
-                    <th>Cliente</th>
                 </tr>a
             </thead>
         </table>

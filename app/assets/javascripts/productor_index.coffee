@@ -1,7 +1,7 @@
 $ ->
   $.get "/productores", (productores) ->
     $.each productores, (index, productor) ->
-      monto = $("<td>").text productor.monto
-      cuenta = $("<td>").text productor.cuenta
-      cliente = $("<td>").text productor.cliente
-      $("#productores").append $("<tr>").append(monto).append(cuenta).append(cliente)
+      nombre = $("<td>").text productor.nombre
+      carnet = $("<td>").text productor.carnet
+      asociacion = $("<td>").text productor.asociacion
+      $("#productores").append $("<tr>").append(nombre).append(carnet).append(asociacion)

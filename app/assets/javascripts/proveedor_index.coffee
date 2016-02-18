@@ -1,7 +1,6 @@
 $ ->
   $.get "/proveedores", (proveedores) ->
     $.each proveedores, (index, proveedor) ->
-      monto = $("<td>").text proveedor.monto
+      nombre = $("<td>").text proveedor.nombre
       cuenta = $("<td>").text proveedor.cuenta
-      cliente = $("<td>").text proveedor.cliente
-      $("#proveedores").append $("<tr>").append(monto).append(cuenta).append(cliente)
+      $("#proveedores").append $("<tr>").append(nombre).append(cuenta)

@@ -2,8 +2,8 @@ package models
 
 import play.api.libs.json._
 
-case class Productor(id: Long, monto: Int, cuenta: Int, cliente: Int)
+case class Productor(id: Long, nombre: String, carnet: Int, asociacion: Int)
 
 object Productor {
-  implicit val productorFormat = Json.format[Productor]
+  implicit val productorFormat = Json.format[Productor]	
 }

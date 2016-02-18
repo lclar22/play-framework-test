@@ -23,19 +23,19 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productores") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def monto = column[Int]("monto")
-    def cuenta = column[Int]("cuenta")
-    def cliente = column[Int]("cliente")
-    def * = (id, monto, cuenta, cliente) <> ((Productor.apply _).tupled, Productor.unapply)
+    def nombre = column[String]("nombre")
+    def carnet = column[Int]("carnet")
+    def asociacion = column[Int]("asociacion")
+    def * = (id, nombre, carnet, asociacion) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
   private val productores = TableQuery[ProductoresTable]
 
-  def create(monto: Int, cuenta: Int, cliente: Int): Future[Productor] = db.run {
-    (productores.map(p => (p.monto, p.cuenta, p.cliente))
+  def create(nombre: String, carnet: Int, asociacion: Int): Future[Productor] = db.run {
+    (productores.map(p => (p.nombre, p.carnet, p.asociacion))
       returning productores.map(_.id)
       into ((nameAge, id) => Productor(id, nameAge._1, nameAge._2, nameAge._3))
-    ) += (monto, cuenta, cliente)
+    ) += (nombre, carnet, asociacion)
   }
 
   def list(): Future[Seq[Productor]] = db.run {
