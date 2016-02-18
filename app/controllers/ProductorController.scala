@@ -21,7 +21,10 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     mapping(
       "nombre" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
-      "asociacion" -> number.verifying(min(0), max(140))
+      "telefono" -> number.verifying(min(0), max(9999999)),
+      "direccion" -> nonEmptyText,
+      "cuenta" -> longNumber,
+      "asociacion" -> longNumber
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
@@ -35,7 +38,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
         Future.successful(Ok(views.html.productor_index(errorForm)))
       },
       productor => {
-        repo.create(productor.nombre, productor.carnet, productor.asociacion).map { _ =>
+        repo.create(productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.cuenta, productor.asociacion).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -49,4 +52,4 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 }
 
-case class CreateProductorForm(nombre: String, carnet: Int, asociacion: Int)
+case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)

@@ -8,6 +8,9 @@
     @form(routes.ProductorController.addProductor()) {
         @inputText(banco("nombre"))
         @inputText(banco("carnet"))
+        @inputText(banco("telefono"))
+        @inputText(banco("direccion"))
+        @inputText(banco("cuenta"))
         @inputText(banco("asociacion"))
         <input type="submit" value="Add Productor"/>
     }
@@ -17,6 +20,9 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Cuenta</th>
                     <th>Asociacion</th>
                 </tr>a
             </thead>
