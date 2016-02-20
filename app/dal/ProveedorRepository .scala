@@ -24,17 +24,20 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")
-    def cuenta = column[String]("cuenta")
-    def * = (id, nombre, cuenta) <> ((Proveedor.apply _).tupled, Proveedor.unapply)
+    def telefono = column[Int]("telefono")
+    def direccion = column[String]("direccion")
+    def contacto = column[String]("contacto")
+    def cuenta = column[Long]("cuenta")
+    def * = (id, nombre, telefono, direccion, contacto, cuenta) <> ((Proveedor.apply _).tupled, Proveedor.unapply)
   }
 
   private val proveedores = TableQuery[ProveedoresTable]
 
-  def create(nombre: String, cuenta: String): Future[Proveedor] = db.run {
-    (proveedores.map(p => (p.nombre, p.cuenta))
+  def create(nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long): Future[Proveedor] = db.run {
+    (proveedores.map(p => (p.nombre, p.telefono, p.direccion, p.contacto, p.cuenta))
       returning proveedores.map(_.id)
-      into ((nameAge, id) => Proveedor(id, nameAge._1, nameAge._2))
-    ) += (nombre, cuenta)
+      into ((nameAge, id) => Proveedor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+    ) += (nombre, telefono, direccion, contacto, cuenta)
   }
 
   def list(): Future[Seq[Proveedor]] = db.run {

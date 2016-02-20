@@ -7,6 +7,9 @@
 
     @form(routes.ProveedorController.addProveedor()) {
         @inputText(proveedor("nombre"))
+        @inputText(proveedor("telefono"))
+        @inputText(proveedor("direccion"))
+        @inputText(proveedor("contacto"))
         @inputText(proveedor("cuenta"))
         <input type="submit" value="Add Proveedor"/>
     }
@@ -15,6 +18,9 @@
             <thead>
                 <tr>
                     <th>Nombre</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Contacto</th>
                     <th>Cuenta</th>
                 </tr>a
             </thead>

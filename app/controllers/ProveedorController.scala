@@ -20,7 +20,10 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   val proveedorForm: Form[CreateProveedorForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
-      "cuenta" -> nonEmptyText
+      "telefono" -> number,
+      "direccion" -> nonEmptyText,
+      "contacto" -> nonEmptyText,
+      "cuenta" -> longNumber
     )(CreateProveedorForm.apply)(CreateProveedorForm.unapply)
   }
 
@@ -34,7 +37,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
         Future.successful(Ok(views.html.proveedor_index(errorForm)))
       },
       proveedor => {
-        repo.create(proveedor.nombre, proveedor.cuenta).map { _ =>
+        repo.create(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.cuenta).map { _ =>
           Redirect(routes.ProveedorController.index)
         }
       }
@@ -48,4 +51,4 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   }
 }
 
-case class CreateProveedorForm(nombre: String, cuenta: String)
+case class CreateProveedorForm(nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long)
