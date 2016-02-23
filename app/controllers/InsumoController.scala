@@ -19,9 +19,11 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
 
   val insumoForm: Form[CreateInsumoForm] = Form {
     mapping(
-      "monto" -> number.verifying(min(0), max(140)),
-      "cuenta" -> number.verifying(min(0), max(140)),
-      "cliente" -> number.verifying(min(0), max(140))
+      "nombre" -> nonEmptyText,
+      "costo" -> number,
+      "porcentage" -> number,
+      "descripcion" -> text,
+      "unidad" -> longNumber
     )(CreateInsumoForm.apply)(CreateInsumoForm.unapply)
   }
 
@@ -34,8 +36,8 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       errorForm => {
         Future.successful(Ok(views.html.insumo_index(errorForm)))
       },
-      transaccion => {
-        repo.create(transaccion.monto, transaccion.cuenta, transaccion.cliente).map { _ =>
+      insumo => {
+        repo.create(insumo.nombre, insumo.costo, insumo.porcentage, insumo.descripcion, insumo.unidad).map { _ =>
           Redirect(routes.InsumoController.index)
         }
       }
@@ -49,4 +51,4 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
   }
 }
 
-case class CreateInsumoForm(monto: Int, cuenta: Int, cliente: Int)
+case class CreateInsumoForm(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long)

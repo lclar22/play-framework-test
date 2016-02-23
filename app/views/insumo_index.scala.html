@@ -6,18 +6,22 @@
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_index.js")'></script>
 
     @form(routes.InsumoController.addInsumo()) {
-        @inputText(insumo("monto"))
-        @inputText(insumo("cuenta"))
-        @inputText(insumo("cliente"))
+        @inputText(insumo("nombre"))
+        @inputText(insumo("costo"))
+        @inputText(insumo("porcentage"))
+        @inputText(insumo("descripcion"))
+        @inputText(insumo("unidad"))
         <input type="submit" value="Add Insumo"/>
     }
     <div class="table-responsive">
         <table class="table" id="insumos">
             <thead>
                 <tr>
-                    <th>Monto</th>
-                    <th>Cuenta</th>
-                    <th>Cliente</th>
+                    <th>Nombre</th>
+                    <th>Costo</th>
+                    <th>Porcentage</th>
+                    <th>Descripcion</th>
+                    <th>Unidad</th>
                 </tr>a
             </thead>
         </table>
