@@ -23,19 +23,21 @@ class VeterinarioRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
   private class VeterinariosTable(tag: Tag) extends Table[Veterinario](tag, "veterinarios") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def monto = column[Int]("monto")
-    def cuenta = column[Int]("cuenta")
-    def cliente = column[Int]("cliente")
-    def * = (id, monto, cuenta, cliente) <> ((Veterinario.apply _).tupled, Veterinario.unapply)
+    def nombre = column[String]("nombre")
+    def carnet = column[Int]("carnet")
+    def telefono = column[Int]("telefono")
+    def direccion = column[String]("direccion")
+    def sueldo = column[Int]("sueldo")
+    def * = (id, nombre, carnet, telefono, direccion, sueldo) <> ((Veterinario.apply _).tupled, Veterinario.unapply)
   }
 
   private val veterinarios = TableQuery[VeterinariosTable]
 
-  def create(monto: Int, cuenta: Int, cliente: Int): Future[Veterinario] = db.run {
-    (veterinarios.map(p => (p.monto, p.cuenta, p.cliente))
+  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Veterinario] = db.run {
+    (veterinarios.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo))
       returning veterinarios.map(_.id)
-      into ((nameAge, id) => Veterinario(id, nameAge._1, nameAge._2, nameAge._3))
-    ) += (monto, cuenta, cliente)
+      into ((nameAge, id) => Veterinario(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+    ) += (nombre, carnet, telefono, direccion, sueldo)
   }
 
   def list(): Future[Seq[Veterinario]] = db.run {

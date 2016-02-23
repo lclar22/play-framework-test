@@ -19,9 +19,11 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
 
   val veterinarioForm: Form[CreateVeterinarioForm] = Form {
     mapping(
-      "monto" -> number.verifying(min(0), max(140)),
-      "cuenta" -> number.verifying(min(0), max(140)),
-      "cliente" -> number.verifying(min(0), max(140))
+      "nombre" -> nonEmptyText,
+      "carnet" -> number,
+      "telefono" -> number,
+      "direccion" -> text,
+      "sueldo" -> number
     )(CreateVeterinarioForm.apply)(CreateVeterinarioForm.unapply)
   }
 
@@ -35,7 +37,7 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
         Future.successful(Ok(views.html.veterinario_index(errorForm)))
       },
       veterinario => {
-        repo.create(veterinario.monto, veterinario.cuenta, veterinario.cliente).map { _ =>
+        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo).map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }
@@ -49,4 +51,4 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
   }
 }
 
-case class CreateVeterinarioForm(monto: Int, cuenta: Int, cliente: Int)
+case class CreateVeterinarioForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)

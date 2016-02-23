@@ -6,19 +6,23 @@
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/veterinario_index.js")'></script>
 
     @form(routes.VeterinarioController.addVeterinario()) {
-        @inputText(banco("monto"))
-        @inputText(banco("cuenta"))
-        @inputText(banco("cliente"))
+        @inputText(banco("nombre"))
+        @inputText(banco("carnet"))
+        @inputText(banco("telefono"))
+        @inputText(banco("direccion"))
+        @inputText(banco("sueldo"))
         <input type="submit" value="Add Veterinario"/>
     }
     <div class="table-responsive">
         <table class="table" id="veterinarios">
             <thead>
                 <tr>
-                    <th>Monto</th>
-                    <th>Cuenta</th>
-                    <th>Cliente</th>
-                </tr>a
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Sueldo</th>
+                </tr>
             </thead>
         </table>
     </div>

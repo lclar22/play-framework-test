@@ -1,7 +1,9 @@
 $ ->
   $.get "/veterinarios", (veterinarios) ->
     $.each veterinarios, (index, veterinario) ->
-      monto = $("<td>").text veterinario.monto
-      cuenta = $("<td>").text veterinario.cuenta
-      cliente = $("<td>").text veterinario.cliente
-      $("#veterinarios").append $("<tr>").append(monto).append(cuenta).append(cliente)
+      nombre = $("<td>").text veterinario.nombre
+      carnet = $("<td>").text veterinario.carnet
+      telefono = $("<td>").text veterinario.telefono
+      direccion = $("<td>").text veterinario.direccion
+      sueldo = $("<td>").text veterinario.sueldo
+      $("#veterinarios").append $("<tr>").append(nombre).append(carnet).append(telefono).append(direccion).append(sueldo)
