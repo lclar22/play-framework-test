@@ -6,18 +6,16 @@
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/banco_index.js")'></script>
 
     @form(routes.BancoController.addBanco()) {
-        @inputText(banco("monto"))
-        @inputText(banco("cuenta"))
-        @inputText(banco("cliente"))
+        @inputText(banco("nombre"))
+        @inputText(banco("tipo"))
         <input type="submit" value="Add Banco"/>
     }
     <div class="table-responsive">
         <table class="table" id="bancos">
             <thead>
                 <tr>
-                    <th>Monto</th>
-                    <th>Cuenta</th>
-                    <th>Cliente</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
                 </tr>a
             </thead>
         </table>

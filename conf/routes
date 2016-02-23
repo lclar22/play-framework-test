@@ -4,8 +4,9 @@
 
 # Home page
 GET     /                			 	controllers.MainController.index
-POST    /banco                 			controllers.BancoController.addBanco
-GET     /bancos         				controllers.BancoController.index
+POST    /cuenta                 		controllers.BancoController.addBanco
+GET     /cuentas         				controllers.BancoController.getBancos
+GET     /cuentas_view         			controllers.BancoController.index
 POST    /insumo                 		controllers.InsumoController.addInsumo
 GET     /insumos         				controllers.InsumoController.getInsumos
 GET     /insumos_view         			controllers.InsumoController.index

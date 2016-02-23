@@ -19,9 +19,8 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
   val bancoForm: Form[CreateBancoForm] = Form {
     mapping(
-      "monto" -> number.verifying(min(0), max(140)),
-      "cuenta" -> number.verifying(min(0), max(140)),
-      "cliente" -> number.verifying(min(0), max(140))
+      "nombre" -> nonEmptyText,
+      "tipo" -> nonEmptyText
     )(CreateBancoForm.apply)(CreateBancoForm.unapply)
   }
 
@@ -35,7 +34,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
         Future.successful(Ok(views.html.banco_index(errorForm)))
       },
       banco => {
-        repo.create(banco.monto, banco.cuenta, banco.cliente).map { _ =>
+        repo.create(banco.nombre, banco.tipo).map { _ =>
           Redirect(routes.BancoController.index)
         }
       }
@@ -49,4 +48,4 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
   }
 }
 
-case class CreateBancoForm(monto: Int, cuenta: Int, cliente: Int)
+case class CreateBancoForm(nombre: String, tipo: String)

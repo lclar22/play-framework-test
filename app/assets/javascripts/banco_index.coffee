@@ -1,7 +1,6 @@
 $ ->
-  $.get "/bancos", (bancos) ->
+  $.get "/cuentas", (bancos) ->
     $.each bancos, (index, banco) ->
-      monto = $("<td>").text banco.monto
-      cuenta = $("<td>").text banco.cuenta
-      cliente = $("<td>").text banco.cliente
-      $("#bancos").append $("<tr>").append(monto).append(cuenta).append(cliente)
+      nombre = $("<td>").text banco.nombre
+      tipo = $("<td>").text banco.tipo
+      $("#bancos").append $("<tr>").append(nombre).append(tipo)

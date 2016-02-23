@@ -23,19 +23,18 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   private class BancosTable(tag: Tag) extends Table[Banco](tag, "bancos") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def monto = column[Int]("monto")
-    def cuenta = column[Int]("cuenta")
-    def cliente = column[Int]("cliente")
-    def * = (id, monto, cuenta, cliente) <> ((Banco.apply _).tupled, Banco.unapply)
+    def nombre = column[String]("nombre")
+    def tipo = column[String]("tipo")
+    def * = (id, nombre, tipo) <> ((Banco.apply _).tupled, Banco.unapply)
   }
 
   private val bancos = TableQuery[BancosTable]
 
-  def create(monto: Int, cuenta: Int, cliente: Int): Future[Banco] = db.run {
-    (bancos.map(p => (p.monto, p.cuenta, p.cliente))
+  def create(nombre: String, tipo: String): Future[Banco] = db.run {
+    (bancos.map(p => (p.nombre, p.tipo))
       returning bancos.map(_.id)
-      into ((nameAge, id) => Banco(id, nameAge._1, nameAge._2, nameAge._3))
-    ) += (monto, cuenta, cliente)
+      into ((nameAge, id) => Banco(id, nameAge._1, nameAge._2))
+    ) += (nombre, tipo)
   }
 
   def list(): Future[Seq[Banco]] = db.run {
