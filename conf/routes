@@ -6,6 +6,7 @@
 GET     /                			 	controllers.MainController.index
 POST    /cuenta                 		controllers.BancoController.addBanco
 GET     /cuentas         				controllers.BancoController.getBancos
+GET     /account_names         			controllers.BancoController.getBankNames
 GET     /cuentas_view         			controllers.BancoController.index
 
 POST    /insumo                 		controllers.InsumoController.addInsumo

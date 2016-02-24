@@ -40,4 +40,9 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   def list(): Future[Seq[Banco]] = db.run {
     bancos.result
   }
+
+  def listNames(): Future[Seq[String]] = db.run {
+    bancos.map(_.nombre).result
+  }
+
 }
