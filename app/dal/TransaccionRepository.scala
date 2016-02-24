@@ -23,19 +23,18 @@ class TransaccionRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
   private class TransaccionesTable(tag: Tag) extends Table[Transaccion](tag, "transacciones") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
-    def monto = column[Int]("monto")
-    def cuenta = column[Int]("cuenta")
-    def cliente = column[Int]("cliente")
-    def * = (id, monto, cuenta, cliente) <> ((Transaccion.apply _).tupled, Transaccion.unapply)
+    def fecha = column[String]("fecha")
+    def descripcion = column[String]("descripcion")
+    def * = (id, fecha, descripcion) <> ((Transaccion.apply _).tupled, Transaccion.unapply)
   }
 
   private val transacciones = TableQuery[TransaccionesTable]
 
-  def create(monto: Int, cuenta: Int, cliente: Int): Future[Transaccion] = db.run {
-    (transacciones.map(p => (p.monto, p.cuenta, p.cliente))
+  def create(fecha: String, descripcion: String): Future[Transaccion] = db.run {
+    (transacciones.map(p => (p.fecha, p.descripcion))
       returning transacciones.map(_.id)
-      into ((nameAge, id) => Transaccion(id, nameAge._1, nameAge._2, nameAge._3))
-    ) += (monto, cuenta, cliente)
+      into ((nameAge, id) => Transaccion(id, nameAge._1, nameAge._2))
+    ) += (fecha, descripcion)
   }
 
   def list(): Future[Seq[Transaccion]] = db.run {

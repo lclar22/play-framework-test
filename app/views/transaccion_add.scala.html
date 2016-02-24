@@ -1,4 +1,4 @@
-@(banco: Form[CreateTransaccionForm])(implicit messages: Messages)
+@(transaccion: Form[CreateTransaccionForm])(implicit messages: Messages)
 
 @import helper._
 
@@ -6,18 +6,17 @@
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaccion_index.js")'></script>
 
     @form(routes.TransaccionController.addTransaccion()) {
-        @inputText(banco("monto"))
-        @inputText(banco("cuenta"))
-        @inputText(banco("cliente"))
+        @inputDate(transaccion("fecha"))
+        @inputText(transaccion("descripcion"))
         <input type="submit" value="Add Transaccion"/>
     }
     <div class="table-responsive">
+        <div> Los 10 transacciones recien creadas</div>
         <table class="table" id="transacciones">
             <thead>
                 <tr>
-                    <th>Monto</th>
-                    <th>Cuenta</th>
-                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
                 </tr>
             </thead>
         </table>

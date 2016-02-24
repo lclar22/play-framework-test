@@ -19,27 +19,34 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
 
   val transaccionForm: Form[CreateTransaccionForm] = Form {
     mapping(
-      "monto" -> number.verifying(min(0), max(140)),
-      "cuenta" -> number.verifying(min(0), max(140)),
-      "cliente" -> number.verifying(min(0), max(140))
+      "fecha" -> nonEmptyText,
+      "descripcion" -> text
     )(CreateTransaccionForm.apply)(CreateTransaccionForm.unapply)
   }
 
   def index = Action {
-    Ok(views.html.cliente_transaccion(transaccionForm))
+    Ok(views.html.transaccion_add(transaccionForm))
   }
 
   def addTransaccion = Action.async { implicit request =>
     transaccionForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.cliente_transaccion(errorForm)))
+        Future.successful(Ok(views.html.transaccion_add(errorForm)))
       },
       transaccion => {
-        repo.create(transaccion.monto, transaccion.cuenta, transaccion.cliente).map { _ =>
-          Redirect(routes.TransaccionController.index)
+        repo.create(transaccion.fecha, transaccion.descripcion).map { _ =>
+          Redirect(routes.TransaccionController.getTransaccionListView)
         }
       }
     )
+  }
+
+  def getTransaccionListView = Action {
+    Ok(views.html.transaccion_table())
+  }
+  
+  def getTransaccionView = Action {
+    Ok(views.html.transaccion_view())
   }
 
   def getTransacciones = Action.async {
@@ -49,4 +56,4 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
   }
 }
 
-case class CreateTransaccionForm(monto: Int, cuenta: Int, cliente: Int)
+case class CreateTransaccionForm(fecha: String, descripcion: String)

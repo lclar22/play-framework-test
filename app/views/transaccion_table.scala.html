@@ -1,0 +1,18 @@
+@import helper._
+
+@main("Welcome to Play") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaccion_index.js")'></script>
+
+    <div class="table-responsive">
+        <div>Lista de todas las transaciones creadas</div>
+        <a href="/transacciones_view"><span class="glyphicon glyphicon-plus"></span></a>
+        <table class="table" id="transacciones">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Descripcion</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}
