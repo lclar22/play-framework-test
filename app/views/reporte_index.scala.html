@@ -2,14 +2,14 @@
 
 @import helper._
 
-@main("Welcome to Play") {
+@main("Agregar réporte") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/reporte_index.js")'></script>
 
     @form(routes.ReporteController.addReporte()) {
         @inputText(banco("monto"))
         @inputText(banco("cuenta"))
         @inputText(banco("cliente"))
-        <input type="submit" value="Add Reporte"/>
+        <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
         <table class="table" id="reportes">

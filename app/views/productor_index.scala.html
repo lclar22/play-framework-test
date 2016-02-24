@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Welcome to Play") {
+@main("Agregar productor") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
 
     @form(routes.ProductorController.addProductor()) {
@@ -12,7 +12,7 @@
         @inputText(banco("direccion"))
         @inputText(banco("cuenta"))
         @inputText(banco("asociacion"))
-        <input type="submit" value="Add Productor"/>
+        <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
         <table class="table" id="productores">

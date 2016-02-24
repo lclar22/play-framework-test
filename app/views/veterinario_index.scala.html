@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Welcome to Play") {
+@main("Agregar veterinario") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/veterinario_index.js")'></script>
 
     @form(routes.VeterinarioController.addVeterinario()) {
@@ -11,7 +11,7 @@
         @inputText(banco("telefono"))
         @inputText(banco("direccion"))
         @inputText(banco("sueldo"))
-        <input type="submit" value="Add Veterinario"/>
+        <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
         <table class="table" id="veterinarios">

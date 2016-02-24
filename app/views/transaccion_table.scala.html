@@ -1,9 +1,10 @@
 @import helper._
 
-@main("Welcome to Play") {
+@main("Lista de transacciones") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaccion_index.js")'></script>
 
     <div class="table-responsive">
+        <a href="/"><span class="glyphicon glyphicon-th-list"></span></a>
         <div>Lista de todas las transaciones creadas</div>
         <a href="/transacciones_view"><span class="glyphicon glyphicon-plus"></span></a>
         <table class="table" id="transacciones">

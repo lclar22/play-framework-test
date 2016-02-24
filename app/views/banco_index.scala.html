@@ -2,13 +2,13 @@
 
 @import helper._
 
-@main("Welcome to Play") {
+@main("Agregar cuentas") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/banco_index.js")'></script>
 
     @form(routes.BancoController.addBanco()) {
         @inputText(banco("nombre"))
         @inputText(banco("tipo"))
-        <input type="submit" value="Add Banco"/>
+        <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
         <table class="table" id="bancos">
@@ -16,7 +16,7 @@
                 <tr>
                     <th>Nombre</th>
                     <th>Tipo</th>
-                </tr>a
+                </tr>
             </thead>
         </table>
     </div>

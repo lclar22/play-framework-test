@@ -2,7 +2,7 @@
 
 @import helper._
 
-@main("Welcome to Play") {
+@main("Agregar insumos") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_index.js")'></script>
 
     @form(routes.InsumoController.addInsumo()) {
@@ -11,7 +11,7 @@
         @inputText(insumo("porcentage"))
         @inputText(insumo("descripcion"))
         @inputText(insumo("unidad"))
-        <input type="submit" value="Add Insumo"/>
+        <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
         <table class="table" id="insumos">
