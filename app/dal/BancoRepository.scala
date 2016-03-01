@@ -58,7 +58,9 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
     println(id)
     //val q = for { l <- bancos if l.id === id } yield l.nombre
     //(q.update("the weekend")).result
-    //bancos.filter(_.id === id).map(_.nombre).update("new Account name").updateInvoker
+    var q = (bancos.filter(_.id === 1L).map(_.nombre)).update(("new Account name"))
+    println(q)
+    println("print after ipdate")
     bancos.filter(_.id === id).result
   }
 
