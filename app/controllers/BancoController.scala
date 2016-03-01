@@ -68,8 +68,13 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     }
   }
 
+<<<<<<< HEAD
   def list = Action.async {
     repo.list().map { bancos =>
+=======
+  def getBankNames = Action.async {
+    repo.listNames().map { bancos =>
+>>>>>>> b9918268cc9090e57f26a4e6016f68add510af21
       Ok(Json.toJson(bancos))
     }
   }
