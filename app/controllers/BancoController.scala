@@ -42,10 +42,45 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
   }
 
   def getBancos = Action.async {
-  	repo.list().map { bancos =>
+    repo.list().map { bancos =>
       Ok(Json.toJson(bancos))
     }
   }
+
+  def list = Action.async {
+    repo.list().map { bancos =>
+      Ok(Json.toJson(bancos))
+    }
+  }
+
+  def getNameListByName = Action.async {
+    repo.getNameListByName(nombre = "Luis").map { bancos =>
+      Ok(Json.toJson(bancos))
+    }
+  }
+
+  def getExampleAction(name: String) = Action { request =>
+    Ok("Got request [" + name + "]")
+  }
+
+  def getExampleAction_3(name: String) = Action { request =>
+    Ok("Got request [" + name + "]")
+  }
+
+  def getExampleAction_2(name: String) = Action {
+    Redirect("/cuenta_example_action?name=" + name)
+  }
+
+  def getCuentaById(id: Long) = Action.async {
+    repo.getCuentaById(id).map { bancos =>
+      Ok(Json.toJson(bancos))
+    }
+  }
+
+  def show_view(id: Long) = Action {
+    Ok(views.html.banco_index_show())
+  }
+
 }
 
 case class CreateBancoForm(nombre: String, tipo: String)

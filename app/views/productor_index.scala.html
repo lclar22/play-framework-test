@@ -12,7 +12,7 @@
         @inputText(banco("direccion"))
         @inputText(banco("cuenta"))
         @inputText(banco("asociacion"))
-        @select(banco("asociacion"), options = options(List("Yes","No")))
+        @select(field = banco("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
 
         <input type="submit" value="Guardar"/>
     }

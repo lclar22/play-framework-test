@@ -40,4 +40,20 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   def list(): Future[Seq[Banco]] = db.run {
     bancos.result
   }
+
+  def getNameListByFirst10(): Future[Seq[String]] = db.run {
+    bancos.filter(_.id < 10L).map(s => (s.nombre)).result 
+  }
+
+  def getNameListByName(nombre: String): Future[Seq[String]] = db.run {
+    bancos.filter(_.nombre === nombre).map(_.nombre).result 
+  }
+
+  def getCuentaListByName(nombre: String): Future[Seq[Banco]] = db.run {
+    bancos.filter(_.nombre === nombre).result 
+  }
+
+  def getCuentaById(id: Long): Future[Seq[Banco]] = db.run {
+    bancos.filter(_.id === id).result
+  }
 }

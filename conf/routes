@@ -6,7 +6,13 @@
 GET     /                			 	controllers.MainController.index
 POST    /cuenta                 		controllers.BancoController.addBanco
 GET     /cuentas         				controllers.BancoController.getBancos
+GET     /cuentas/all       				controllers.BancoController.list()
+GET     /cuenta_example_action         	controllers.BancoController.getExampleAction(name: String)
+GET     /cuenta_example_action_2        controllers.BancoController.getExampleAction_2(name: String)
+GET     /cuenta_example_action_3        controllers.BancoController.getExampleAction_3(name: String)
 GET     /cuentas_view         			controllers.BancoController.index
+GET     /cuentas/:id 					controllers.BancoController.getCuentaById(id: Long)
+GET     /cuentas_show/:id 				controllers.BancoController.show_view(id: Long)
 
 POST    /insumo                 		controllers.InsumoController.addInsumo
 GET     /insumos         				controllers.InsumoController.getInsumos
