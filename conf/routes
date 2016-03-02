@@ -5,6 +5,7 @@
 # Home page
 GET     /                			 	controllers.MainController.index
 POST    /cuenta                 		controllers.BancoController.addBanco
+POST    /cuenta_update             		controllers.BancoController.updateBanco
 GET     /cuentas         				controllers.BancoController.getBancos
 GET     /cuentas/all       				controllers.BancoController.list()
 GET     /cuenta_example_action         	controllers.BancoController.getExampleAction(name: String)

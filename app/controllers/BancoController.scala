@@ -24,11 +24,18 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )(CreateBancoForm.apply)(CreateBancoForm.unapply)
   }
 
+  val updateForm: Form[UpdateBancoForm] = Form {
+    mapping(
+      "id" -> longNumber,
+      "nombre" -> nonEmptyText,
+      "tipo" -> nonEmptyText
+    )(UpdateBancoForm.apply)(UpdateBancoForm.unapply)
+  }
+
   def index_update(id: Long) = Action.async {
     repo.getCuentaById(id).map { bancos =>
-      println(bancos(0))
-      val anyData = Map("nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
-      Ok(views.html.banco_index_update(bancoForm.bind(anyData)))
+      val anyData = Map("id" -> id.toString(), "nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
+      Ok(views.html.banco_index_update(updateForm.bind(anyData)))
     }
   }
 
@@ -50,12 +57,12 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
   }
 
   def updateBanco = Action.async { implicit request =>
-    bancoForm.bindFromRequest.fold(
+    updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.banco_index(errorForm)))
+        Future.successful(Ok(views.html.banco_index_update(errorForm)))
       },
       banco => {
-        repo.create(banco.nombre, banco.tipo).map { _ =>
+        repo.update(banco.id, banco.nombre, banco.tipo).map { _ =>
           Redirect(routes.BancoController.index)
         }
       }
@@ -112,4 +119,4 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
 case class CreateBancoForm(nombre: String, tipo: String)
 
-case class UpdateBancoForm(nombre: String, tipo: String)
+case class UpdateBancoForm(id: Long, nombre: String, tipo: String)
