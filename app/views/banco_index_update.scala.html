@@ -4,7 +4,7 @@
 
 @main("Actualizar cuentas") {
     @form(routes.BancoController.updateBanco()) {
-        @inputText(banco("id"))
+        @inputText(banco("id"), 'hidden -> "true", '_label -> "")
         @inputText(banco("nombre"))
         @inputText(banco("tipo"))
         <input type="submit" value="Actualizar"/>
