@@ -24,6 +24,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )(CreateBancoForm.apply)(CreateBancoForm.unapply)
   }
 
+  // update required
   val updateForm: Form[UpdateBancoForm] = Form {
     mapping(
       "id" -> longNumber,
@@ -32,6 +33,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )(UpdateBancoForm.apply)(UpdateBancoForm.unapply)
   }
 
+  // update required
   def index_update(id: Long) = Action.async {
     repo.getCuentaById(id).map { bancos =>
       val anyData = Map("id" -> id.toString(), "nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
@@ -56,6 +58,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )
   }
 
+  // update required
   def updateBanco = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
@@ -119,4 +122,5 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
 case class CreateBancoForm(nombre: String, tipo: String)
 
+// update required
 case class UpdateBancoForm(id: Long, nombre: String, tipo: String)

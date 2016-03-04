@@ -1,3 +1,4 @@
+// update this to work with bancos
 $ ->
   $.get "/cuentas", (bancos) ->
     $.each bancos, (index, banco) ->

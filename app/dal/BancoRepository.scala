@@ -37,8 +37,9 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
     ) += (nombre, tipo)
   }
 
+  // update required
   def update(id: Long, nombre: String, tipo: String): Future[Seq[Banco]] = db.run {
-    val q = for { c <- bancos if c.id === 1L } yield c.nombre
+    val q = for { c <- bancos if c.id === id } yield c.nombre
     db.run(q.update(nombre))
 
     var q2 = (bancos.filter(_.id === id).map(_.tipo)).update((tipo))

@@ -4,7 +4,9 @@
 
 @main("Agregar cuentas") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/banco_index.js")'></script>
-
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
     @form(routes.BancoController.addBanco()) {
         @inputText(banco("nombre"))
         @inputText(banco("tipo"))

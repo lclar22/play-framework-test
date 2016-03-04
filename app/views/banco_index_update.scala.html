@@ -2,11 +2,15 @@
 
 @import helper._
 
-@main("Actualizar cuentas") {
+
+
+@main("Actualizar Cuenta") {
+	<a href="/cuentas_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.BancoController.updateBanco()) {
         @inputText(banco("id"), 'hidden -> "true", '_label -> "")
         @inputText(banco("nombre"))
         @inputText(banco("tipo"))
         <input type="submit" value="Actualizar"/>
+        <a href="/cuentas_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
     }
 }
