@@ -4,14 +4,15 @@
 
 @main("Agregar productor") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
-
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
     @form(routes.ProductorController.addProductor()) {
         @inputText(banco("nombre"), '_label -> "Nombre Productor")
         @inputText(banco("carnet"))
         @inputText(banco("telefono"))
         @inputText(banco("direccion"))
         @inputText(banco("cuenta"))
-        @inputText(banco("asociacion"))
         @select(field = banco("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
 
         <input type="submit" value="Guardar"/>
@@ -23,9 +24,9 @@
                     <th>Nombre</th>
                     <th>Carnet</th>
                     <th>Telefono</th>
-                    <th>Direccion</th>
                     <th>Cuenta</th>
                     <th>Asociacion</th>
+                    <th>---</th>
                 </tr>
             </thead>
         </table>

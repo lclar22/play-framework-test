@@ -50,6 +50,49 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       Ok(Json.toJson(productores))
     }
   }
+
+  def show_view(id: Long) = Action {
+    Ok(views.html.productor_index_show())
+  }
+
+  def getProductorById(id: Long) = Action.async {
+    repo.getProductorById(id).map { productores =>
+      Ok(Json.toJson(productores))
+    }
+  }
+
+  // update required
+  val updateForm: Form[UpdateProductorForm] = Form {
+    mapping(
+      "id" -> longNumber,
+      "nombre" -> nonEmptyText
+    )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
+  }
+
+  // update required
+  def index_update(id: Long) = Action.async {
+    repo.getProductorById(id).map { productores =>
+      val anyData = Map("id" -> id.toString(), "nombre" -> productores.toList(0).nombre)
+      Ok(views.html.productor_index_update(updateForm.bind(anyData)))
+    }
+  }
+
+  // update required
+  def updateProductor = Action.async { implicit request =>
+    updateForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.productor_index_update(errorForm)))
+      },
+      productor => {
+        repo.update(productor.id, productor.nombre).map { _ =>
+          Redirect(routes.ProductorController.index)
+        }
+      }
+    )
+  }
+
 }
 
 case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)
+
+case class UpdateProductorForm(id: Long, nombre: String)

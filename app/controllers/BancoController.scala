@@ -24,22 +24,6 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )(CreateBancoForm.apply)(CreateBancoForm.unapply)
   }
 
-  // update required
-  val updateForm: Form[UpdateBancoForm] = Form {
-    mapping(
-      "id" -> longNumber,
-      "nombre" -> nonEmptyText,
-      "tipo" -> nonEmptyText
-    )(UpdateBancoForm.apply)(UpdateBancoForm.unapply)
-  }
-
-  // update required
-  def index_update(id: Long) = Action.async {
-    repo.getCuentaById(id).map { bancos =>
-      val anyData = Map("id" -> id.toString(), "nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
-      Ok(views.html.banco_index_update(updateForm.bind(anyData)))
-    }
-  }
 
   def index() = Action {
     Ok(views.html.banco_index(bancoForm))
@@ -58,19 +42,6 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )
   }
 
-  // update required
-  def updateBanco = Action.async { implicit request =>
-    updateForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(Ok(views.html.banco_index_update(errorForm)))
-      },
-      banco => {
-        repo.update(banco.id, banco.nombre, banco.tipo).map { _ =>
-          Redirect(routes.BancoController.index)
-        }
-      }
-    )
-  }
 
   def getBancos = Action.async {
     repo.list().map { bancos =>
@@ -116,6 +87,35 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
   def show_view(id: Long) = Action {
     Ok(views.html.banco_index_show())
+  }
+  // update required
+  val updateForm: Form[UpdateBancoForm] = Form {
+    mapping(
+      "id" -> longNumber,
+      "nombre" -> nonEmptyText,
+      "tipo" -> nonEmptyText
+    )(UpdateBancoForm.apply)(UpdateBancoForm.unapply)
+  }
+
+  // update required
+  def index_update(id: Long) = Action.async {
+    repo.getCuentaById(id).map { bancos =>
+      val anyData = Map("id" -> id.toString(), "nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
+      Ok(views.html.banco_index_update(updateForm.bind(anyData)))
+    }
+  }
+  // update required
+  def updateBanco = Action.async { implicit request =>
+    updateForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.banco_index_update(errorForm)))
+      },
+      banco => {
+        repo.update(banco.id, banco.nombre, banco.tipo).map { _ =>
+          Redirect(routes.BancoController.index)
+        }
+      }
+    )
   }
 
 }

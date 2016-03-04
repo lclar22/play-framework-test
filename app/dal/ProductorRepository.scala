@@ -44,4 +44,16 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   def list(): Future[Seq[Productor]] = db.run {
     productores.result
   }
+
+  def getProductorById(id: Long): Future[Seq[Productor]] = db.run {
+    productores.filter(_.id === id).result
+  }
+
+  // update required
+  def update(id: Long, nombre: String): Future[Seq[Productor]] = db.run {
+    val q = for { c <- productores if c.id === id } yield c.nombre
+    db.run(q.update(nombre))
+    productores.filter(_.id === id).result
+  }
+
 }
