@@ -50,10 +50,27 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required
-  def update(id: Long, nombre: String): Future[Seq[Productor]] = db.run {
+  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long): Future[Seq[Productor]] = db.run {
     val q = for { c <- productores if c.id === id } yield c.nombre
     db.run(q.update(nombre))
+    val q2 = for { c <- productores if c.id === id } yield c.carnet
+    db.run(q2.update(carnet))
+    val q3 = for { c <- productores if c.id === id } yield c.telefono
+    db.run(q3.update(telefono))
+    val q4 = for { c <- productores if c.id === id } yield c.cuenta
+    db.run(q4.update(cuenta))
+    val q5 = for { c <- productores if c.id === id } yield c.asociacion
+    db.run(q5.update(asociacion))
+
     productores.filter(_.id === id).result
+  }
+
+  def deleteProductor(id: Long): Future[Seq[Productor]] = db.run {
+    val q = productores.filter(_.id === id)
+    val action = q.delete
+    val affectedRowsCount: Future[Int] = db.run(action)
+    println("removed " + affectedRowsCount);
+    productores.result
   }
 
 }

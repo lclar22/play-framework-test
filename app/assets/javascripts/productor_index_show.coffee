@@ -4,4 +4,8 @@ $ ->
   $.get "/productores/" + productor_id, (productores) ->
     $.each productores, (index, productor) ->
       $("#name").html productor.nombre
-      $("#type").html productor.id
+      $("#carnet").html productor.carnet
+      $("#telefono").html productor.telefono
+      $("#direccion").html productor.direccion
+      $("#cuenta").html productor.cuenta
+      $("#asociacion").html productor.asociacion

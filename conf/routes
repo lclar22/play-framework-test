@@ -14,6 +14,7 @@ GET     /cuentas/:id 					controllers.BancoController.getCuentaById(id: Long)
 GET     /productor_show/:id 			controllers.ProductorController.show_view(id: Long)
 GET     /productores/:id 				controllers.ProductorController.getProductorById(id: Long)
 GET     /productor_update/:id        	controllers.ProductorController.index_update(id: Long)
+GET     /productor_remove/:id        	controllers.ProductorController.deleteProductor(id: Long)
 POST    /productor_update             	controllers.ProductorController.updateProductor
 
 GET     /cuentas         				controllers.BancoController.getBancos
