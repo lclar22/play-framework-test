@@ -5,12 +5,14 @@
 @main("Crear transaccion") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/transaccion_index.js")'></script>
 
+
     @form(routes.TransaccionController.addTransaccion()) {
         @inputDate(transaccion("fecha"))
         @inputText(transaccion("descripcion"))
         <input type="submit" value="Guardar"/>
     }
-    <a href="/transaccion_list" > Cancelar </a>
+    <p>Filtrar: DE  <input type="text" id="datepicker1"> HASTA<input type="text" id="datepicker2"></p>
+    <a href="/transaccion_list" > List </a>
     <div class="table-responsive">
         <div> Los 10 transacciones recien creadas</div>
         <table class="table" id="transacciones">
