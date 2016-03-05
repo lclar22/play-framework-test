@@ -1,10 +1,10 @@
 $ ->
-  $.get "/productores", (productores) ->
-    $.each productores, (index, productor) ->
-      nombre = $("<td>").text productor.nombre
-      carnet = $("<td>").text productor.carnet
-      telefono = $("<td>").text productor.telefono
-      cuenta = $("<td>").text productor.cuenta
-      asociacion = $("<td>").text productor.asociacion
-      link = $("<td>").html '<a href="/productor_update/' + productor.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/productor_remove/' + productor.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/productor_show/' + productor.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
-      $("#productores").append $("<tr>").append(nombre).append(carnet).append(telefono).append(cuenta).append(asociacion).append(link)
+  $.get "/productores", (rows) ->
+    $.each rows, (index, row) ->
+      nombre = $("<td>").text row.nombre
+      carnet = $("<td>").text row.carnet
+      telefono = $("<td>").text row.telefono
+      cuenta = $("<td>").text row.cuenta
+      asociacion = $("<td>").text row.asociacion
+      link = $("<td>").html '<a href="/productor_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/productor_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/productor_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
+      $("#rows").append $("<tr>").append(nombre).append(carnet).append(telefono).append(cuenta).append(asociacion).append(link)

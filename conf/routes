@@ -20,18 +20,18 @@ GET     /productor_remove/:id        	controllers.ProductorController.delete(id:
 GET     /productores/:id 				controllers.ProductorController.getById(id: Long)
 POST    /productor_update             	controllers.ProductorController.updatePost
 
-POST    /productor                 		controllers.ProductorController.addProductor
+POST    /productor                 		controllers.ProductorController.add
 GET     /productores         			controllers.ProductorController.getProductores
 GET     /productores_view         		controllers.ProductorController.index
 
 # Now for veterinarios
-#GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
-#GET     /veterinario_update/:id        	controllers.VeterinarioController.getUpdate(id: Long)
-#GET     /veterinario_remove/:id        	controllers.VeterinarioController.delete(id: Long)
-#GET     /veterinarios/:id 				controllers.VeterinarioController.getById(id: Long)
-#POST    /veterinario_update             	controllers.VeterinarioController.updatePost
+GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
+GET     /veterinario_update/:id        	controllers.VeterinarioController.getUpdate(id: Long)
+GET     /veterinario_remove/:id        	controllers.VeterinarioController.delete(id: Long)
+GET     /veterinarios/:id 				controllers.VeterinarioController.getById(id: Long)
+POST    /veterinario_update             	controllers.VeterinarioController.updatePost
 
-POST    /veterinario                 	controllers.VeterinarioController.addVeterinario
+POST    /veterinario                 	controllers.VeterinarioController.add
 GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
 GET     /veterinarios_view     			controllers.VeterinarioController.index
 

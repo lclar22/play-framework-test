@@ -17,7 +17,7 @@ import javax.inject._
 class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val productorForm: Form[CreateProductorForm] = Form {
+  val newForm: Form[CreateProductorForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
       "carnet" -> number.verifying(min(0), max(9999999)),
@@ -29,11 +29,11 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 
   def index = Action {
-    Ok(views.html.productor_index(productorForm))
+    Ok(views.html.productor_index(newForm))
   }
 
-  def addProductor = Action.async { implicit request =>
-    productorForm.bindFromRequest.fold(
+  def add = Action.async { implicit request =>
+    newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productor_index(errorForm)))
       },
@@ -46,8 +46,8 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 
   def getProductores = Action.async {
-  	repo.list().map { productores =>
-      Ok(Json.toJson(productores))
+  	repo.list().map { res =>
+      Ok(Json.toJson(res))
     }
   }
 
@@ -71,23 +71,23 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
 
   // update required
   def getUpdate(id: Long) = Action.async {
-    repo.getProductorById(id).map { productores =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> productores.toList(0).nombre, "carnet" -> productores.toList(0).carnet.toString(), "telefono" -> productores.toList(0).telefono.toString(), "direccion" -> productores.toList(0).direccion, "cuenta" -> productores.toList(0).cuenta.toString(), "asociacion" -> productores.toList(0).asociacion.toString())
+    repo.getById(id).map { res =>
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "cuenta" -> res.toList(0).cuenta.toString(), "asociacion" -> res.toList(0).asociacion.toString())
       Ok(views.html.productor_update(updateForm.bind(anyData)))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
-    repo.deleteProductor(id).map { productores =>
-      Ok(views.html.productor_index(productorForm))
+    repo.delete(id).map { res =>
+      Ok(views.html.productor_index(newForm))
     }
   }
 
   // to copy
   def getById(id: Long) = Action.async {
-    repo.getProductorById(id).map { productores =>
-      Ok(Json.toJson(productores))
+    repo.getById(id).map { res =>
+      Ok(Json.toJson(res))
     }
   }
 

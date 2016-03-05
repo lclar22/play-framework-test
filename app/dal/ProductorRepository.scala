@@ -32,46 +32,47 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     def * = (id, nombre, carnet, telefono, direccion, cuenta, asociacion) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
-  private val productores = TableQuery[ProductoresTable]
+  private val tableQ = TableQuery[ProductoresTable]
 
   def create(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long): Future[Productor] = db.run {
-    (productores.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.cuenta, p.asociacion))
-      returning productores.map(_.id)
+    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.cuenta, p.asociacion))
+      returning tableQ.map(_.id)
       into ((nameAge, id) => Productor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
     ) += (nombre, carnet, telefono, direccion, cuenta, asociacion)
   }
 
   def list(): Future[Seq[Productor]] = db.run {
-    productores.result
+    tableQ.result
   }
 
-  def getProductorById(id: Long): Future[Seq[Productor]] = db.run {
-    productores.filter(_.id === id).result
+  // to cpy
+  def getById(id: Long): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.id === id).result
   }
 
-  // update required
+  // update required to copy
   def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long): Future[Seq[Productor]] = db.run {
-    val q = for { c <- productores if c.id === id } yield c.nombre
+    val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
-    val q2 = for { c <- productores if c.id === id } yield c.carnet
+    val q2 = for { c <- tableQ if c.id === id } yield c.carnet
     db.run(q2.update(carnet))
-    val q3 = for { c <- productores if c.id === id } yield c.telefono
+    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
     db.run(q3.update(telefono))
-    val q4 = for { c <- productores if c.id === id } yield c.cuenta
+    val q4 = for { c <- tableQ if c.id === id } yield c.cuenta
     db.run(q4.update(cuenta))
-    val q5 = for { c <- productores if c.id === id } yield c.asociacion
+    val q5 = for { c <- tableQ if c.id === id } yield c.asociacion
     db.run(q5.update(asociacion))
 
-    productores.filter(_.id === id).result
+    tableQ.filter(_.id === id).result
   }
 
   // delete required
-  def deleteProductor(id: Long): Future[Seq[Productor]] = db.run {
-    val q = productores.filter(_.id === id)
+  def delete(id: Long): Future[Seq[Productor]] = db.run {
+    val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
     println("removed " + affectedRowsCount);
-    productores.result
+    tableQ.result
   }
 
 }

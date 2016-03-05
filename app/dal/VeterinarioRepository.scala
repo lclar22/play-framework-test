@@ -31,16 +31,43 @@ class VeterinarioRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     def * = (id, nombre, carnet, telefono, direccion, sueldo) <> ((Veterinario.apply _).tupled, Veterinario.unapply)
   }
 
-  private val veterinarios = TableQuery[VeterinariosTable]
+  private val tableQ = TableQuery[VeterinariosTable]
 
   def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Veterinario] = db.run {
-    (veterinarios.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo))
-      returning veterinarios.map(_.id)
+    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo))
+      returning tableQ.map(_.id)
       into ((nameAge, id) => Veterinario(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
     ) += (nombre, carnet, telefono, direccion, sueldo)
   }
 
   def list(): Future[Seq[Veterinario]] = db.run {
-    veterinarios.result
+    tableQ.result
+  }
+
+  // to cpy
+  def getById(id: Long): Future[Seq[Veterinario]] = db.run {
+    tableQ.filter(_.id === id).result
+  }
+
+  // update required to copy
+  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Seq[Veterinario]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.nombre
+    db.run(q.update(nombre))
+    val q2 = for { c <- tableQ if c.id === id } yield c.carnet
+    db.run(q2.update(carnet))
+    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
+    db.run(q3.update(telefono))
+    val q4 = for { c <- tableQ if c.id === id } yield c.sueldo
+    db.run(q4.update(sueldo))
+    tableQ.filter(_.id === id).result
+  }
+
+  // delete required
+  def delete(id: Long): Future[Seq[Veterinario]] = db.run {
+    val q = tableQ.filter(_.id === id)
+    val action = q.delete
+    val affectedRowsCount: Future[Int] = db.run(action)
+    println("removed " + affectedRowsCount);
+    tableQ.result
   }
 }

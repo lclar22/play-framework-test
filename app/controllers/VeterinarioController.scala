@@ -17,7 +17,7 @@ import javax.inject._
 class VeterinarioController @Inject() (repo: VeterinarioRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val veterinarioForm: Form[CreateVeterinarioForm] = Form {
+  val newForm: Form[CreateVeterinarioForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
       "carnet" -> number,
@@ -28,11 +28,11 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
   }
 
   def index = Action {
-    Ok(views.html.veterinario_index(veterinarioForm))
+    Ok(views.html.veterinario_index(newForm))
   }
 
-  def addVeterinario = Action.async { implicit request =>
-    veterinarioForm.bindFromRequest.fold(
+  def add = Action.async { implicit request =>
+    newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.veterinario_index(errorForm)))
       },
@@ -45,12 +45,65 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
   }
 
   def getVeterinarios = Action.async {
-  	repo.list().map { veterinarios =>
-      Ok(Json.toJson(veterinarios))
+  	repo.list().map { res =>
+      Ok(Json.toJson(res))
     }
   }
 
-  
+  // update required
+  val updateForm: Form[UpdateVeterinarioForm] = Form {
+    mapping(
+      "id" -> longNumber,
+      "nombre" -> nonEmptyText,
+      "carnet" -> number.verifying(min(0), max(9999999)),
+      "telefono" -> number.verifying(min(0), max(9999999)),
+      "direccion" -> nonEmptyText,
+      "sueldo" -> number
+    )(UpdateVeterinarioForm.apply)(UpdateVeterinarioForm.unapply)
+  }
+
+  // to copy
+  def show(id: Long) = Action {
+    Ok(views.html.veterinario_show())
+  }
+
+  // update required
+  def getUpdate(id: Long) = Action.async {
+    repo.getById(id).map { res =>
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString())
+      Ok(views.html.veterinario_update(updateForm.bind(anyData)))
+    }
+  }
+
+  // delete required
+  def delete(id: Long) = Action.async {
+    repo.delete(id).map { res =>
+      Ok(views.html.veterinario_index(newForm))
+    }
+  }
+
+  // to copy
+  def getById(id: Long) = Action.async {
+    repo.getById(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  // update required
+  def updatePost = Action.async { implicit request =>
+    updateForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.veterinario_update(errorForm)))
+      },
+      veterinario => {
+        repo.update(veterinario.id, veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo).map { _ =>
+          Redirect(routes.VeterinarioController.index)
+        }
+      }
+    )
+  }
 }
 
 case class CreateVeterinarioForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)
+
+case class UpdateVeterinarioForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)

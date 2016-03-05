@@ -1,17 +1,17 @@
-@(productor: Form[UpdateProductorForm])(implicit messages: Messages)
+@(row: Form[UpdateProductorForm])(implicit messages: Messages)
 
 @import helper._
 
 @main("Actualizar Cuenta") {
 	<a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProductorController.updatePost()) {
-        @inputText(productor("id"), 'hidden -> "true", '_label -> "")
-        @inputText(productor("nombre"))
-        @inputText(productor("carnet"))
-        @inputText(productor("telefono"))
-        @inputText(productor("direccion"))
-        @inputText(productor("cuenta"))
-        @select(field = productor("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("nombre"))
+        @inputText(row("carnet"))
+        @inputText(row("telefono"))
+        @inputText(row("direccion"))
+        @inputText(row("cuenta"))
+        @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
         <input type="submit" value="Actualizar"/>
         <a href="/productores_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
     }
