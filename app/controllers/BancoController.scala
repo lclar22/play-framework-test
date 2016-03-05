@@ -24,19 +24,15 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
     )(CreateBancoForm.apply)(CreateBancoForm.unapply)
   }
 
-  def index = Action {
-
-    val anyData = Map("nombre" -> "Luis Arce", "tipo" ->"haber")
-    println(anyData)
-
-    repo.getCuentaById(1L).map { bancos =>
-      println(bancos.toList)
+  def index_update(id: Long) = Action.async {
+    repo.getCuentaById(id).map { bancos =>
+      println(bancos.toList(0))
+      val anyData = Map("nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
+      Ok(views.html.banco_index_update(bancoForm.bind(anyData)))
     }
-
-    Ok(views.html.banco_index(bancoForm.bind(anyData)))
   }
 
-  def index_update(id: Long) = Action {
+  def index() = Action {
     Ok(views.html.banco_index(bancoForm))
   }
 

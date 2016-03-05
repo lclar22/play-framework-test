@@ -11,6 +11,7 @@ GET     /cuenta_example_action         	controllers.BancoController.getExampleAc
 GET     /cuenta_example_action_2        controllers.BancoController.getExampleAction_2(name: String)
 GET     /cuenta_example_action_3        controllers.BancoController.getExampleAction_3(name: String)
 GET     /cuentas_view         			controllers.BancoController.index
+GET     /cuentas_update/:id        		controllers.BancoController.index_update(id: Long)
 GET     /cuentas/:id 					controllers.BancoController.getCuentaById(id: Long)
 GET     /cuentas_show/:id 				controllers.BancoController.show_view(id: Long)
 

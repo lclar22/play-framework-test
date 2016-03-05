@@ -1,0 +1,11 @@
+@(banco: Form[CreateBancoForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar cuentas") {
+    @form(routes.BancoController.addBanco()) {
+        @inputText(banco("nombre"))
+        @inputText(banco("tipo"))
+        <input type="submit" value="Actualizar"/>
+    }
+}
