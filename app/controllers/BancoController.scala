@@ -25,10 +25,35 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
   }
 
   def index = Action {
+
+    val anyData = Map("nombre" -> "Luis Arce", "tipo" ->"haber")
+    println(anyData)
+
+    repo.getCuentaById(1L).map { bancos =>
+      println(bancos.toList)
+    }
+
+    Ok(views.html.banco_index(bancoForm.bind(anyData)))
+  }
+
+  def index_update(id: Long) = Action {
     Ok(views.html.banco_index(bancoForm))
   }
 
   def addBanco = Action.async { implicit request =>
+    bancoForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.banco_index(errorForm)))
+      },
+      banco => {
+        repo.create(banco.nombre, banco.tipo).map { _ =>
+          Redirect(routes.BancoController.index)
+        }
+      }
+    )
+  }
+
+  def updateBanco = Action.async { implicit request =>
     bancoForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.banco_index(errorForm)))

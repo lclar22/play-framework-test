@@ -56,4 +56,8 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   def getCuentaById(id: Long): Future[Seq[Banco]] = db.run {
     bancos.filter(_.id === id).result
   }
+
+  def getCuentaById_1(id: Long): Future[Seq[Banco]] = db.run {
+    bancos.filter(_.id === id).result
+  }
 }
