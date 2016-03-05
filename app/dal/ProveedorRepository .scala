@@ -31,16 +31,45 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     def * = (id, nombre, telefono, direccion, contacto, cuenta) <> ((Proveedor.apply _).tupled, Proveedor.unapply)
   }
 
-  private val proveedores = TableQuery[ProveedoresTable]
+  private val tableQ = TableQuery[ProveedoresTable]
 
   def create(nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long): Future[Proveedor] = db.run {
-    (proveedores.map(p => (p.nombre, p.telefono, p.direccion, p.contacto, p.cuenta))
-      returning proveedores.map(_.id)
+    (tableQ.map(p => (p.nombre, p.telefono, p.direccion, p.contacto, p.cuenta))
+      returning tableQ.map(_.id)
       into ((nameAge, id) => Proveedor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
     ) += (nombre, telefono, direccion, contacto, cuenta)
   }
 
   def list(): Future[Seq[Proveedor]] = db.run {
-    proveedores.result
+    tableQ.result
+  }
+  
+    // to cpy
+  def getById(id: Long): Future[Seq[Proveedor]] = db.run {
+    tableQ.filter(_.id === id).result
+  }
+
+  // update required to copy
+  def update(id: Long, nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long): Future[Seq[Proveedor]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.nombre
+    db.run(q.update(nombre))
+    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
+    db.run(q3.update(telefono))
+    val q2 = for { c <- tableQ if c.id === id } yield c.direccion
+    db.run(q2.update(direccion))
+    val q4 = for { c <- tableQ if c.id === id } yield c.contacto
+    db.run(q4.update(contacto))
+    val q5 = for { c <- tableQ if c.id === id } yield c.cuenta
+    db.run(q5.update(cuenta))
+    tableQ.filter(_.id === id).result
+  }
+
+  // delete required
+  def delete(id: Long): Future[Seq[Proveedor]] = db.run {
+    val q = tableQ.filter(_.id === id)
+    val action = q.delete
+    val affectedRowsCount: Future[Int] = db.run(action)
+    println("removed " + affectedRowsCount);
+    tableQ.result
   }
 }

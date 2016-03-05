@@ -95,8 +95,8 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
       errorForm => {
         Future.successful(Ok(views.html.veterinario_update(errorForm)))
       },
-      veterinario => {
-        repo.update(veterinario.id, veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo).map { _ =>
+      res => {
+        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo).map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }

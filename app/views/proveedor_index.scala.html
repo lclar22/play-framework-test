@@ -4,7 +4,9 @@
 
 @main("Agregar proveedor") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/proveedor_index.js")'></script>
-
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
     @form(routes.ProveedorController.addProveedor()) {
         @inputText(proveedor("nombre"))
         @inputText(proveedor("telefono"))
@@ -14,7 +16,7 @@
         <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
-        <table class="table" id="proveedores">
+        <table class="table" id="rows">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -22,6 +24,7 @@
                     <th>Direccion</th>
                     <th>Contacto</th>
                     <th>Cuenta</th>
+                    <th>-----------</th>
                 </tr>
             </thead>
         </table>
