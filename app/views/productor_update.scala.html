@@ -4,7 +4,7 @@
 
 @main("Actualizar Cuenta") {
 	<a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
-    @form(routes.ProductorController.updateProductor()) {
+    @form(routes.ProductorController.updatePost()) {
         @inputText(productor("id"), 'hidden -> "true", '_label -> "")
         @inputText(productor("nombre"))
         @inputText(productor("carnet"))

@@ -49,6 +49,8 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
       Ok(Json.toJson(veterinarios))
     }
   }
+
+  
 }
 
 case class CreateVeterinarioForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)

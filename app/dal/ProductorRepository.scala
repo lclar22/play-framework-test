@@ -65,6 +65,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     productores.filter(_.id === id).result
   }
 
+  // delete required
   def deleteProductor(id: Long): Future[Seq[Productor]] = db.run {
     val q = productores.filter(_.id === id)
     val action = q.delete

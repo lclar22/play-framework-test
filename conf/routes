@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                			 	controllers.MainController.index
+
+# Cuentas routes
 POST    /cuenta                 		controllers.BancoController.addBanco
 
 GET     /cuentas_view         			controllers.BancoController.index
@@ -11,11 +13,27 @@ GET     /cuentas_show/:id 				controllers.BancoController.show_view(id: Long)
 GET     /cuentas_update/:id        		controllers.BancoController.index_update(id: Long)
 GET     /cuentas/:id 					controllers.BancoController.getCuentaById(id: Long)
 
-GET     /productor_show/:id 			controllers.ProductorController.show_view(id: Long)
-GET     /productores/:id 				controllers.ProductorController.getProductorById(id: Long)
-GET     /productor_update/:id        	controllers.ProductorController.index_update(id: Long)
-GET     /productor_remove/:id        	controllers.ProductorController.deleteProductor(id: Long)
-POST    /productor_update             	controllers.ProductorController.updateProductor
+# productores routes
+GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
+GET     /productor_update/:id        	controllers.ProductorController.getUpdate(id: Long)
+GET     /productor_remove/:id        	controllers.ProductorController.delete(id: Long)
+GET     /productores/:id 				controllers.ProductorController.getById(id: Long)
+POST    /productor_update             	controllers.ProductorController.updatePost
+
+POST    /productor                 		controllers.ProductorController.addProductor
+GET     /productores         			controllers.ProductorController.getProductores
+GET     /productores_view         		controllers.ProductorController.index
+
+# Now for veterinarios
+#GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
+#GET     /veterinario_update/:id        	controllers.VeterinarioController.getUpdate(id: Long)
+#GET     /veterinario_remove/:id        	controllers.VeterinarioController.delete(id: Long)
+#GET     /veterinarios/:id 				controllers.VeterinarioController.getById(id: Long)
+#POST    /veterinario_update             	controllers.VeterinarioController.updatePost
+
+POST    /veterinario                 	controllers.VeterinarioController.addVeterinario
+GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
+GET     /veterinarios_view     			controllers.VeterinarioController.index
 
 GET     /cuentas         				controllers.BancoController.getBancos
 POST    /cuenta_update             		controllers.BancoController.updateBanco
@@ -31,9 +49,6 @@ POST    /insumo                 		controllers.InsumoController.addInsumo
 GET     /insumos         				controllers.InsumoController.getInsumos
 GET     /insumos_view         			controllers.InsumoController.index
 
-POST    /productor                 		controllers.ProductorController.addProductor
-GET     /productores         			controllers.ProductorController.getProductores
-GET     /productores_view         		controllers.ProductorController.index
 
 POST    /proveedor                 		controllers.ProveedorController.addProveedor
 GET     /proveedores         			controllers.ProveedorController.getProveedores
@@ -49,9 +64,6 @@ POST    /transaccion                 	controllers.TransaccionController.addTrans
 GET     /transacciones         			controllers.TransaccionController.getTransacciones
 GET     /transacciones_view    			controllers.TransaccionController.index
 
-POST    /veterinario                 	controllers.VeterinarioController.addVeterinario
-GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
-GET     /veterinarios_view     			controllers.VeterinarioController.index
 
 GET     /clientes                    	controllers.ClienteController.getClientes
 

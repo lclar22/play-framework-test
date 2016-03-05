@@ -51,16 +51,6 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     }
   }
 
-  def show_view(id: Long) = Action {
-    Ok(views.html.productor_index_show())
-  }
-
-  def getProductorById(id: Long) = Action.async {
-    repo.getProductorById(id).map { productores =>
-      Ok(Json.toJson(productores))
-    }
-  }
-
   // update required
   val updateForm: Form[UpdateProductorForm] = Form {
     mapping(
@@ -74,19 +64,39 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
   }
 
-  // update required
-  def index_update(id: Long) = Action.async {
-    repo.getProductorById(id).map { productores =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> productores.toList(0).nombre, "carnet" -> productores.toList(0).carnet.toString(), "telefono" -> productores.toList(0).telefono.toString(), "direccion" -> productores.toList(0).direccion, "cuenta" -> productores.toList(0).cuenta.toString(), "asociacion" -> productores.toList(0).asociacion.toString())
-      Ok(views.html.productor_index_update(updateForm.bind(anyData)))
-    }
+  // to copy
+  def show(id: Long) = Action {
+    Ok(views.html.productor_show())
   }
 
   // update required
-  def updateProductor = Action.async { implicit request =>
+  def getUpdate(id: Long) = Action.async {
+    repo.getProductorById(id).map { productores =>
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> productores.toList(0).nombre, "carnet" -> productores.toList(0).carnet.toString(), "telefono" -> productores.toList(0).telefono.toString(), "direccion" -> productores.toList(0).direccion, "cuenta" -> productores.toList(0).cuenta.toString(), "asociacion" -> productores.toList(0).asociacion.toString())
+      Ok(views.html.productor_update(updateForm.bind(anyData)))
+    }
+  }
+
+  // delete required
+  def delete(id: Long) = Action.async {
+    repo.deleteProductor(id).map { productores =>
+      Ok(views.html.productor_index(productorForm))
+    }
+  }
+
+  // to copy
+  def getById(id: Long) = Action.async {
+    repo.getProductorById(id).map { productores =>
+      Ok(Json.toJson(productores))
+    }
+  }
+
+
+  // update required
+  def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index_update(errorForm)))
+        Future.successful(Ok(views.html.productor_update(errorForm)))
       },
       productor => {
         repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.cuenta, productor.asociacion).map { _ =>
@@ -96,15 +106,9 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     )
   }
 
-  def deleteProductor(id: Long) = Action.async {
-    repo.deleteProductor(id).map { productores =>
-      Ok(views.html.productor_index(productorForm))
-    }
-  }
-
-
 }
 
 case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)
 
+// Update required
 case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)
