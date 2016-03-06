@@ -105,3 +105,5 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 }
 
 case class CreateBancoForm(nombre: String, tipo: String)
+
+case class UpdateBancoForm(nombre: String, tipo: String)

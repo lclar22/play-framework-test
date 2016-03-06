@@ -54,6 +54,11 @@ class BancoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   }
 
   def getCuentaById(id: Long): Future[Seq[Banco]] = db.run {
+    println("This is the example")
+    println(id)
+    //val q = for { l <- bancos if l.id === id } yield l.nombre
+    //(q.update("the weekend")).result
+    //bancos.filter(_.id === id).map(_.nombre).update("new Account name").updateInvoker
     bancos.filter(_.id === id).result
   }
 
