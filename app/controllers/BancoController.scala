@@ -26,7 +26,7 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
   def index_update(id: Long) = Action.async {
     repo.getCuentaById(id).map { bancos =>
-      println(bancos.toList(0))
+      println(bancos(0))
       val anyData = Map("nombre" -> bancos.toList(0).nombre, "tipo" ->bancos.toList(0).tipo)
       Ok(views.html.banco_index_update(bancoForm.bind(anyData)))
     }
