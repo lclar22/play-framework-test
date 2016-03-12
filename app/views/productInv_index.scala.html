@@ -1,0 +1,30 @@
+@(row: Form[CreateProductInvForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInv_index.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.ProductInvController.add()) {
+        @inputText(row("productId"))
+        @inputText(row("proveedorId"))
+        @inputText(row("amount"))
+        @inputText(row("amountLeft"))
+        <input type="submit" value="Guardar"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Proveedor</th>
+                    <th>Amount</th>
+                    <th>Amoun Left</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

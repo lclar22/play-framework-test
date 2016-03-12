@@ -60,6 +60,18 @@ GET     /insumos         				controllers.InsumoController.getInsumos
 GET     /insumos_view         			controllers.InsumoController.index
 
 
+# Now for product Invs
+GET     /productInv_show/:id 				controllers.ProductInvController.show(id: Long)
+GET     /productInv_update/:id        		controllers.ProductInvController.getUpdate(id: Long)
+GET     /productInv_remove/:id        		controllers.ProductInvController.delete(id: Long)
+GET     /productInvs/:id 					controllers.ProductInvController.getById(id: Long)
+POST    /productInv_update             		controllers.ProductInvController.updatePost
+
+POST    /productInv                 		controllers.ProductInvController.add
+GET     /productInvs         				controllers.ProductInvController.getProductInvs
+GET     /productInvs_view         			controllers.ProductInvController.index
+
+
 GET     /cuentas         				controllers.BancoController.getBancos
 POST    /cuenta_update             		controllers.BancoController.updateBanco
 GET     /cuentas/all       				controllers.BancoController.list()
