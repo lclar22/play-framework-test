@@ -1,20 +1,22 @@
-@(insumo: Form[CreateInsumoForm])(implicit messages: Messages)
+@(row: Form[CreateInsumoForm])(implicit messages: Messages)
 
 @import helper._
 
-@main("Agregar insumos") {
+@main("Agregar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_index.js")'></script>
-
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
     @form(routes.InsumoController.addInsumo()) {
-        @inputText(insumo("nombre"))
-        @inputText(insumo("costo"))
-        @inputText(insumo("porcentage"))
-        @inputText(insumo("descripcion"))
-        @inputText(insumo("unidad"))
+        @inputText(row("nombre"))
+        @inputText(row("costo"))
+        @inputText(row("porcentage"))
+        @inputText(row("descripcion"))
+        @inputText(row("unidad"))
         <input type="submit" value="Guardar"/>
     }
     <div class="table-responsive">
-        <table class="table" id="insumos">
+        <table class="table" id="rows">
             <thead>
                 <tr>
                     <th>Nombre</th>
@@ -22,6 +24,7 @@
                     <th>Porcentage</th>
                     <th>Descripcion</th>
                     <th>Unidad</th>
+                    <th>-----------</th>
                 </tr>
             </thead>
         </table>

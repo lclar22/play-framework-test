@@ -1,0 +1,30 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_show.js")'></script>
+    <div>
+        <a href="/proveedores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Nombre: </div>
+            <div style="display: inline-block;" id="nombre">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Costo: </div>
+            <div style="display: inline-block;" id="costo">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Porcentage: </div>
+            <div style="display: inline-block;" id="porcentage">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Description: </div>
+            <div style="display: inline-block;" id="description">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Unidad: </div>
+            <div style="display: inline-block;" id="unidad">  </div>
+        </div>
+    </div>
+}
