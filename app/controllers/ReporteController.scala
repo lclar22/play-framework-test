@@ -17,7 +17,7 @@ import javax.inject._
 class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val reporteForm: Form[CreateReporteForm] = Form {
+  val newForm: Form[CreateReporteForm] = Form {
     mapping(
       "monto" -> number.verifying(min(0), max(140)),
       "cuenta" -> number.verifying(min(0), max(140)),
@@ -26,11 +26,11 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
   }
 
   def index = Action {
-    Ok(views.html.reporte_index(reporteForm))
+    Ok(views.html.reporte_index(newForm))
   }
 
   def addReporte = Action.async { implicit request =>
-    reporteForm.bindFromRequest.fold(
+    newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.reporte_index(errorForm)))
       },

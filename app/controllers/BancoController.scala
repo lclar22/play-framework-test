@@ -17,7 +17,7 @@ import javax.inject._
 class BancoController @Inject() (repo: BancoRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val bancoForm: Form[CreateBancoForm] = Form {
+  val newForm: Form[CreateBancoForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
       "tipo" -> nonEmptyText
@@ -26,11 +26,11 @@ class BancoController @Inject() (repo: BancoRepository, val messagesApi: Message
 
 
   def index() = Action {
-    Ok(views.html.banco_index(bancoForm))
+    Ok(views.html.banco_index(newForm))
   }
 
   def addBanco = Action.async { implicit request =>
-    bancoForm.bindFromRequest.fold(
+    newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.banco_index(errorForm)))
       },

@@ -17,7 +17,7 @@ import javax.inject._
 class TransaccionController @Inject() (repo: TransaccionRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val transaccionForm: Form[CreateTransaccionForm] = Form {
+  val newForm: Form[CreateTransaccionForm] = Form {
     mapping(
       "fecha" -> nonEmptyText,
       "descripcion" -> text
@@ -25,11 +25,11 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
   }
 
   def index = Action {
-    Ok(views.html.transaccion_add(transaccionForm))
+    Ok(views.html.transaccion_add(newForm))
   }
 
   def addTransaccion = Action.async { implicit request =>
-    transaccionForm.bindFromRequest.fold(
+    newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.transaccion_add(errorForm)))
       },
