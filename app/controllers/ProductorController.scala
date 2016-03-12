@@ -17,6 +17,8 @@ import javax.inject._
 class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
+  val asociaciones = scala.collection.immutable.Map[String, String]("1" -> "Asociacion 1", "2" -> "Asociacion 2")
+
   val newForm: Form[CreateProductorForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
@@ -29,13 +31,14 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 
   def index = Action {
-    Ok(views.html.productor_index(newForm))
+
+    Ok(views.html.productor_index(newForm, asociaciones))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(errorForm)))
+        Future.successful(Ok(views.html.productor_index(errorForm, asociaciones)))
       },
       productor => {
         repo.create(productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.cuenta, productor.asociacion).map { _ =>
@@ -80,7 +83,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(newForm))
+      Ok(views.html.productor_index(newForm, asociaciones))
     }
   }
 

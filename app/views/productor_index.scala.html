@@ -1,11 +1,11 @@
-@(row: Form[CreateProductorForm])(implicit messages: Messages)
+@(row: Form[CreateProductorForm], associations: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
 @main("Agregar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
     <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro @associations</span></a>
     </div>
     @form(routes.ProductorController.add()) {
         @inputText(row("nombre"), '_label -> "Nombre Productor")
@@ -13,7 +13,7 @@
         @inputText(row("telefono"))
         @inputText(row("direccion"))
         @inputText(row("cuenta"))
-        @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
+        @select(field = row("asociacion"), options = options(associations))
 
         <input type="submit" value="Guardar"/>
     }
