@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -9,8 +10,11 @@ import play.api.data.validation.Constraints._
 import play.api.libs.json.Json
 import models._
 import dal._
-
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
+import scala.collection.mutable.ListBuffer
+import java.util.LinkedHashMap
+import collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
@@ -45,6 +49,13 @@ class ProductInvController @Inject() (repo: ProductInvRepository,repo2: InsumoRe
     )
   }
 
+  def getProductInvs = Action.async {
+    repo.list().map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+
   // update required
   val updateForm: Form[UpdateProductInvForm] = Form {
     mapping(
@@ -58,18 +69,28 @@ class ProductInvController @Inject() (repo: ProductInvRepository,repo2: InsumoRe
 
   // to copy
   def show(id: Long) = Action {
-
     Ok(views.html.productInv_show())
   }
 
   // update required
   def getUpdate(id: Long) = Action.async {
-    repo2.getListNames().onComplete { res1 =>
-      repo.getById(id).map { res =>
-        val anyData = Map("id" -> id.toString().toString(), "productId" -> res.toList(0).productId.toString(), "proveedorId" -> res.toList(0).proveedorId.toString(), "amount" -> res.toList(0).amount.toString(), "amountLeft" -> res.toList(0).amountLeft.toString())
-        Ok(views.html.productInv_update(updateForm.bind(anyData), res1))
-      }
+    repo.getById(id).map {case (res) =>
+      val anyData = Map("id" -> id.toString().toString(), "productId" -> res.toList(0).productId.toString(), "proveedorId" -> res.toList(0).proveedorId.toString(), "amount" -> res.toList(0).amount.toString(), "amountLeft" -> res.toList(0).amountLeft.toString())
+      val hh = getUpdate2(id)
+      Ok(views.html.productInv_update(updateForm.bind(anyData), hh))
     }
+  }
+
+  def getUpdate2(id: Long): Map[String, String] = {
+    Await.result(repo2.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+        println(">>> key=" + key + ", value=" + value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
   }
 
   // delete required
@@ -90,7 +111,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository,repo2: InsumoRe
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productInv_update(errorForm)))
+        Future.successful(Ok(views.html.productInv_update(errorForm, Map[String, String]())))
       },
       res => {
         repo.update(res.id, res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>

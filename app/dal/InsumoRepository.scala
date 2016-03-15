@@ -44,8 +44,8 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     tableQ.result
   }
 
-  def getListNames(): Future[Seq[String]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.nombre)).result 
+  def getListNames(): Future[Seq[(Long, String)]] = db.run {
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
   }
 
     // to cpy
