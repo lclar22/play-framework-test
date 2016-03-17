@@ -72,4 +72,9 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     println("removed " + affectedRowsCount);
     tableQ.result
   }
+
+  // get list of names
+  def getListNames(): Future[Seq[(Long, String)]] = db.run {
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+  }
 }

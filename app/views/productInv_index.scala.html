@@ -1,4 +1,4 @@
-@(row: Form[CreateProductInvForm])(implicit messages: Messages)
+@(row: Form[CreateProductInvForm], products: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -8,8 +8,8 @@
         <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
     </div>
     @form(routes.ProductInvController.add()) {
-        @inputText(row("productId"))
-        @inputText(row("proveedorId"))
+        @select(field = row("productId"), options = options(products))
+        @select(field = row("proveedorId"), options = options(vendors))
         @inputText(row("amount"))
         @inputText(row("amountLeft"))
         <input type="submit" value="Guardar"/>
