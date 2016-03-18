@@ -67,6 +67,11 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
     Ok(views.html.proveedor_show())
   }
 
+  // to copy
+  def profile(id: Long) = Action {
+    Ok(views.html.proveedor_show())
+  }
+
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>

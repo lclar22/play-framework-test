@@ -59,7 +59,6 @@ POST    /insumo                 		controllers.InsumoController.addInsumo
 GET     /insumos         				controllers.InsumoController.getInsumos
 GET     /insumos_view         			controllers.InsumoController.index
 
-
 # Now for product Invs
 GET     /productInv_show/:id 				controllers.ProductInvController.show(id: Long)
 GET     /productInv_update/:id        		controllers.ProductInvController.getUpdate(id: Long)
@@ -70,6 +69,13 @@ POST    /productInv_update             		controllers.ProductInvController.update
 POST    /productInv                 		controllers.ProductInvController.add
 GET     /productInvs         				controllers.ProductInvController.getProductInvs
 GET     /productInvs_view         			controllers.ProductInvController.index
+
+
+# profiles
+GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
+GET     /veterinario_request         		controllers.ProductInvController.request
+GET     /productInv_request_row         	controllers.ProductInvController.request_row
+POST    /productInv_request_row             controllers.ProductInvController.add_request_row
 
 
 GET     /cuentas         				controllers.BancoController.getBancos

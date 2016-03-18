@@ -67,6 +67,11 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
     Ok(views.html.veterinario_show())
   }
 
+  // to copy
+  def profile(id: Long) = Action {
+    Ok(views.html.veterinario_profile())
+  }
+
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>

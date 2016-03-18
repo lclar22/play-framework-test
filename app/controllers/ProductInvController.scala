@@ -38,6 +38,18 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
     Ok(views.html.productInv_index(newForm, insumosNames, proveeNames))
   }
 
+  def request = Action {
+    val insumosNames = getInsumoNamesMap()
+    val proveeNames = getProveeNamesMap()
+    Ok(views.html.productInv_request(newForm, insumosNames, proveeNames))
+  }
+
+  def request_row = Action {
+    val insumosNames = getInsumoNamesMap()
+    val proveeNames = getProveeNamesMap()
+    Ok(views.html.productInv_request_row(newForm, insumosNames, proveeNames))
+  }
+
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -46,6 +58,19 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
       res => {
         repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
           Redirect(routes.ProductInvController.index)
+        }
+      }
+    )
+  }
+
+  def add_request_row = Action.async { implicit request =>
+    newForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.productInv_request(errorForm, Map[String, String](), Map[String, String]())))
+      },
+      res => {
+        repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
+          Redirect(routes.ProductInvController.request)
         }
       }
     )
