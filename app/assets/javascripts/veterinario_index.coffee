@@ -6,5 +6,5 @@ $ ->
       telefono = $("<td>").text row.telefono
       direccion = $("<td>").text row.direccion
       sueldo = $("<td>").text row.sueldo
-      links = $("<td>").html '<a href="/veterinario_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/veterinario_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/veterinario_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
+      links = $("<td>").html '<a href="/veterinario_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/veterinario_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/veterinario_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>' + '<a href="/veterinario_profile/' + row.id + '"><span class="glyphicon glyphicon-remove">Profile</span></a>'
       $("#rows").append $("<tr>").append(nombre).append(carnet).append(telefono).append(direccion).append(sueldo).append(links)

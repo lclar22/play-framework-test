@@ -1,0 +1,29 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequest_show.js")'></script>
+    <div>
+        <a href="/productRequests_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Date: </div>
+            <div style="display: inline-block;" id="date">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Veterinario: </div>
+            <div style="display: inline-block;" id="veterinario">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Almacen: </div>
+            <div style="display: inline-block;" id="storekeeper">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Status: </div>
+            <div style="display: inline-block;" id="status">  </div>
+        </div>
+    </div>
+    <div>
+            <div style="display: inline-block;"> <a href="/productRequest_addGet">Agregar Productos</a> </div>
+    </div>
+}

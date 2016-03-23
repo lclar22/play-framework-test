@@ -1,0 +1,17 @@
+@(row: Form[CreateProductRequestForm], users: Map[String, String], vendors: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.ProductRequestController.add()) {
+        @inputText(row("date"))
+        @select(field = row("veterinario"), options = options(users))
+        @select(field = row("storekeeper"), options = options(users))
+        @inputText(row("status"))
+        @inputText(row("detail"))
+        <input type="submit" value="Guardar"/>
+    }
+}

@@ -40,6 +40,10 @@ class VeterinarioRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     ) += (nombre, carnet, telefono, direccion, sueldo)
   }
 
+  def getListNames(): Future[Seq[(Long, String)]] = db.run {
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+  }
+
   def list(): Future[Seq[Veterinario]] = db.run {
     tableQ.result
   }

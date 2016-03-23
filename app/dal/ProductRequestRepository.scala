@@ -4,7 +4,7 @@ import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
-import models.RequestModel
+import models.ProductRequest
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -14,13 +14,13 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class RequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import driver.api._
 
-  private class RequestTable(tag: Tag) extends Table[RequestModel](tag, "request") {
+  private class ProductRequestTable(tag: Tag) extends Table[ProductRequest](tag, "productRequest") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def date = column[String]("date")
@@ -28,19 +28,19 @@ class RequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     def storekeeper = column[Long]("storekeeper")
     def status = column[String]("status")
     def detail = column[String]("detail")
-    def * = (id, date, veterinario, storekeeper, status, detail) <> ((RequestModel.apply _).tupled, RequestModel.unapply)
+    def * = (id, date, veterinario, storekeeper, status, detail) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
   }
 
-  private val tableQ = TableQuery[RequestTable]
+  private val tableQ = TableQuery[ProductRequestTable]
 
-  def create(date: String, veterinario: Long, storekeeper: Long, status: String, detail: String): Future[RequestModel] = db.run {
+  def create(date: String, veterinario: Long, storekeeper: Long, status: String, detail: String): Future[ProductRequest] = db.run {
     (tableQ.map(p => (p.date, p.veterinario, p.storekeeper, p.status, p.detail))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => RequestModel(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+      into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
     ) += (date, veterinario, storekeeper, status, detail)
   }
 
-  def list(): Future[Seq[RequestModel]] = db.run {
+  def list(): Future[Seq[ProductRequest]] = db.run {
     tableQ.result
   }
 
@@ -49,12 +49,12 @@ class RequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
     // to cpy
-  def getById(id: Long): Future[Seq[RequestModel]] = db.run {
+  def getById(id: Long): Future[Seq[ProductRequest]] = db.run {
     tableQ.filter(_.id === id).result
   }
 
   // update required to copy
-  def update(id: Long, date: String, veterinario: Long, storekeeper: Long, status: String, detail: String): Future[Seq[RequestModel]] = db.run {
+  def update(id: Long, date: String, veterinario: Long, storekeeper: Long, status: String, detail: String): Future[Seq[ProductRequest]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q2 = for { c <- tableQ if c.id === id } yield c.veterinario
@@ -69,7 +69,7 @@ class RequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // delete required
-  def delete(id: Long): Future[Seq[RequestModel]] = db.run {
+  def delete(id: Long): Future[Seq[ProductRequest]] = db.run {
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)

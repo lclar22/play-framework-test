@@ -70,6 +70,18 @@ POST    /productInv                 		controllers.ProductInvController.add
 GET     /productInvs         				controllers.ProductInvController.getProductInvs
 GET     /productInvs_view         			controllers.ProductInvController.index
 
+# Now for Product requests
+GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
+GET     /productRequest_update/:id        		controllers.ProductRequestController.getUpdate(id: Long)
+GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
+GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
+POST    /productRequest_update             		controllers.ProductRequestController.updatePost
+
+POST    /productRequest                 		controllers.ProductRequestController.add
+GET     /productRequests         				controllers.ProductRequestController.getProductRequests
+GET     /productRequests_view         			controllers.ProductRequestController.index
+GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
+
 
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
