@@ -82,6 +82,18 @@ GET     /productRequests         				controllers.ProductRequestController.getPro
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
 
+# Now for Product requests Rows
+GET     /requestRow_show/:id 				controllers.RequestRowController.show(id: Long)
+GET     /requestRow_update/:id        		controllers.RequestRowController.getUpdate(id: Long)
+GET     /requestRow_remove/:id        		controllers.RequestRowController.delete(id: Long)
+GET     /requestRows/:id 					controllers.RequestRowController.getById(id: Long)
+POST    /requestRow_update             		controllers.RequestRowController.updatePost
+
+POST    /requestRow                 		controllers.RequestRowController.add
+GET     /requestRows         				controllers.RequestRowController.getRequestRows
+GET     /requestRows_view         			controllers.RequestRowController.index
+GET     /requestRow_addGet         			controllers.RequestRowController.addGet
+
 
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)

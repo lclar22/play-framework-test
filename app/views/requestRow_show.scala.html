@@ -1,0 +1,33 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_show.js")'></script>
+    <div>
+        <a href="/requestRows_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> requestId: </div>
+            <div style="display: inline-block;" id="requestId">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> productId: </div>
+            <div style="display: inline-block;" id="productId">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> productorId: </div>
+            <div style="display: inline-block;" id="productorId">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> quantity: </div>
+            <div style="display: inline-block;" id="quantity">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> status: </div>
+            <div style="display: inline-block;" id="status">  </div>
+        </div>
+    </div>
+    <div>
+            <div style="display: inline-block;"> <a href="/requestRow_addGet">Agregar Productos</a> </div>
+    </div>
+}
