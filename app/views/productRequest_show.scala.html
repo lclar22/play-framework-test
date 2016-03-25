@@ -24,6 +24,27 @@
         </div>
     </div>
     <div>
-            <div style="display: inline-block;"> <a href="/productRequest_addGet">Agregar Productos</a> </div>
+            <div style="display: inline-block;"> <a href="/requestRow_addGet">Agregar Productos</a> </div>
     </div>
+
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_index.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    <div>Lista de Productos</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>requestId</th>
+                    <th>productId</th>
+                    <th>productorId</th>
+                    <th>quantity</th>
+                    <th>status</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
 }

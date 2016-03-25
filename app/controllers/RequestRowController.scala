@@ -18,7 +18,7 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
-class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: VeterinarioRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
+class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository, repoInsum: InsumoRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowForm] = Form {
@@ -34,15 +34,16 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: Vet
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
   def index = Action {
-    val insumosNames = getVeterinarioNamesMap()
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.requestRow_index(insumosNames, proveeNames))
+    val productReqNames = getProductReqNamesMap()
+    val insumoNames = getInsumoNamesMap()
+    Ok(views.html.requestRow_index(productReqNames, insumoNames))
   }
 
   def addGet = Action {
-    val insumosNames = getVeterinarioNamesMap()
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.requestRow_add(newForm, insumosNames, proveeNames))
+    val productReqNames = getProductReqNamesMap()
+    val insumoNames = getInsumoNamesMap()
+    val productorNames = getProductorNamesMap()
+    Ok(views.html.requestRow_add(newForm, productReqNames, insumoNames, productorNames))
   }
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
@@ -51,7 +52,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: Vet
       },
       res => {
         repo.create(res.requestId, res.productId, res.productorId, res.quantity, res.status).map { _ =>
-          Redirect(routes.VeterinarioController.profile(1L))
+          Redirect(routes.ProductRequestController.show(1L))
         }
       }
     )
@@ -85,13 +86,25 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: Vet
       val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
                                 "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
                                 "quantity" -> res.toList(0).quantity.toString(), "status" -> res.toList(0).status.toString())
-      val insumosMap = getVeterinarioNamesMap()
-      val proveeMap = getProveeNamesMap()
-      Ok(views.html.requestRow_update(updateForm.bind(anyData), insumosMap, proveeMap))
+      val productReqNames = getProductReqNamesMap()
+      val insumoNames = getInsumoNamesMap()
+      val productorNames = getProductorNamesMap()
+      Ok(views.html.requestRow_update(updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
     }
   }
 
-  def getVeterinarioNamesMap(): Map[String, String] = {
+  def getProductReqNamesMap(): Map[String, String] = {
+    Await.result(repoProductReq.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getInsumoNamesMap(): Map[String, String] = {
     Await.result(repoInsum.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -102,8 +115,8 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: Vet
     }, 3000.millis)
   }
 
-  def getProveeNamesMap(): Map[String, String] = {
-    Await.result(repoProvee.getListNames().map{ case (res1) => 
+  def getProductorNamesMap(): Map[String, String] = {
+    Await.result(repoProductor.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -131,7 +144,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoInsum: Vet
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String](), Map[String, String]())))
       },
       res => {
         repo.update(res.id, res.requestId, res.productId, res.productorId, res.quantity, res.status).map { _ =>
