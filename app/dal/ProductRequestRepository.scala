@@ -44,6 +44,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.result
   }
 
+  def listByVeterinario(id: Long): Future[Seq[ProductRequest]] = db.run {
+    tableQ.filter(_.veterinario === id).result
+  }
+
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
     tableQ.filter(_.id < 10L).map(s => (s.id, s.date)).result
   }

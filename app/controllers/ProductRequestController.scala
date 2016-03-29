@@ -44,6 +44,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
     val proveeNames = getProveeNamesMap()
     Ok(views.html.productRequest_add(newForm, insumosNames, proveeNames))
   }
+  
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -51,11 +52,18 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
       },
       res => {
         repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail).map { _ =>
-          Redirect(routes.VeterinarioController.profile(1L))
+          Redirect(routes.VeterinarioController.profile(res.veterinario))
         }
       }
     )
   }
+
+  def getProductRequestsByVeterinario(id: Long) = Action.async {
+    repo.listByVeterinario(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
   def getProductRequests = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))

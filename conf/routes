@@ -79,6 +79,7 @@ POST    /productRequest_update             		controllers.ProductRequestControlle
 
 POST    /productRequest                 		controllers.ProductRequestController.add
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
+GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
 
