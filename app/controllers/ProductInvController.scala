@@ -57,6 +57,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
       },
       res => {
         repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
+          repoInsum.updateAmount(res.productId, res.amount)
           Redirect(routes.ProductInvController.index)
         }
       }

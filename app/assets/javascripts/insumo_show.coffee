@@ -7,3 +7,4 @@ $ ->
       $("#porcentage").html row.porcentage
       $("#descripcion").html row.descripcion
       $("#unidad").html row.unidad
+      $("#currentAmount").html row.currentAmount

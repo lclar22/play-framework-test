@@ -23,7 +23,8 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       "costo" -> number,
       "porcentage" -> number,
       "descripcion" -> text,
-      "unidad" -> longNumber
+      "unidad" -> longNumber,
+      "currentAmount" -> number
     )(CreateInsumoForm.apply)(CreateInsumoForm.unapply)
   }
 
@@ -38,8 +39,8 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       errorForm => {
         Future.successful(Ok(views.html.insumo_index(errorForm)))
       },
-      insumo => {
-        repo.create(insumo.nombre, insumo.costo, insumo.porcentage, insumo.descripcion, insumo.unidad).map { _ =>
+      res => {
+        repo.create(res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad, res.currentAmount).map { _ =>
           Redirect(routes.InsumoController.index)
         }
       }
@@ -60,7 +61,8 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       "costo" -> number,
       "porcentage" -> number,
       "descripcion" -> text,
-      "unidad" -> longNumber
+      "unidad" -> longNumber,
+      "currentAmount" -> number
     )(UpdateInsumoForm.apply)(UpdateInsumoForm.unapply)
   }
 
@@ -72,7 +74,7 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "costo" -> res.toList(0).costo.toString(), "porcentage" -> res.toList(0).porcentage.toString(), "descripcion" -> res.toList(0).descripcion, "unidad" -> res.toList(0).unidad.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "costo" -> res.toList(0).costo.toString(), "porcentage" -> res.toList(0).porcentage.toString(), "descripcion" -> res.toList(0).descripcion, "unidad" -> res.toList(0).unidad.toString(), "currentAmount" -> res.toList(0).currentAmount.toString())
       Ok(views.html.insumo_update(updateForm.bind(anyData)))
     }
   }
@@ -98,7 +100,7 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
         Future.successful(Ok(views.html.insumo_update(errorForm)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad).map { _ =>
+        repo.update(res.id, res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad, res.currentAmount).map { _ =>
           Redirect(routes.InsumoController.index)
         }
       }
@@ -107,6 +109,6 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
 
 }
 
-case class CreateInsumoForm(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long)
+case class CreateInsumoForm(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)
 
-case class UpdateInsumoForm(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long)
+case class UpdateInsumoForm(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)

@@ -28,16 +28,17 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     def porcentage = column[Int]("porcentage")
     def descripcion = column[String]("descripcion")
     def unidad = column[Long]("unidad")
-    def * = (id, nombre, costo, porcentage, descripcion, unidad) <> ((Insumo.apply _).tupled, Insumo.unapply)
+    def currentAmount = column[Int]("currentAmount")
+    def * = (id, nombre, costo, porcentage, descripcion, unidad, currentAmount) <> ((Insumo.apply _).tupled, Insumo.unapply)
   }
 
   private val tableQ = TableQuery[InsumosTable]
 
-  def create(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long): Future[Insumo] = db.run {
-    (tableQ.map(p => (p.nombre, p.costo, p.porcentage, p.descripcion, p.unidad))
+  def create(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Insumo] = db.run {
+    (tableQ.map(p => (p.nombre, p.costo, p.porcentage, p.descripcion, p.unidad, p.currentAmount))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => Insumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-    ) += (nombre, costo, porcentage, descripcion, unidad)
+      into ((nameAge, id) => Insumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
+    ) += (nombre, costo, porcentage, descripcion, unidad, currentAmount)
   }
 
   def list(): Future[Seq[Insumo]] = db.run {
@@ -54,7 +55,7 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long): Future[Seq[Insumo]] = db.run {
+  def update(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Seq[Insumo]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.porcentage
@@ -65,6 +66,8 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     db.run(q4.update(descripcion))
     val q5 = for { c <- tableQ if c.id === id } yield c.unidad
     db.run(q5.update(unidad))
+    val q6 = for { c <- tableQ if c.id === id } yield c.currentAmount
+    db.run(q6.update(currentAmount))
     tableQ.filter(_.id === id).result
   }
 
@@ -76,4 +79,11 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     println("removed " + affectedRowsCount);
     tableQ.result
   }
+
+  def updateAmount(id:Long, amount: Int) = {
+    println("We need to update it id: " + id + " amount: " + amount)
+    val q = for { c <- tableQ if c.id === id } yield c.currentAmount
+    db.run(q.update(amount))
+  }
+
 }
