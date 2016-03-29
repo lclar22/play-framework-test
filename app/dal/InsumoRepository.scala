@@ -83,7 +83,8 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   def updateAmount(id:Long, amount: Int) = {
     println("We need to update it id: " + id + " amount: " + amount)
     val q = for { c <- tableQ if c.id === id } yield c.currentAmount
-    db.run(q.update(amount))
+    db.run(tableQ.filter(_.id === id).result).map(s=> s.map(insumoObj => 
+      db.run(q.update(amount + insumoObj.currentAmount))
+    ))
   }
-
 }

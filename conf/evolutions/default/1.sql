@@ -44,7 +44,8 @@ create table "insumos" (
   "costo" int,
   "porcentage" int,
   "descripcion" varchar,
-  "unidad" bigint
+  "unidad" bigint,
+  "currentAmount" int
 );
 
 create table "productores" (
@@ -115,8 +116,7 @@ create table "product" (
   "costo" int,
   "porcentage" int,
   "descripcion" varchar,
-  "unidad" bigint,
-  "currentAmount" int
+  "unidad" bigint
 );
 
 create table "productor" (
