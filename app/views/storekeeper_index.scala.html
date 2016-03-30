@@ -1,0 +1,32 @@
+@(row: Form[CreateStorekeeperForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/storekeeper_index.js")'></script>
+    <div>
+        <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
+    </div>
+    @form(routes.StorekeeperController.add()) {
+        @inputText(row("nombre"))
+        @inputText(row("carnet"))
+        @inputText(row("telefono"))
+        @inputText(row("direccion"))
+        @inputText(row("sueldo"))
+        <input type="submit" value="Guardar"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Direccion</th>
+                    <th>Sueldo</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}

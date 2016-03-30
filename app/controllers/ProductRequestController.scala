@@ -64,6 +64,12 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
     }
   }
 
+  def getProductRequestsByStorekeeper(id: Long) = Action.async {
+    repo.listByStorekeeper(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
   def getProductRequests = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
@@ -97,6 +103,28 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
       Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, proveeMap))
     }
   }
+
+// update required
+  def getSend(id: Long) = Action.async {
+    repo.sendById(id).map {case (res) =>
+      Redirect(routes.VeterinarioController.profile(res.toList(0).veterinario))
+    }
+  }
+
+// update required
+  def getAccept(id: Long) = Action.async {
+    repo.acceptById(id).map {case (res) =>
+      Redirect(routes.VeterinarioController.profile(res.toList(0).veterinario))
+    }
+  }
+
+// update required
+  def getFinish(id: Long) = Action.async {
+    repo.finishById(id).map {case (res) =>
+      Redirect(routes.VeterinarioController.profile(res.toList(0).veterinario))
+    }
+  }
+
 
   def getVeterinarioNamesMap(): Map[String, String] = {
     Await.result(repoInsum.getListNames().map{ case (res1) => 

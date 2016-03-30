@@ -36,6 +36,18 @@ GET     /veterinarios         			controllers.VeterinarioController.getVeterinari
 GET     /veterinarios_view     			controllers.VeterinarioController.index
 
 
+# Now for Storekeepers
+GET     /storekeeper_show/:id 			controllers.StorekeeperController.show(id: Long)
+GET     /storekeeper_update/:id        	controllers.StorekeeperController.getUpdate(id: Long)
+GET     /storekeeper_remove/:id        	controllers.StorekeeperController.delete(id: Long)
+GET     /storekeepers/:id 				controllers.StorekeeperController.getById(id: Long)
+POST    /storekeeper_update             controllers.StorekeeperController.updatePost
+
+POST    /storekeeper                 	controllers.StorekeeperController.add
+GET     /storekeepers         			controllers.StorekeeperController.getStorekeepers
+GET     /storekeepers_view     			controllers.StorekeeperController.index
+
+
 
 # Now for provedores
 GET     /proveedor_show/:id 			controllers.ProveedorController.show(id: Long)
@@ -74,6 +86,9 @@ GET     /productInvs_view         			controllers.ProductInvController.index
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
 GET     /productRequest_update/:id        		controllers.ProductRequestController.getUpdate(id: Long)
+GET     /productRequest_send/:id        		controllers.ProductRequestController.getSend(id: Long)
+GET     /productRequest_accept/:id        		controllers.ProductRequestController.getAccept(id: Long)
+GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
 GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
 GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
 POST    /productRequest_update             		controllers.ProductRequestController.updatePost
@@ -81,6 +96,7 @@ POST    /productRequest_update             		controllers.ProductRequestControlle
 POST    /productRequest                 		controllers.ProductRequestController.add
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
 GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
+GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
 
@@ -99,6 +115,7 @@ GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
+GET     /storekeeper_profile/:id 			controllers.StorekeeperController.profile(id: Long)
 GET     /veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row

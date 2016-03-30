@@ -48,6 +48,10 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.veterinario === id).result
   }
 
+  def listByStorekeeper(id: Long): Future[Seq[ProductRequest]] = db.run {
+    tableQ.filter(_.storekeeper === id).result
+  }
+
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
     tableQ.filter(_.id < 10L).map(s => (s.id, s.date)).result
   }
@@ -69,6 +73,27 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     db.run(q4.update(status))
     val q5 = for { c <- tableQ if c.id === id } yield c.detail
     db.run(q5.update(detail))
+    tableQ.filter(_.id === id).result
+  }
+
+  // Update the status to enviado status
+  def sendById(id: Long): Future[Seq[ProductRequest]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("enviado"))
+    tableQ.filter(_.id === id).result
+  }
+
+  // Update the status to enviado status
+  def acceptById(id: Long): Future[Seq[ProductRequest]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("aceptado"))
+    tableQ.filter(_.id === id).result
+  }
+
+  // Update the status to finalizado status
+  def finishById(id: Long): Future[Seq[ProductRequest]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("finalizado"))
     tableQ.filter(_.id === id).result
   }
 
