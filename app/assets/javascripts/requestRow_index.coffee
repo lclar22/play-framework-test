@@ -6,5 +6,5 @@ $ ->
       productorId = $("<td>").text row.productorId
       quantity = $("<td>").text row.quantity
       status = $("<td>").text row.status
-      links = $("<td>").html '<a href="/requestRow_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/requestRow_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/requestRow_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
+      links = $("<td>").html '<a href="/requestRow_cancel/' + row.id + '"><span class="glyphicon glyphicon-pencil">Cancelar</span></a>' + '<a href="/requestRow_fill/' + row.id + '"><span class="glyphicon glyphicon-pencil">Entregar</span></a>' + '<a href="/requestRow_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/requestRow_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/requestRow_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
       $("#rows").append $("<tr>").append(requestId).append(productId).append(productorId).append(quantity).append(status).append(links)

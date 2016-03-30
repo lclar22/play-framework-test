@@ -4,6 +4,7 @@
 
 # Home page
 GET     /                			 	controllers.MainController.index
+GET     /pdf               			 	controllers.MainController.index_pdf
 
 # Cuentas routes
 POST    /cuenta                 		controllers.BancoController.addBanco
