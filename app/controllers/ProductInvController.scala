@@ -58,7 +58,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
       res => {
         repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
           repoInsum.updateAmount(res.productId, res.amount)
-          Redirect(routes.ProductInvController.index)
+          Redirect(routes.InsumoController.show(res.productId))
         }
       }
     )
@@ -79,6 +79,12 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
 
   def getProductInvs = Action.async {
     repo.list().map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getProductInvsByInsumo(id: Long) = Action.async {
+    repo.listByInsumo(id).map { res =>
       Ok(Json.toJson(res))
     }
   }

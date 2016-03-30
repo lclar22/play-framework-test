@@ -68,6 +68,7 @@ POST    /productInv_update             		controllers.ProductInvController.update
 
 POST    /productInv                 		controllers.ProductInvController.add
 GET     /productInvs         				controllers.ProductInvController.getProductInvs
+GET     /ProductInvsByInsumo/:id				controllers.ProductInvController.getProductInvsByInsumo(id: Long)
 GET     /productInvs_view         			controllers.ProductInvController.index
 
 # Now for Product requests

@@ -43,6 +43,12 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     tableQ.result
   }
 
+  def listByInsumo(id: Long): Future[Seq[ProductInv]] = db.run {
+    tableQ.filter(_.productId === id).result
+  }
+
+
+
     // to cpy
   def getById(id: Long): Future[Seq[ProductInv]] = db.run {
     tableQ.filter(_.id === id).result
