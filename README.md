@@ -13,3 +13,6 @@ Run
 Go to localhost:9000
 Open the application with sublime
 
+##Load dependencies with activator
+activator libraryDependencies
+activator "show dependencyClasspath"
