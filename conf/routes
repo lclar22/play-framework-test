@@ -67,6 +67,7 @@ GET     /insumo_update/:id        		controllers.InsumoController.getUpdate(id: L
 GET     /insumo_remove/:id        		controllers.InsumoController.delete(id: Long)
 GET     /insumos/:id 					controllers.InsumoController.getById(id: Long)
 POST    /insumo_update             		controllers.InsumoController.updatePost
+POST    /insumoUpload/:id             		controllers.InsumoController.upload(id: Long)
 
 POST    /insumo                 		controllers.InsumoController.addInsumo
 GET     /insumos         				controllers.InsumoController.getInsumos

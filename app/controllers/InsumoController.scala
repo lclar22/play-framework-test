@@ -68,7 +68,7 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
 
   // to copy
   def show(id: Long) = Action {
-    Ok(views.html.insumo_show())
+    Ok(views.html.insumo_show(id))
   }
 
   // update required
@@ -105,6 +105,26 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
         }
       }
     )
+  }
+
+  def upload(id: Long) = Action(parse.multipartFormData) { request =>
+    request.body.file("picture").map { picture =>
+      import java.io.File
+      val filename = picture.filename;
+      val type1 = filename.substring(filename.length - 4);
+      val contentType = picture.contentType
+      val fileNewName = id.toString() + "_product" + type1
+      try { 
+        new File(s"C:/Users/Luis Arce/scala/play-scala-intro/public/images/$fileNewName").delete()
+      } catch {
+        case e: Exception => println(e)
+      }
+      picture.ref.moveTo(new File(s"C:/Users/Luis Arce/scala/play-scala-intro/public/images/$fileNewName"))
+      Ok(views.html.insumo_show(id))
+    }.getOrElse {
+      Redirect(routes.InsumoController.show(id)).flashing(
+        "error" -> "Missing file")
+    }
   }
 
 }

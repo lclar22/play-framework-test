@@ -1,3 +1,4 @@
+@(row_id: Long)(implicit messages: Messages)
 @import helper._
 
 @main("Mostrar") {
@@ -6,46 +7,60 @@
         <a href="/proveedores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     </div>
     <div class="container">
-        <div>
-            <div style="display: inline-block;"> Nombre: </div>
-            <div style="display: inline-block;" id="nombre">  </div>
+        <div class="col-md-8" style="background: blue;">
+            <div>
+                <div style="display: inline-block;"> Nombre: </div>
+                <div style="display: inline-block;" id="nombre">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"> Costo: </div>
+                <div style="display: inline-block;" id="costo">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"> Porcentage: </div>
+                <div style="display: inline-block;" id="porcentage">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"> Description: </div>
+                <div style="display: inline-block;" id="description">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"> Unidad: </div>
+                <div style="display: inline-block;" id="unidad">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"> Current Amount: </div>
+                <div style="display: inline-block;" id="currentAmount">  </div>
+            </div>
+            <div>
+                <div style="display: inline-block;"><a href="/productInvs_view">Registrar producto</a> </div>
+            </div>
         </div>
-        <div>
-            <div style="display: inline-block;"> Costo: </div>
-            <div style="display: inline-block;" id="costo">  </div>
+        <div class="col-md-4">
+            <img src="@routes.Assets.versioned("images/1_product.jpg")" width="70">
+            @helper.form(action = routes.InsumoController.upload(row_id), 'enctype -> "multipart/form-data") {
+                <input type="hidden" name="id_row" id="id_row" value="1">
+                <input type="file" name="picture">
+                <p>
+                    <input type="submit">
+                </p>
+            }
         </div>
-        <div>
-            <div style="display: inline-block;"> Porcentage: </div>
-            <div style="display: inline-block;" id="porcentage">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Description: </div>
-            <div style="display: inline-block;" id="description">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Unidad: </div>
-            <div style="display: inline-block;" id="unidad">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> Current Amount: </div>
-            <div style="display: inline-block;" id="currentAmount">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"><a href="/productInvs_view"> Registrar producto </a> </div>
-        </div>
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInvByInsumo.js")'></script>
-        <div class="table-responsive">
-            <table class="table" id="rows">
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Proveedor</th>
-                        <th>Amount</th>
-                        <th>Amoun Left</th>
-                        <th>-----------</th>
-                    </tr>
-                </thead>
-            </table>
+        <div class="col-md-12">
+            <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productInvByInsumo.js")'></script>
+            <div class="table-responsive">
+                <table class="table" id="rows">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Proveedor</th>
+                            <th>Amount</th>
+                            <th>Amoun Left</th>
+                            <th>-----------</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
     </div>
 }
