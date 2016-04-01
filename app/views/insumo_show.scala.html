@@ -7,7 +7,7 @@
         <a href="/proveedores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     </div>
     <div class="container">
-        <div class="col-md-8" style="">
+        <div class="col-md-6" style="">
             <div>
                 <div style="display: inline-block;"> Nombre: </div>
                 <div style="display: inline-block;" id="nombre">  </div>
@@ -36,14 +36,11 @@
                 <div style="display: inline-block;"><a href="/productInvs_view">Registrar producto</a> </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <img src="@routes.Assets.versioned("images/1_product.jpg")" width="70">
+        <div class="col-md-6">
+            <img src="@routes.Assets.versioned("images/" + row_id + "_product.jpg")" width="200">
             @helper.form(action = routes.InsumoController.upload(row_id), 'enctype -> "multipart/form-data") {
-                <input type="hidden" name="id_row" id="id_row" value="1">
                 <input type="file" name="picture">
-                <p>
-                    <input type="submit">
-                </p>
+                <input type="submit">
             }
         </div>
         <div class="col-md-12">
@@ -52,10 +49,10 @@
                 <table class="table" id="rows">
                     <thead>
                         <tr>
-                            <th>Product</th>
+                            <th>Producto</th>
                             <th>Proveedor</th>
-                            <th>Amount</th>
-                            <th>Amoun Left</th>
+                            <th>Registrado</th>
+                            <th>En Inventario</th>
                             <th>-----------</th>
                         </tr>
                     </thead>

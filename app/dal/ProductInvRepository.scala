@@ -70,9 +70,10 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
   // delete required
   def delete(id: Long): Future[Seq[ProductInv]] = db.run {
     val q = tableQ.filter(_.id === id)
+    val res = q.result
     val action = q.delete
-    val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
-    tableQ.result
+    val affectedRowsCount: Future[Int] = db.run(action);
+    affectedRowsCount.map(s=> println(s))
+    res
   }
 }

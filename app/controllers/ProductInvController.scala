@@ -142,8 +142,11 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
+      println(res);
+      //repoInsum.updateAmount(res.productId, );
       Ok(views.html.productInv_index(newForm, Map[String, String](), Map[String, String]()))
     }
+
   }
 
   // to copy
