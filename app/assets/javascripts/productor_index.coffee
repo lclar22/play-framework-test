@@ -6,5 +6,5 @@ $ ->
       telefono = $("<td>").text row.telefono
       cuenta = $("<td>").text row.cuenta
       asociacion = $("<td>").text row.asociacion
-      link = $("<td>").html '<a href="/productor_update/' + row.id + '"><span class="glyphicon glyphicon-pencil">Editar</span></a>' + '<a href="/productor_remove/' + row.id + '"><span class="glyphicon glyphicon-remove">Eliminar</span></a>' + '<a href="/productor_show/' + row.id + '"><span class="glyphicon glyphicon-remove">Mostrar</span></a>'
+      link = $("<td>").html '<a href="/productor_update/' + row.id + '" class="btn btn-primary">Editar</a>' + '<a href="/productor_remove/' + row.id + '" class="btn btn-danger">Eliminar</a>' + '<a href="/productor_show/' + row.id + '" class="btn btn-info">Mostrar</a>'
       $("#rows").append $("<tr>").append(nombre).append(carnet).append(telefono).append(cuenta).append(asociacion).append(link)

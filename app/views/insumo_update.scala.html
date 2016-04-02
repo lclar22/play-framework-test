@@ -3,7 +3,6 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/insumos_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.InsumoController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
@@ -12,7 +11,7 @@
         @inputText(row("descripcion"))
         @inputText(row("unidad"))
         @inputText(row("currentAmount"))
-        <input type="submit" value="Actualizar"/>
-        <a href="/insumos_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <input type="submit" class="btn btn-primary" value="Actualizar"/>
+        <a href="/insumos_view" class="btn btn-primary">Cancel</a>
     }
 }

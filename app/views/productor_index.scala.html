@@ -5,7 +5,7 @@
 @main("Agregar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productor_index.js")'></script>
     <div>
-        <a href="/"><span class="glyphicon glyphicon-plus">Muro @associations</span></a>
+        <a href="/">Muro</a>
     </div>
     @form(routes.ProductorController.add()) {
         @inputText(row("nombre"), '_label -> "Nombre Productor")
@@ -15,7 +15,7 @@
         @inputText(row("cuenta"))
         @select(field = row("asociacion"), options = options(associations))
 
-        <input type="submit" value="Guardar"/>
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
     }
     <div class="table-responsive">
         <table class="table" id="rows">

@@ -3,7 +3,6 @@
 @import helper._
 
 @main("Actualizar Cuenta") {
-	<a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProductorController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
@@ -12,7 +11,7 @@
         @inputText(row("direccion"))
         @inputText(row("cuenta"))
         @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
-        <input type="submit" value="Actualizar"/>
-        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <input type="submit" value="Actualizar"  class="btn btn-primary"/>
+        <a href="/productores_view" class="btn btn-primary">Cancel</a>
     }
 }
