@@ -114,12 +114,14 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       val type1 = filename.substring(filename.length - 4);
       val contentType = picture.contentType
       val fileNewName = id.toString() + "_product" + type1
+      val path_1 = "/home/llll/Desktop/projects/isystem/public/images/"
       try { 
-        new File(s"C:/Users/Luis Arce/scala/play-scala-intro/public/images/$fileNewName").delete()
+
+        new File(s"$path_1$fileNewName").delete()
       } catch {
         case e: Exception => println(e)
       }
-      picture.ref.moveTo(new File(s"C:/Users/Luis Arce/scala/play-scala-intro/public/images/$fileNewName"))
+      picture.ref.moveTo(new File(s"$path_1$fileNewName"))
       Ok(views.html.insumo_show(id))
     }.getOrElse {
       Redirect(routes.InsumoController.show(id)).flashing(
