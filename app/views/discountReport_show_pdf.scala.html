@@ -1,0 +1,32 @@
+@import helper._
+
+@main("Mostrar") {
+    <div class="container">
+        <div>
+            <div style="display: inline-block; width: 150px;" >Fecha de Inicio: </div>
+            <div style="display: inline-block; width: 150px;" id="startDate">01/01/2016 </div>
+            <div style="display: inline-block; width: 150px;">Fecha Final: </div>
+            <div style="display: inline-block; width: 150px;" id="endDate">01/15/2016 </div>
+        </div>
+        <div>
+            <div style="display: inline-block; width: 150px;"> Total: </div>
+            <div style="display: inline-block; width: 150px;" id="total"> 350 Bs </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Productor</th>
+                    <th>Monto</th>
+                </tr>
+            </thead>
+            <tbody>
+            <tr><td>Juan Salinas</td><td>200</td></tr>
+            <tr><td>Pedro Contreras</td><td>150</td></tr></tbody>
+            <tr><td><strong>Total</strong></td><td><strong>350 Bs</strong></td></tr></tbody>
+        </table>
+    </div>
+
+}

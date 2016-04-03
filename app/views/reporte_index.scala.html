@@ -5,21 +5,20 @@
 @main("Agregar réporte") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/reporte_index.js")'></script>
 
-    @form(routes.ReporteController.addReporte()) {
-        @inputText(banco("monto"))
-        @inputText(banco("cuenta"))
-        @inputText(banco("cliente"))
-        <input type="submit" value="Guardar"/>
-    }
     <div class="table-responsive">
         <table class="table" id="reportes">
             <thead>
                 <tr>
-                    <th>Monto</th>
-                    <th>Cuenta</th>
-                    <th>Cliente</th>
+                    <th>Reporte</th>
+                    <th>-----------</th>
                 </tr>
             </thead>
         </table>
+        <tbody>
+            <tr>
+                <td>Reporte de descuentos</td>
+                <td><a href="/productores_report_pdf" class="btn btn-info">Mostrar</a><a href="/discountReports_view" class="btn btn-info">Lista</a></td>
+            </tr>
+        </tbody>
     </div>
 }

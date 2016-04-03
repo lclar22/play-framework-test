@@ -13,6 +13,7 @@ import dal._
 import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
+import it.innove.play.pdf.PdfGenerator
 
 class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -31,9 +32,15 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 
   def index = Action {
-
     Ok(views.html.productor_index(newForm, asociaciones))
   }
+
+  def index_pdf = Action {
+    val generator = new PdfGenerator
+    Ok(generator.toBytes(views.html.reporte_productores(), "http://localhost:9000/")).as("application/pdf")
+  }
+
+
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
@@ -49,6 +56,12 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   }
 
   def getProductores = Action.async {
+    repo.list().map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getProductoresReport = Action.async {
   	repo.list().map { res =>
       Ok(Json.toJson(res))
     }

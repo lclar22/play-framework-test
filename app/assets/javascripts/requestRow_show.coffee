@@ -6,4 +6,4 @@ $ ->
       $("#productId").html row.productId
       $("#productorId").html row.productorId
       $("#quantity").html row.quantity
-      $("#statusstatus").html row.status
+      $("#status").html row.status

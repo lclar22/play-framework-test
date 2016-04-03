@@ -3,14 +3,14 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInvs_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+	<a href="/productInvs_view">Lista</a>
     @form(routes.ProductInvController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @select(field = row("productId"), options = options(products))
         @select(field = row("proveedorId"), options = options(vendors))
         @inputText(row("amount"))
         @inputText(row("amountLeft"))
-        <input type="submit" value="Actualizar"/>
-        <a href="/productInvs_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
+        <input type="submit" value="Actualizar" class="btn btn-primary"/>
+        <a href="/productInvs_view" class="btn btn-primary">Cancelar</a>
     }
 }

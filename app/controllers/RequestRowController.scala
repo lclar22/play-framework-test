@@ -45,6 +45,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     val productorNames = getProductorNamesMap()
     Ok(views.html.requestRow_add(newForm, productReqNames, insumoNames, productorNames))
   }
+
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -57,6 +58,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       }
     )
   }
+
   def getRequestRows = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))

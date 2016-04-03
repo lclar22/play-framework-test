@@ -18,7 +18,7 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
-class ProductRequestController @Inject() (repo: ProductRequestRepository, repoInsum: VeterinarioRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
+class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVete: VeterinarioRepository, repoSto: StorekeeperRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductRequestForm] = Form {
@@ -34,15 +34,15 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
   def index = Action {
-    val insumosNames = getVeterinarioNamesMap()
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.productRequest_index(insumosNames, proveeNames))
+    val veterinariosNames = getVeterinarioNamesMap()
+    val storeNames = getStorekeepersNamesMap()
+    Ok(views.html.productRequest_index(veterinariosNames, storeNames))
   }
 
   def addGet = Action {
-    val insumosNames = getVeterinarioNamesMap()
-    val proveeNames = getProveeNamesMap()
-    Ok(views.html.productRequest_add(newForm, insumosNames, proveeNames))
+    val veterinariosNames = getVeterinarioNamesMap()
+    val storeNames = getStorekeepersNamesMap()
+    Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
   }
   
   def add = Action.async { implicit request =>
@@ -99,8 +99,8 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
       val insumosMap = getVeterinarioNamesMap()
-      val proveeMap = getProveeNamesMap()
-      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, proveeMap))
+      val storeMap = getStorekeepersNamesMap()
+      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, storeMap))
     }
   }
 
@@ -127,7 +127,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
 
 
   def getVeterinarioNamesMap(): Map[String, String] = {
-    Await.result(repoInsum.getListNames().map{ case (res1) => 
+    Await.result(repoVete.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -137,8 +137,8 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoIn
     }, 3000.millis)
   }
 
-  def getProveeNamesMap(): Map[String, String] = {
-    Await.result(repoProvee.getListNames().map{ case (res1) => 
+  def getStorekeepersNamesMap(): Map[String, String] = {
+    Await.result(repoSto.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)

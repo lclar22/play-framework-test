@@ -23,6 +23,7 @@ POST    /productor_update             	controllers.ProductorController.updatePos
 
 POST    /productor                 		controllers.ProductorController.add
 GET     /productores         			controllers.ProductorController.getProductores
+GET     /productores_report    			controllers.ProductorController.getProductoresReport
 GET     /productores_view         		controllers.ProductorController.index
 
 # Now for veterinarios
@@ -85,6 +86,38 @@ GET     /productInvs         				controllers.ProductInvController.getProductInvs
 GET     /ProductInvsByInsumo/:id				controllers.ProductInvController.getProductInvsByInsumo(id: Long)
 GET     /productInvs_view         			controllers.ProductInvController.index
 
+
+# Now for Discount Detail
+GET     /discountDetail_show/:id 				controllers.DiscountDetailController.show(id: Long)
+GET     /discountDetail_update/:id        		controllers.DiscountDetailController.getUpdate(id: Long)
+GET     /discountDetail_remove/:id        		controllers.DiscountDetailController.delete(id: Long)
+GET     /discountDetails/:id 					controllers.DiscountDetailController.getById(id: Long)
+POST    /discountDetail_update             		controllers.DiscountDetailController.updatePost
+
+POST    /discountDetail                 		controllers.DiscountDetailController.add
+GET     /discountDetails         				controllers.DiscountDetailController.getDiscountDetails
+GET     /discountDetailsByReport/:id			controllers.DiscountDetailController.getDiscountDetailsByReport(id: Long)
+GET     /discountDetailsByInsumo/:id			controllers.DiscountDetailController.getDiscountDetailsByInsumo(id: Long)
+GET     /discountDetails_view         			controllers.DiscountDetailController.index
+GET     /discountDetail_addGet         			controllers.DiscountDetailController.addGet
+
+
+
+# Now for  Discount Report
+GET     /discountReport_show/:id 				controllers.DiscountReportController.show(id: Long)
+GET     /discountReport_generarReporte/:id 		controllers.DiscountReportController.generarReporte(id: Long)
+GET     /discountReport_show_pdf/:id 			controllers.DiscountReportController.show_pdf(id: Long)
+GET     /discountReport_update/:id        		controllers.DiscountReportController.getUpdate(id: Long)
+GET     /discountReport_remove/:id        		controllers.DiscountReportController.delete(id: Long)
+GET     /discountReports/:id 					controllers.DiscountReportController.getById(id: Long)
+POST    /discountReport_update             		controllers.DiscountReportController.updatePost
+
+POST    /discountReport                 		controllers.DiscountReportController.add
+GET     /discountReports         				controllers.DiscountReportController.getDiscountReports
+GET     /discountReports_view         			controllers.DiscountReportController.index
+GET     /discountReport_addGet         			controllers.DiscountReportController.addGet
+
+
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
 GET     /productRequest_update/:id        		controllers.ProductRequestController.getUpdate(id: Long)
@@ -132,7 +165,6 @@ GET     /cuenta_example_action_3        controllers.BancoController.getExampleAc
 GET     /account_names         			controllers.BancoController.getBankNames
 
 
-
 #POST    /insumo                 		controllers.InsumoController.addInsumo
 #GET     /insumos         				controllers.InsumoController.getInsumos
 #GET     /insumos_view         			controllers.InsumoController.index
@@ -144,6 +176,8 @@ GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
 
 GET     /transaccion_view               controllers.TransaccionController.getTransaccionView
+GET     /productores_report_pdf        controllers.ProductorController.index_pdf
+
 GET     /transaccion_list               controllers.TransaccionController.getTransaccionListView
 POST    /transaccion                 	controllers.TransaccionController.addTransaccion
 GET     /transacciones         			controllers.TransaccionController.getTransacciones

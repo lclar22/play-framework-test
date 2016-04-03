@@ -64,7 +64,7 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
 
   // to copy
   def show(id: Long) = Action {
-    Ok(views.html.veterinario_show())
+    Ok(views.html.storekeeper_show())
   }
 
   // to copy

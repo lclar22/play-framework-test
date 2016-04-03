@@ -28,24 +28,25 @@ class StorekeeperRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
     def sueldo = column[Int]("sueldo")
-    def * = (id, nombre, carnet, telefono, direccion, sueldo) <> ((Veterinario.apply _).tupled, Veterinario.unapply)
+    def type_1 = column[String]("type")
+    def * = (id, nombre, carnet, telefono, direccion, sueldo, type_1) <> ((Veterinario.apply _).tupled, Veterinario.unapply)
   }
 
   private val tableQ = TableQuery[VeterinariosTable]
 
   def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Veterinario] = db.run {
-    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo))
+    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => Veterinario(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-    ) += (nombre, carnet, telefono, direccion, sueldo)
+      into ((nameAge, id) => Veterinario(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
+    ) += (nombre, carnet, telefono, direccion, sueldo, "storekeeper")
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.type_1 === "storekeeper").map(s => (s.id, s.nombre)).result
   }
 
   def list(): Future[Seq[Veterinario]] = db.run {
-    tableQ.result
+    tableQ.filter(_.type_1 === "storekeeper").result
   }
 
   // to cpy

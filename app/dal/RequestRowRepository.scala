@@ -44,9 +44,17 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     tableQ.result
   }
 
+  def listByQuantity(): Future[Seq[RequestRow]] = db.run {
+    tableQ.filter(_.quantity > 0).result
+  }
+
     // to cpy
   def getById(id: Long): Future[Seq[RequestRow]] = db.run {
     tableQ.filter(_.id === id).result
+  }
+
+  def getListNames(): Future[Seq[(Long, String)]] = db.run {
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.productorId.toString())).result
   }
 
   // update required to copy

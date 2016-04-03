@@ -114,7 +114,7 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       val type1 = filename.substring(filename.length - 4);
       val contentType = picture.contentType
       val fileNewName = id.toString() + "_product" + type1
-      val path_1 = "C:/Users/Luis Arce/scala/play-scala-intro/public/images/"
+      val path_1 = "/home/llll/Desktop/projects/isystem/public/images/"
       try { 
 
         new File(s"$path_1$fileNewName").delete()

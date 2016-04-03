@@ -1,0 +1,46 @@
+@import helper._
+
+@main("Mostrar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountReport_show.js")'></script>
+    <div>
+        <a href="/discountReports_view">Lista</a>
+    </div>
+    <div class="container">
+        <div>
+            <div style="display: inline-block;"> Start date: </div>
+            <div style="display: inline-block;" id="startDate">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> End Date: </div>
+            <div style="display: inline-block;" id="endDate">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Estado: </div>
+            <div style="display: inline-block;" id="status">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Total: </div>
+            <div style="display: inline-block;" id="total">  </div>
+        </div>
+    </div>
+    <div>
+        <div style="display: inline-block;"> <a href="/discountDetail_addGet" class="btn btn-primary">Agregar Productores</a> <a href="/discountReport_generarReporte/1" class="btn btn-primary">Generar reporte</a> </div>
+    </div>
+
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByReport.js")'></script>
+    <div>Lista de Productores</div>
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Report</th>
+                    <th>Productor</th>
+                    <th>Status</th>
+                    <th>Monto</th>
+                    <th>-----------</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+
+}
