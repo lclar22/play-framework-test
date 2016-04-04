@@ -42,6 +42,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   def generarReporte(id: Long) = Action {
     val productRequestRowsByProduct = getProductoRequestsByProductor()
+    println("Hello this is the example")
     println(productRequestRowsByProduct)
     Ok(views.html.discountReport_index(productRequestRowsByProduct))
   }
