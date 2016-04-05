@@ -91,8 +91,10 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   def show_pdf(id: Long) = Action {
     val generator = new PdfGenerator
-    val values = getDiscountDetailList()
-    Ok(generator.toBytes(views.html.discountReport_show_pdf(values), "http://localhost:9000/")).as("application/pdf")
+    val discountReport = getDiscountReportById(id)
+    val values = getDiscountDetailList(id)
+
+    Ok(generator.toBytes(views.html.discountReport_show_pdf(values, discountReport.startDate, discountReport.endDate, discountReport.total.toString()), "http://localhost:9000/")).as("application/pdf")
   }
 
   // update required
@@ -110,9 +112,14 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
       }
-      println(cache)
       cache.toMap
     }, 3000.millis)
+  }
+
+  def getDiscountReportById(id: Long): DiscountReport = {
+    Await.result(repo.getById(id).map{ case (res1) => 
+      res1(0)
+    }, 500.millis)
   }
 
   def getProductoRequestsByProductor(): Seq[RequestRow] = {
@@ -122,8 +129,8 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
 
-  def getDiscountDetailList(): Seq[DiscountDetail] = {
-    Await.result(repoDiscDetail.list().map{ case (res1) => 
+  def getDiscountDetailList(id: Long): Seq[DiscountDetail] = {
+    Await.result(repoDiscDetail.listByReport(id).map{ case (res1) => 
       res1
     }, 3000.millis)
   }

@@ -1,17 +1,17 @@
-@(discounts: Seq[DiscountDetail])
+@(discounts: Seq[DiscountDetail], stardDate: String, endDate: String, total: String)
 @import helper._
 
 @main("Mostrar") {
     <div class="container">
         <div>
             <div style="display: inline-block; width: 150px;" >Fecha de Inicio: </div>
-            <div style="display: inline-block; width: 150px;" id="startDate">01/01/2016 </div>
+            <div style="display: inline-block; width: 150px;" id="startDate">@stardDate </div>
             <div style="display: inline-block; width: 150px;">Fecha Final: </div>
-            <div style="display: inline-block; width: 150px;" id="endDate">01/15/2016 </div>
+            <div style="display: inline-block; width: 150px;" id="endDate">@endDate </div>
         </div>
         <div>
             <div style="display: inline-block; width: 150px;"> Total: </div>
-            <div style="display: inline-block; width: 150px;" id="total"> 350 Bs </div>
+            <div style="display: inline-block; width: 150px;" id="total"> @total Bs </div>
         </div>
     </div>
 
