@@ -56,6 +56,11 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.id === id).result
   }
 
+  def generarReporte(datos: Map[Long, String]) = {
+    println("Generating data")
+    println(datos)
+  }
+
   // update required to copy
   def update(id: Long, startDate: String, endDate: String, status: String, total: Int): Future[Seq[DiscountReport]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.startDate

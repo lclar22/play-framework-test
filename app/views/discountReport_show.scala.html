@@ -1,3 +1,4 @@
+@(rowId: String)
 @import helper._
 
 @main("Mostrar") {
@@ -24,7 +25,7 @@
         </div>
     </div>
     <div>
-        <div style="display: inline-block;"> <a href="/discountDetail_addGet" class="btn btn-primary">Agregar Productores</a> <a href="/discountReport_generarReporte/1" class="btn btn-primary">Generar reporte</a> </div>
+        <div style="display: inline-block;"> <a href="/discountDetail_addGet" class="btn btn-primary">Agregar Productores</a> <a href="/discountReport_generarReporte/@rowId" class="btn btn-primary">Generar reporte</a> </div>
     </div>
 
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByReport.js")'></script>

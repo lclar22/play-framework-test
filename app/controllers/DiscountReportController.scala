@@ -20,9 +20,9 @@ import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
-                                          repoSto: StorekeeperRepository, repoRequestRows: RequestRowRepository, 
+                                          repoSto: StorekeeperRepository, repoDiscDetail: DiscountDetailRepository, repoRequestRows: RequestRowRepository, 
                                           val messagesApi: MessagesApi)
-                                         (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+                                         (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateDiscountReportForm] = Form {
     mapping(
@@ -42,9 +42,11 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   def generarReporte(id: Long) = Action {
     val productRequestRowsByProduct = getProductoRequestsByProductor()
+    val productoresNames = getProductoresNamesMap()
     println("Hello this is the example")
     println(productRequestRowsByProduct)
-    Ok(views.html.discountReport_index(productRequestRowsByProduct))
+    repoDiscDetail.generarReporte(productRequestRowsByProduct, id)
+    Ok(views.html.discountReport_index(productoresNames))
   }
 
   def addGet = Action {
@@ -84,7 +86,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   // to copy
   def show(id: Long) = Action {
-    Ok(views.html.discountReport_show())
+    Ok(views.html.discountReport_show(id.toString()))
   }
 
   def show_pdf(id: Long) = Action {
@@ -112,16 +114,12 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }, 3000.millis)
   }
 
-  def getProductoRequestsByProductor(): Map[String, String] = {
+  def getProductoRequestsByProductor(): Seq[RequestRow] = {
     Await.result(repoRequestRows.listByQuantity().map{ case (res1) => 
-      val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (requestRow) => 
-        cache put (requestRow.productorId.toString(), requestRow.productorId.toString())
-      }
-      println(cache)
-      cache.toMap
+      res1
     }, 3000.millis)
   }
+
 
   // delete required
   def delete(id: Long) = Action.async {

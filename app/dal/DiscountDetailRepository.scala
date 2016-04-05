@@ -5,6 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.DiscountDetail
+import models.RequestRow
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -54,6 +55,22 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   // to cpy
   def getById(id: Long): Future[Seq[DiscountDetail]] = db.run {
     tableQ.filter(_.id === id).result
+  }
+
+  def generarReporte(datos: Seq[RequestRow], discountReportId: Long) = {
+    println("Generating data")
+    println(datos)
+    datos.foreach { case (dato) => 
+        println("dato: " + dato)
+       val dd  = db.run {
+                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.amount))
+                    returning tableQ.map(_.id)
+                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
+                  ) += (discountReportId, dato.productorId, "borrador", dato.quantity)
+                };
+      dd.map(res2 => println(res2))
+      println("DONE");
+    }
   }
 
   // update required to copy
