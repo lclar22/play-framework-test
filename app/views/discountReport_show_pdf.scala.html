@@ -1,3 +1,4 @@
+@(discounts: Seq[DiscountDetail])
 @import helper._
 
 @main("Mostrar") {
@@ -23,9 +24,10 @@
                 </tr>
             </thead>
             <tbody>
-            <tr><td>Juan Salinas</td><td>200</td></tr>
-            <tr><td>Pedro Contreras</td><td>150</td></tr></tbody>
-            <tr><td><strong>Total</strong></td><td><strong>350 Bs</strong></td></tr></tbody>
+            @for(discount <- discounts) {
+                <tr><td>@discount.productorId</td><td>@discount.amount</td></tr>
+            }
+            </tbody>
         </table>
     </div>
 

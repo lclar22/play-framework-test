@@ -91,7 +91,8 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   def show_pdf(id: Long) = Action {
     val generator = new PdfGenerator
-    Ok(generator.toBytes(views.html.discountReport_show_pdf(), "http://localhost:9000/")).as("application/pdf")
+    val values = getDiscountDetailList()
+    Ok(generator.toBytes(views.html.discountReport_show_pdf(values), "http://localhost:9000/")).as("application/pdf")
   }
 
   // update required
@@ -116,6 +117,13 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
   def getProductoRequestsByProductor(): Seq[RequestRow] = {
     Await.result(repoRequestRows.listByQuantity().map{ case (res1) => 
+      res1
+    }, 3000.millis)
+  }
+
+
+  def getDiscountDetailList(): Seq[DiscountDetail] = {
+    Await.result(repoDiscDetail.list().map{ case (res1) => 
       res1
     }, 3000.millis)
   }
