@@ -128,6 +128,28 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }, 3000.millis)
   }
 
+  // update required
+  def getAccept(id: Long) = Action.async {
+    repo.acceptById(id).map {case (res) =>
+      repoInsum.updateAmount(res(0).productId, - res(0).quantity);
+      Redirect(routes.VeterinarioController.profile(1L))
+    }
+  }
+
+// update required
+  def getSend(id: Long) = Action.async {
+    repo.sendById(id).map {case (res) =>
+      Redirect(routes.VeterinarioController.profile(1L))
+    }
+  }
+
+// update required
+  def getFinish(id: Long) = Action.async {
+    repo.finishById(id).map {case (res) =>
+      Redirect(routes.VeterinarioController.profile(1L))
+    }
+  }
+
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>

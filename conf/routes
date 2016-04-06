@@ -135,9 +135,13 @@ GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestContr
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
 
+
 # Now for Product requests Rows
 GET     /requestRow_show/:id 				controllers.RequestRowController.show(id: Long)
 GET     /requestRow_update/:id        		controllers.RequestRowController.getUpdate(id: Long)
+GET     /requestRow_send/:id        		controllers.RequestRowController.getSend(id: Long)
+GET     /requestRow_fill/:id        		controllers.RequestRowController.getAccept(id: Long)
+GET     /requestRow_finish/:id        		controllers.RequestRowController.getFinish(id: Long)
 GET     /requestRow_remove/:id        		controllers.RequestRowController.delete(id: Long)
 GET     /requestRows/:id 					controllers.RequestRowController.getById(id: Long)
 POST    /requestRow_update             		controllers.RequestRowController.updatePost

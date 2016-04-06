@@ -72,6 +72,27 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     tableQ.filter(_.id === id).result
   }
 
+  // Update the status to enviado status
+  def sendById(id: Long): Future[Seq[RequestRow]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("enviado"))
+    tableQ.filter(_.id === id).result
+  }
+
+  // Update the status to enviado status
+  def acceptById(id: Long): Future[Seq[RequestRow]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("aceptado"))
+    tableQ.filter(_.id === id).result
+  }
+
+  // Update the status to finalizado status
+  def finishById(id: Long): Future[Seq[RequestRow]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("finalizado"))
+    tableQ.filter(_.id === id).result
+  }
+
   // delete required
   def delete(id: Long): Future[Seq[RequestRow]] = db.run {
     val q = tableQ.filter(_.id === id)

@@ -80,10 +80,11 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     tableQ.result
   }
 
-  def updateAmount(id:Long, amount: Int) = {
-    val q = for { c <- tableQ if c.id === id } yield c.currentAmount
-    db.run(tableQ.filter(_.id === id).result).map(s=> s.map(insumoObj => 
+  def updateAmount(insumoId: Long, amount: Int) = {
+    val q = for { c <- tableQ if c.id === insumoId } yield c.currentAmount
+    db.run(tableQ.filter(_.id === insumoId).result).map(s=> s.map(insumoObj => 
       db.run(q.update(amount + insumoObj.currentAmount))
     ))
   }
+
 }

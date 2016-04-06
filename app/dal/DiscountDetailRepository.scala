@@ -57,18 +57,15 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.id === id).result
   }
 
-  def generarReporte(datos: Seq[RequestRow], discountReportId: Long) = {
-    println("Generating data")
-    println(datos)
-    datos.foreach { case (dato) => 
-        println("dato: " + dato)
-       val dd  = db.run {
+  def generarReporte(requestRows: Seq[RequestRow], discountReportId: Long) = {
+    requestRows.foreach { case (requestRow) => 
+       val insertResult = db.run {
                   (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.amount))
                     returning tableQ.map(_.id)
                     into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
-                  ) += (discountReportId, dato.productorId, "borrador", dato.quantity)
+                  ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity)
                 };
-      dd.map(res2 => println(res2))
+      insertResult.map(insertResultRow => println(insertResultRow))
       println("DONE");
     }
   }
