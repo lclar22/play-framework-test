@@ -10,6 +10,7 @@
         @select(field = row("productId"), options = options(productos))
         @select(field = row("productorId"), options = options(productors))
         @inputText(row("quantity"))
+        @inputText(row("cost"))
         @inputText(row("status"))
         <input type="submit" value="Actualizar"/>
         <a href="/requestRows_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>

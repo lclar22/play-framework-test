@@ -27,6 +27,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
+      "cost" -> number,
       "status" -> text
     )(CreateRequestRowForm.apply)(CreateRequestRowForm.unapply)
   }
@@ -52,7 +53,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         Future.successful(Ok(views.html.requestRow_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.requestId, res.productId, res.productorId, res.quantity, res.status).map { _ =>
+        repo.create(res.requestId, res.productId, res.productorId, res.quantity, res.cost, res.status).map { _ =>
           Redirect(routes.ProductRequestController.show(1L))
         }
       }
@@ -73,6 +74,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
+      "cost" -> number,
       "status" -> text
     )(UpdateRequestRowForm.apply)(UpdateRequestRowForm.unapply)
   }
@@ -87,7 +89,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
                                 "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
-                                "quantity" -> res.toList(0).quantity.toString(), "status" -> res.toList(0).status.toString())
+                                "quantity" -> res.toList(0).quantity.toString(), "cost" -> res.toList(0).cost.toString(), "status" -> res.toList(0).status.toString())
       val productReqNames = getProductReqNamesMap()
       val insumoNames = getInsumoNamesMap()
       val productorNames = getProductorNamesMap()
@@ -171,7 +173,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.requestId, res.productId, res.productorId, res.quantity, res.status).map { _ =>
+        repo.update(res.id, res.requestId, res.productId, res.productorId, res.quantity, res.cost, res.status).map { _ =>
           Redirect(routes.RequestRowController.index)
         }
       }
@@ -180,6 +182,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
 
 }
 
-case class CreateRequestRowForm(requestId: Long, productId: Long, productorId: Long, quantity: Int, status: String)
+case class CreateRequestRowForm(requestId: Long, productId: Long, productorId: Long, quantity: Int, cost: Int, status: String)
 
-case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, status: String)
+case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, cost: Int, status: String)

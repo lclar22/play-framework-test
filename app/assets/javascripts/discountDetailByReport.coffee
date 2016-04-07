@@ -4,6 +4,7 @@ $ ->
   $.get "/discountDetailsByReport/" + row_id, (rows) ->
     $.each rows, (index, row) ->
       discountReport = $("<td>").text row.discountReport
+      requestId = $("<td>").text row.requestId
       productorId = $("<td>").text row.productorId
       status = $("<td>").text row.status
       amount = $("<td>").text row.amount

@@ -15,7 +15,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,  repoRequestRow: RequestRowRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -25,6 +25,7 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def discountReport = column[Long]("discountReport")
+    def requestRow = column[Long]("requestRow")
     def productorId = column[Long]("productorId")
     def status = column[String]("status")
     def amount = column[Int]("amount")
@@ -65,6 +66,7 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
                     into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
                   ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity)
                 };
+      repoRequestRow.updatePaid(1L, 250).map(mm => println("DONE"))
       insertResult.map(insertResultRow => println(insertResultRow))
       println("DONE");
     }
