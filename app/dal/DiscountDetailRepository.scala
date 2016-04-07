@@ -66,8 +66,8 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
                     into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
                   ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity)
                 };
-      repoRequestRow.updatePaid(1L, 250).map(mm => println("DONE"))
-      insertResult.map(insertResultRow => println(insertResultRow))
+      
+      insertResult.map(insertResultRow => repoRequestRow.updatePaid(1L, insertResultRow.amount).map(mm => println("DONE")))
       println("DONE");
     }
   }

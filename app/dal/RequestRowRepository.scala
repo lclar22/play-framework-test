@@ -92,8 +92,11 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
 
   // Update the status to enviado status
   def updatePaid(id: Long, monto: Int): Future[Seq[RequestRow]] = db.run {
+    val l = tableQ.filter(_.id === id).result
     val q = for { c <- tableQ if c.id === id } yield c.paid
-    db.run(q.update(monto))
+    getById(id).map { row =>
+      db.run(q.update(row(0).paid + monto))
+    }
     tableQ.filter(_.id === id).result
   }
 
