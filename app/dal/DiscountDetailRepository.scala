@@ -53,6 +53,10 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.discountReport === id).result
   }
 
+  def listByProductor(id: Long): Future[Seq[DiscountDetail]] = db.run {
+    tableQ.filter(_.productorId === id).result
+  }
+
   // to cpy
   def getById(id: Long): Future[Seq[DiscountDetail]] = db.run {
     tableQ.filter(_.id === id).result

@@ -98,6 +98,7 @@ POST    /discountDetail_update             		controllers.DiscountDetailControlle
 POST    /discountDetail                 		controllers.DiscountDetailController.add
 GET     /discountDetails         				controllers.DiscountDetailController.getDiscountDetails
 GET     /discountDetailsByReport/:id			controllers.DiscountDetailController.getDiscountDetailsByReport(id: Long)
+GET     /discountDetailsByProductor/:id			controllers.DiscountDetailController.getDiscountDetailsByProductor(id: Long)
 GET     /discountDetailsByInsumo/:id			controllers.DiscountDetailController.getDiscountDetailsByInsumo(id: Long)
 GET     /discountDetails_view         			controllers.DiscountDetailController.index
 GET     /discountDetail_addGet         			controllers.DiscountDetailController.addGet
@@ -151,6 +152,7 @@ POST    /requestRow_update             		controllers.RequestRowController.update
 POST    /requestRow                 		controllers.RequestRowController.add
 GET     /requestRows         				controllers.RequestRowController.getRequestRows
 GET     /requestRows_view         			controllers.RequestRowController.index
+GET     /requestRowsByProductor/:id    		controllers.RequestRowController.requestRowsByProductor(id: Long)
 GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 
 

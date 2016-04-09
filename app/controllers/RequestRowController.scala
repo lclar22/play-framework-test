@@ -166,6 +166,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }
   }
 
+  // to copy
+  def requestRowsByProductor(id: Long) = Action.async {
+    repo.getById(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(

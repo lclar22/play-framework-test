@@ -69,6 +69,12 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       Ok(Json.toJson(res))
     }
   }
+  
+  def getDiscountDetailsByProductor(id: Long) = Action.async {
+    repo.listByProductor(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
 
   def getDiscountDetailsByInsumo(id: Long) = Action.async {
     repo.listByInsumo(id).map { res =>
