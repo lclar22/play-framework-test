@@ -68,7 +68,7 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
                 };
         println("DONE")
       // This updates the paid of the row but should go when I finished the discount retail
-      insertResult.map(insertResultRow => repoRequestRow.updatePaid(requestRow.id, insertResultRow.discount).map(mm => println("DONE")))
+      //insertResult.map(insertResultRow => repoRequestRow.updatePaid(requestRow.id, insertResultRow.discount).map(mm => println("DONE")))
     }
   }
 
