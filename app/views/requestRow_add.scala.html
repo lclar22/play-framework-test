@@ -12,7 +12,7 @@
         @select(field = row("productId"), options = options(products))
         @inputText(row("quantity"))
         @inputText(row("precio"))
-        @inputText(row("status"))
+        @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         <input type="submit" value="Guardar"/>
     }
 }

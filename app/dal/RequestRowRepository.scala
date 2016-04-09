@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoInsum: InsumoRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -113,10 +113,13 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
 
   // delete required
   def delete(id: Long): Future[Seq[RequestRow]] = db.run {
-    val q = tableQ.filter(_.id === id)
-    val action = q.delete
-    val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
+    getById(id).map { row =>
+      repoInsum.updateInventary(row(0).productId, row(0).quantity)
+      val q = tableQ.filter(_.id === id)
+      val action = q.delete
+      val affectedRowsCount: Future[Int] = db.run(action)
+      println("removed " + affectedRowsCount);
+    }
     tableQ.result
   }
 }
