@@ -34,6 +34,10 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
     Ok(views.html.insumo_index(newForm))
   }
 
+  def list = Action {
+    Ok(views.html.insumo_list())
+  }
+
   def addInsumo = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -41,7 +45,7 @@ class InsumoController @Inject() (repo: InsumoRepository, val messagesApi: Messa
       },
       res => {
         repo.create(res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad, res.currentAmount).map { _ =>
-          Redirect(routes.InsumoController.index)
+          Redirect(routes.InsumoController.list)
         }
       }
     )

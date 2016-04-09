@@ -8,12 +8,20 @@
         <a href="/">Muro</a>
     </div>
     @form(routes.ProveedorController.addProveedor()) {
-        @inputText(proveedor("nombre"))
-        @inputText(proveedor("telefono"))
-        @inputText(proveedor("direccion"))
-        @inputText(proveedor("contacto"))
-        @inputText(proveedor("cuenta"))
-        <input type="submit" class="btn btn-primary" value="Agregar Proveedor"/>
+        <div class="container">
+            <div class="col-md-6">
+                @inputText(proveedor("nombre"))
+                @inputText(proveedor("telefono"))
+                @inputText(proveedor("direccion"))
+            </div>
+            <div class="col-md-6">
+                @inputText(proveedor("contacto"))
+                @inputText(proveedor("cuenta"))
+            </div>
+            <div class="col-md-12">
+                <input type="submit" class="btn btn-primary" value="Agregar Proveedor"/>
+            </div>
+        </div>
     }
     <div class="table-responsive">
         <table class="table" id="rows">

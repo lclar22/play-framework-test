@@ -8,12 +8,20 @@
         <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
     </div>
     @form(routes.VeterinarioController.add()) {
-        @inputText(row("nombre"))
-        @inputText(row("carnet"))
-        @inputText(row("telefono"))
-        @inputText(row("direccion"))
-        @inputText(row("sueldo"))
-        <input type="submit" value="Agregar Veterinario"class="btn btn-primary"/>
+        <div class="container">
+        <div class="col-md-6">
+            @inputText(row("nombre"))
+            @inputText(row("carnet"))
+            @inputText(row("telefono"))
+        </div>
+        <div class="col-md-6">
+            @inputText(row("direccion"))
+            @inputText(row("sueldo"))
+        </div>
+        <div class="col-md-12">
+            <input type="submit" value="Agregar Veterinario"class="btn btn-primary"/>
+        </div>
+        </div>
     }
     <div class="table-responsive">
         <table class="table" id="rows">

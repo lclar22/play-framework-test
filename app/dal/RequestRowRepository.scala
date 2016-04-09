@@ -36,7 +36,7 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
   private val tableQ = TableQuery[RequestRowTable]
 
   def create(requestId: Long, productId: Long, productorId: Long, quantity: Int, cost: Int, status: String): Future[RequestRow] = db.run {
-    (tableQ.map(p => (p.requestId, p.productId, p.productorId, p.quantity, p.cost, p.cost, p.status))
+    (tableQ.map(p => (p.requestId, p.productId, p.productorId, p.quantity, p.cost, p.paid, p.status))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
     ) += (requestId, productId, productorId, quantity, cost, 0, status)

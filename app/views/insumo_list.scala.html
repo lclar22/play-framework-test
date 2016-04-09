@@ -1,5 +1,3 @@
-@(row: Form[CreateInsumoForm])(implicit messages: Messages)
-
 @import helper._
 
 @main("Agregar") {
@@ -7,23 +5,9 @@
     <div>
         <a href="/" >Muro</a>
     </div>
-    @form(routes.InsumoController.addInsumo()) {
-        <div class="container">
-        <div class="col-md-6">
-            @inputText(row("nombre"))
-            @inputText(row("costo"))
-            @inputText(row("porcentage"))
-            @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
-        </div>
-        <div class="col-md-6">
-            @inputText(row("unidad"))
-            @inputText(row("currentAmount"))
-        </div>
-        <div class="col-md-12">
-            <input type="submit" class="btn btn-primary" value="Agregar Producto"/>
-        </div>
-        </div>
-    }
+        <div>
+        <a href="/insumos_view" class="btn btn-info">Agregar</a>
+    </div>
     <div>
         Lista de Productos
     </div>
