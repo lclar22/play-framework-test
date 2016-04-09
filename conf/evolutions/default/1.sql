@@ -100,7 +100,7 @@ create table "requestRow" (
   "productId" bigint,
   "productorId" bigint,
   "quantity" int,
-  "cost" int,
+  "precio" int,
   "paid" int,
   "cuota" int,
   "status" varchar
@@ -155,7 +155,7 @@ create table "discountDetail" (
   "requestRow" bigint,
   "productorId" bigint,
   "status" varchar,
-  "amount" Int
+  "discount" Int
 );
 
 # --- !Downs

@@ -9,7 +9,7 @@
         @select(field = row("discountReport"), options = options(products))
         @select(field = row("productorId"), options = options(vendors))
         @inputText(row("status"))
-        @inputText(row("amount"))
+        @inputText(row("discount"))
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="/ProductReport_show/1" class="btn btn-primary">Cancelar</a>
     }

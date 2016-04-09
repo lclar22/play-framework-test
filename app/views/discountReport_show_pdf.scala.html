@@ -20,12 +20,12 @@
             <thead>
                 <tr>
                     <th>Productor</th>
-                    <th>Monto</th>
+                    <th>Descuento</th>
                 </tr>
             </thead>
             <tbody>
             @for(discount <- discounts) {
-                <tr><td>@discount.productorId</td><td>@discount.amount</td></tr>
+                <tr><td>@discount.productorId</td><td>@discount.discount</td></tr>
             }
             </tbody>
         </table>

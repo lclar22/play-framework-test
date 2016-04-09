@@ -10,7 +10,7 @@
         @select(field = row("discountReport"), options = options(discounts))
         @select(field = row("productorId"), options = options(productors))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
-        @inputText(row("amount"))
+        @inputText(row("discount"))
         <input type="submit" value="Guardar"/>
     }
 }

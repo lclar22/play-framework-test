@@ -5,4 +5,4 @@ $ ->
       $("#discountReport").html row.discountReport
       $("#productorId").html row.productorId
       $("#status").html row.status
-      $("#amount").html row.amount
+      $("#discount").html row.discount

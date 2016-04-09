@@ -2,7 +2,7 @@ package models
 
 import play.api.libs.json._
 
-case class DiscountDetail(id: Long, discountReport: Long, productorId: Long, status: String, amount: Int)
+case class DiscountDetail(id: Long, discountReport: Long, productorId: Long, status: String, discount: Int, requestRow: Long)
 
 object DiscountDetail {
   implicit val ReportDiscountFormat = Json.format[DiscountDetail]

@@ -25,20 +25,20 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def discountReport = column[Long]("discountReport")
-    def requestRow = column[Long]("requestRow")
     def productorId = column[Long]("productorId")
     def status = column[String]("status")
-    def amount = column[Int]("amount")
-    def * = (id, discountReport, productorId, status, amount) <> ((DiscountDetail.apply _).tupled, DiscountDetail.unapply)
+    def discount = column[Int]("discount")
+    def requestRow = column[Long]("requestRow")
+    def * = (id, discountReport, productorId, status, discount, requestRow) <> ((DiscountDetail.apply _).tupled, DiscountDetail.unapply)
   }
 
   private val tableQ = TableQuery[DiscountDetailsTable]
 
-  def create(discountReport: Long, productorId: Long, status: String, amount: Int): Future[DiscountDetail] = db.run {
-    (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.amount))
+  def create(discountReport: Long, productorId: Long, status: String, discount: Int): Future[DiscountDetail] = db.run {
+    (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
-    ) += (discountReport, productorId, status, amount)
+      into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+    ) += (discountReport, productorId, status, discount, 1L)
   }
 
   def list(): Future[Seq[DiscountDetail]] = db.run {
@@ -61,27 +61,29 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   def generarReporte(requestRows: Seq[RequestRow], discountReportId: Long) = {
     requestRows.foreach { case (requestRow) => 
        val insertResult = db.run {
-                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.amount))
+                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
                     returning tableQ.map(_.id)
-                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
-                  ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity)
+                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+                  ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity, requestRow.id)
                 };
-      
-      insertResult.map(insertResultRow => repoRequestRow.updatePaid(1L, insertResultRow.amount).map(mm => println("DONE")))
-      println("DONE");
+        println("DONE")
+      // This updates the paid of the row but should go when I finished the discount retail
+      insertResult.map(insertResultRow => repoRequestRow.updatePaid(requestRow.id, insertResultRow.discount).map(mm => println("DONE")))
     }
   }
 
+
+
   // update required to copy
-  def update(id: Long, discountReport: Long, productorId: Long, status: String, amount: Int): Future[Seq[DiscountDetail]] = db.run {
+  def update(id: Long, discountReport: Long, productorId: Long, status: String, discount: Int): Future[Seq[DiscountDetail]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.discountReport
     db.run(q.update(discountReport))
     val q2 = for { c <- tableQ if c.id === id } yield c.productorId
     db.run(q2.update(productorId))
     val q3 = for { c <- tableQ if c.id === id } yield c.status
     db.run(q3.update(status))
-    val q4 = for { c <- tableQ if c.id === id } yield c.amount
-    db.run(q4.update(amount))
+    val q4 = for { c <- tableQ if c.id === id } yield c.discount
+    db.run(q4.update(discount))
     tableQ.filter(_.id === id).result
   }
 

@@ -26,7 +26,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       "discountReport" -> longNumber,
       "productorId" -> longNumber,
       "status" -> text,
-      "amount" -> number
+      "discount" -> number
     )(CreateDiscountDetailForm.apply)(CreateDiscountDetailForm.unapply)
   }
 
@@ -44,8 +44,8 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_index(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.discountReport, res.productorId, res.status, res.amount).map { _ =>
-          //repoDiscReport.updateAmount(res.discountReport, res.status)
+        repo.create(res.discountReport, res.productorId, res.status, res.discount).map { _ =>
+          //repoDiscReport.updatediscount(res.discountReport, res.status)
           Redirect(routes.DiscountReportController.show(res.discountReport))
         }
       }
@@ -84,7 +84,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       "discountReport" -> longNumber,
       "productorId" -> longNumber,
       "status" -> text,
-      "amount" -> number
+      "discount" -> number
     )(UpdateDiscountDetailForm.apply)(UpdateDiscountDetailForm.unapply)
   }
 
@@ -96,7 +96,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "productorId" -> res.toList(0).productorId.toString(), "status" -> res.toList(0).status.toString(), "amount" -> res.toList(0).amount.toString())
+      val anyData = Map("id" -> id.toString().toString(), "discountReport" -> res.toList(0).discountReport.toString(), "productorId" -> res.toList(0).productorId.toString(), "status" -> res.toList(0).status.toString(), "discount" -> res.toList(0).discount.toString())
       val discountRepMap = getDiscountRepMap()
       val proveeMap = getProductorsNamesMap()
       Ok(views.html.discountDetail_update(updateForm.bind(anyData), discountRepMap, proveeMap))
@@ -130,7 +130,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
       println(res);
-      //repoDiscReport.updateAmount(res.discountReport, );
+      //repoDiscReport.updatediscount(res.discountReport, );
       Ok(views.html.discountDetail_index(newForm, Map[String, String](), Map[String, String]()))
     }
 
@@ -150,7 +150,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
         Future.successful(Ok(views.html.discountDetail_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.discountReport, res.productorId, res.status, res.amount).map { _ =>
+        repo.update(res.id, res.discountReport, res.productorId, res.status, res.discount).map { _ =>
           Redirect(routes.DiscountDetailController.index)
         }
       }
@@ -159,6 +159,6 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
 
 }
 
-case class CreateDiscountDetailForm(discountReport: Long, productorId: Long, status: String, amount: Int)
+case class CreateDiscountDetailForm(discountReport: Long, productorId: Long, status: String, discount: Int)
 
-case class UpdateDiscountDetailForm(id: Long, discountReport: Long, productorId: Long, status: String, amount: Int)
+case class UpdateDiscountDetailForm(id: Long, discountReport: Long, productorId: Long, status: String, discount: Int)

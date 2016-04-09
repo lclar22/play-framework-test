@@ -82,9 +82,9 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // Update the status to enviado status
-  def acceptById(id: Long): Future[Seq[DiscountReport]] = db.run {
+  def finalizeById(id: Long): Future[Seq[DiscountReport]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("aceptado"))
+    db.run(q.update("finalizado"))
     tableQ.filter(_.id === id).result
   }
 

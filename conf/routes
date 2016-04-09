@@ -109,6 +109,7 @@ GET     /discountReport_show/:id 				controllers.DiscountReportController.show(i
 GET     /discountReport_generarReporte/:id 		controllers.DiscountReportController.generarReporte(id: Long)
 GET     /discountReport_show_pdf/:id 			controllers.DiscountReportController.show_pdf(id: Long)
 GET     /discountReport_update/:id        		controllers.DiscountReportController.getUpdate(id: Long)
+GET     /discountReport_finalize/:id        	controllers.DiscountReportController.finalizeReport(id: Long)
 GET     /discountReport_remove/:id        		controllers.DiscountReportController.delete(id: Long)
 GET     /discountReports/:id 					controllers.DiscountReportController.getById(id: Long)
 POST    /discountReport_update             		controllers.DiscountReportController.updatePost

@@ -41,12 +41,9 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
   def generarReporte(id: Long) = Action {
-    val productRequestRowsByProduct = getProductoRequestsByProductor()
-    val productoresNames = getProductoresNamesMap()
-    println("Hello this is the example")
-    println(productRequestRowsByProduct)
+    val productRequestRowsByProduct = getProductoRequestsByQuantity()
     repoDiscDetail.generarReporte(productRequestRowsByProduct, id)
-    Ok(views.html.discountReport_index(productoresNames))
+    Ok(views.html.discountReport_show(id.toString()))
   }
 
   def addGet = Action {
@@ -122,7 +119,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }, 500.millis)
   }
 
-  def getProductoRequestsByProductor(): Seq[RequestRow] = {
+  def getProductoRequestsByQuantity(): Seq[RequestRow] = {
     Await.result(repoRequestRows.listByQuantity().map{ case (res1) => 
       res1
     }, 3000.millis)
@@ -135,11 +132,22 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }, 3000.millis)
   }
 
-
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
       Ok(views.html.discountReport_index(Map[String, String]()))
+    }
+  }
+
+  // update required
+  def finalizeReport(id: Long) = Action.async {
+    val discountDetails = getDiscountDetailList(id)
+    discountDetails.foreach{ case (discountDetail) => 
+      repoRequestRows.updatePaid(discountDetail.requestRow, discountDetail.discount)
+    }
+
+    repo.finalizeById(id).map {case (res) =>
+      Redirect(routes.DiscountReportController.index)
     }
   }
 

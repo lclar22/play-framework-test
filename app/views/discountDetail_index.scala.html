@@ -10,8 +10,8 @@
     @form(routes.ProductInvController.add()) {
         @select(field = row("productId"), options = options(products))
         @select(field = row("proveedorId"), options = options(vendors))
-        @inputText(row("amount"))
-        @inputText(row("amountLeft"))
+        @inputText(row("discount"))
+        @inputText(row("discountLeft"))
         <input type="submit" class="btn btn-primary" value="Registrar Producto"/>
     }
     <div>
@@ -23,7 +23,7 @@
                 <tr>
                     <th>Product</th>
                     <th>Proveedor</th>
-                    <th>Amount</th>
+                    <th>Descuento</th>
                     <th>Amoun Left</th>
                     <th>-----------</th>
                 </tr>
