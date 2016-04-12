@@ -20,7 +20,7 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
   import dbConfig._
   import driver.api._
 
-  private class ProductInvsTable(tag: Tag) extends Table[ProductInv](tag, "product_invs") {
+  private class ProductInvsTable(tag: Tag) extends Table[ProductInv](tag, "productInv") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def productId = column[Long]("productId")

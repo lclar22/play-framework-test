@@ -20,7 +20,7 @@ class ProveedorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   import dbConfig._
   import driver.api._
 
-  private class ProveedoresTable(tag: Tag) extends Table[Proveedor](tag, "proveedores") {
+  private class ProveedoresTable(tag: Tag) extends Table[Proveedor](tag, "proveedor") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")

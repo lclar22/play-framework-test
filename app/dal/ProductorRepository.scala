@@ -20,7 +20,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   import dbConfig._
   import driver.api._
 
-  private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productores") {
+  private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productor") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")
