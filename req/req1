@@ -21,26 +21,26 @@
 
 
 req0
-Crear veterinario
-Crear producto
-Crear 
+	Crear veterinario
+	Crear producto
+	Crear 
 
 req1
-Crear Productor, Veterinario, Almacenero
-Crear peticion desde veterinario profile
-Acceptar peticion desde almacen profile
+	Crear Productor, Veterinario, Almacenero
+	Crear peticion desde veterinario profile
+	Acceptar peticion desde almacen profile
 
 req2
-Crear reporte con los productos vendidos
+	Crear reporte con los productos vendidos
 
 
 inf1
-Mostrar informacion relacionada en Veterinario
-Mostrar informacion relacionada en Almacen
-Mostrar informacion relacionada en Productor
+	Mostrar informacion relacionada en Veterinario
+	Mostrar informacion relacionada en Almacen
+	Mostrar informacion relacionada en Productor
 
 q1
-Que informacion mostrar en el reporte
+	Que informacion mostrar en el reporte
 
 Reportes
-Mostrar el reporte de descuento
+	Mostrar el reporte de descuento
