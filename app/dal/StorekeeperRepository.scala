@@ -20,7 +20,7 @@ class StorekeeperRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
   import dbConfig._
   import driver.api._
 
-  private class VeterinariosTable(tag: Tag) extends Table[Veterinario](tag, "veterinarios") {
+  private class VeterinariosTable(tag: Tag) extends Table[Veterinario](tag, "veterinario") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")

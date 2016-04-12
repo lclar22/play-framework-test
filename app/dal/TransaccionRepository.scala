@@ -20,7 +20,7 @@ class TransaccionRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
   import dbConfig._
   import driver.api._
 
-  private class TransaccionesTable(tag: Tag) extends Table[Transaccion](tag, "transacciones") {
+  private class TransaccionesTable(tag: Tag) extends Table[Transaccion](tag, "transaccion") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def fecha = column[String]("fecha")

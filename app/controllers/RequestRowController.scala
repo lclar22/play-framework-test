@@ -15,6 +15,7 @@ import scala.collection.mutable.ListBuffer
 import java.util.LinkedHashMap
 import collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import play.api.data.format.Formats._ 
 
 import javax.inject._
 
@@ -27,7 +28,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
-      "precio" -> number,
+      "precio" -> of[Double],
       "status" -> text
     )(CreateRequestRowForm.apply)(CreateRequestRowForm.unapply)
   }
@@ -74,7 +75,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       "productId" -> longNumber,
       "productorId" -> longNumber,
       "quantity" -> number,
-      "precio" -> number,
+      "precio" -> of[Double],
       "status" -> text
     )(UpdateRequestRowForm.apply)(UpdateRequestRowForm.unapply)
   }
@@ -189,6 +190,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
 
 }
 
-case class CreateRequestRowForm(requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Int, status: String)
+case class CreateRequestRowForm(requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)
 
-case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Int, status: String)
+case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)

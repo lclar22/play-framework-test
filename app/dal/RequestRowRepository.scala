@@ -27,7 +27,7 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     def productId = column[Long]("productId")
     def productorId = column[Long]("productorId")
     def quantity = column[Int]("quantity")
-    def precio = column[Int]("precio")
+    def precio = column[Double]("precio")
     def paid = column[Int]("paid")
     def status = column[String]("status")
     def * = (id, requestId, productId, productorId, quantity, precio, paid, status) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
@@ -35,7 +35,7 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
 
   private val tableQ = TableQuery[RequestRowTable]
 
-  def create(requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Int, status: String): Future[RequestRow] = db.run {
+  def create(requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String): Future[RequestRow] = db.run {
     (tableQ.map(p => (p.requestId, p.productId, p.productorId, p.quantity, p.precio, p.paid, p.status))
       returning tableQ.map(_.id)
       into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
@@ -65,7 +65,7 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
   }
 
   // update required to copy
-  def update(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Int, status: String): Future[Seq[RequestRow]] = db.run {
+  def update(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String): Future[Seq[RequestRow]] = db.run {
     val q2 = for { c <- tableQ if c.id === id } yield c.requestId
     db.run(q2.update(requestId))
     val q = for { c <- tableQ if c.id === id } yield c.productId
