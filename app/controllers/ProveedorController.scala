@@ -23,7 +23,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
       "telefono" -> number,
       "direccion" -> nonEmptyText,
       "contacto" -> nonEmptyText,
-      "cuenta" -> longNumber
+      "account" -> longNumber
     )(CreateProveedorForm.apply)(CreateProveedorForm.unapply)
   }
 
@@ -37,7 +37,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
         Future.successful(Ok(views.html.proveedor_index(errorForm)))
       },
       proveedor => {
-        repo.create(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.cuenta).map { _ =>
+        repo.create(proveedor.nombre, proveedor.telefono, proveedor.direccion, proveedor.contacto, proveedor.account).map { _ =>
           Redirect(routes.ProveedorController.index)
         }
       }
@@ -58,7 +58,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
       "contacto" -> text,
-      "cuenta" -> longNumber
+      "account" -> longNumber
     )(UpdateProveedorForm.apply)(UpdateProveedorForm.unapply)
   }
 
@@ -75,7 +75,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "contacto" -> res.toList(0).contacto, "cuenta" -> res.toList(0).cuenta.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "contacto" -> res.toList(0).contacto, "account" -> res.toList(0).account.toString())
       Ok(views.html.proveedor_update(updateForm.bind(anyData)))
     }
   }
@@ -101,7 +101,7 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
         Future.successful(Ok(views.html.proveedor_update(errorForm)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.telefono, res.direccion, res.contacto, res.cuenta).map { _ =>
+        repo.update(res.id, res.nombre, res.telefono, res.direccion, res.contacto, res.account).map { _ =>
           Redirect(routes.ProveedorController.index)
         }
       }
@@ -109,6 +109,6 @@ class ProveedorController @Inject() (repo: ProveedorRepository, val messagesApi:
   }
 }
 
-case class CreateProveedorForm(nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long)
+case class CreateProveedorForm(nombre: String, telefono: Int, direccion: String, contacto: String, account: Long)
 
-case class UpdateProveedorForm(id: Long, nombre: String, telefono: Int, direccion: String, contacto: String, cuenta: Long)
+case class UpdateProveedorForm(id: Long, nombre: String, telefono: Int, direccion: String, contacto: String, account: Long)

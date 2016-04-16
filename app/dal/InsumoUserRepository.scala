@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class StorekeeperRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class InsumoUserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -38,15 +38,15 @@ class StorekeeperRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1))
       returning tableQ.map(_.id)
       into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (nombre, carnet, telefono, direccion, sueldo, "storekeeper")
+    ) += (nombre, carnet, telefono, direccion, sueldo, "insumoUser")
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.type_1 === "storekeeper").map(s => (s.id, s.nombre)).result
+    tableQ.filter(_.type_1 === "insumoUser").map(s => (s.id, s.nombre)).result
   }
 
   def list(): Future[Seq[User]] = db.run {
-    tableQ.filter(_.type_1 === "storekeeper").result
+    tableQ.filter(_.type_1 === "insumoUser").result
   }
 
   // to cpy

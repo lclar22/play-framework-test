@@ -20,7 +20,7 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
   val newForm: Form[CreateReporteForm] = Form {
     mapping(
       "monto" -> number.verifying(min(0), max(140)),
-      "cuenta" -> number.verifying(min(0), max(140)),
+      "account" -> number.verifying(min(0), max(140)),
       "cliente" -> number.verifying(min(0), max(140))
     )(CreateReporteForm.apply)(CreateReporteForm.unapply)
   }
@@ -35,7 +35,7 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
         Future.successful(Ok(views.html.reporte_index(errorForm)))
       },
       reporte => {
-        repo.create(reporte.monto, reporte.cuenta, reporte.cliente).map { _ =>
+        repo.create(reporte.monto, reporte.account, reporte.cliente).map { _ =>
           Redirect(routes.ReporteController.index)
         }
       }
@@ -49,4 +49,4 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
   }
 }
 
-case class CreateReporteForm(monto: Int, cuenta: Int, cliente: Int)
+case class CreateReporteForm(monto: Int, account: Int, cliente: Int)

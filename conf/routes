@@ -23,8 +23,22 @@ POST    /productor_update             	controllers.ProductorController.updatePos
 
 POST    /productor                 		controllers.ProductorController.add
 GET     /productores         			controllers.ProductorController.getProductores
+GET     /productorsByModule/:id			controllers.ProductorController.getProductorsByModule(id: Long)
 GET     /productores_report    			controllers.ProductorController.getProductoresReport
 GET     /productores_view         		controllers.ProductorController.index
+
+
+# modules routes
+GET     /module_show/:id 			controllers.ModuleController.show(id: Long)
+GET     /module_update/:id        	controllers.ModuleController.getUpdate(id: Long)
+GET     /module_remove/:id        	controllers.ModuleController.delete(id: Long)
+GET     /modules/:id 				controllers.ModuleController.getById(id: Long)
+POST    /module_update             	controllers.ModuleController.updatePost
+
+POST    /module                 		controllers.ModuleController.add
+GET     /modules         			controllers.ModuleController.getModules
+GET     /modules_report    			controllers.ModuleController.getModulesReport
+GET     /modules_view         		controllers.ModuleController.index
 
 # Now for veterinarios
 GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
@@ -49,6 +63,17 @@ POST    /storekeeper                 	controllers.StorekeeperController.add
 GET     /storekeepers         			controllers.StorekeeperController.getStorekeepers
 GET     /storekeepers_view     			controllers.StorekeeperController.index
 
+
+# Now for InsumoUsers
+GET     /insumoUser_show/:id 			controllers.InsumoUserController.show(id: Long)
+GET     /insumoUser_update/:id        	controllers.InsumoUserController.getUpdate(id: Long)
+GET     /insumoUser_remove/:id        	controllers.InsumoUserController.delete(id: Long)
+GET     /insumoUsers/:id 				controllers.InsumoUserController.getById(id: Long)
+POST    /insumoUser_update             controllers.InsumoUserController.updatePost
+
+POST    /insumoUser                 	controllers.InsumoUserController.add
+GET     /insumoUsers         			controllers.InsumoUserController.getInsumoUsers
+GET     /insumoUsers_view     			controllers.InsumoUserController.index
 
 
 # Now for provedores
@@ -159,6 +184,7 @@ GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
 GET     /storekeeper_profile/:id 			controllers.StorekeeperController.profile(id: Long)
+GET     /insumoUser_profile/:id 			controllers.InsumoUserController.profile(id: Long)
 GET     /veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row
@@ -183,13 +209,25 @@ POST    /reporte                 		controllers.ReporteController.addReporte
 GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
 
-GET     /transaccion_view               controllers.TransaccionController.getTransaccionView
-GET     /productores_report_pdf        controllers.ProductorController.index_pdf
 
-GET     /transaccion_list               controllers.TransaccionController.getTransaccionListView
-POST    /transaccion                 	controllers.TransaccionController.addTransaccion
-GET     /transacciones         			controllers.TransaccionController.getTransacciones
-GET     /transacciones_view    			controllers.TransaccionController.index
+
+
+# Now for Product requests
+GET     /transaction_show/:id 				controllers.TransactionController.show(id: Long)
+GET     /transaction_update/:id        		controllers.TransactionController.getUpdate(id: Long)
+#GET     /transaction_send/:id        		controllers.TransactionController.getSend(id: Long)
+#GET     /transaction_accept/:id        		controllers.TransactionController.getAccept(id: Long)
+#GET     /transaction_finish/:id        		controllers.TransactionController.getFinish(id: Long)
+GET     /transaction_remove/:id        		controllers.TransactionController.delete(id: Long)
+GET     /transactions/:id 					controllers.TransactionController.getById(id: Long)
+POST    /transaction_update             		controllers.TransactionController.updatePost
+
+POST    /transaction                 		controllers.TransactionController.add
+GET     /transactions         				controllers.TransactionController.getTransactions
+#GET     /transactionsByVeterinario/:id        controllers.TransactionController.gettransactionsByVeterinario(id: Long)
+#GET     /transactionsByStorekeeper/:id        controllers.TransactionController.gettransactionsByStorekeeper(id: Long)
+GET     /transactions_view         			controllers.TransactionController.index
+GET     /transaction_addGet         			controllers.TransactionController.addGet
 
 
 GET     /clientes                    	controllers.ClienteController.getClientes

@@ -24,18 +24,18 @@ class ReporteRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def monto = column[Int]("monto")
-    def cuenta = column[Int]("cuenta")
+    def account = column[Int]("account")
     def cliente = column[Int]("cliente")
-    def * = (id, monto, cuenta, cliente) <> ((Reporte.apply _).tupled, Reporte.unapply)
+    def * = (id, monto, account, cliente) <> ((Reporte.apply _).tupled, Reporte.unapply)
   }
 
   private val reportes = TableQuery[ReportesTable]
 
-  def create(monto: Int, cuenta: Int, cliente: Int): Future[Reporte] = db.run {
-    (reportes.map(p => (p.monto, p.cuenta, p.cliente))
+  def create(monto: Int, account: Int, cliente: Int): Future[Reporte] = db.run {
+    (reportes.map(p => (p.monto, p.account, p.cliente))
       returning reportes.map(_.id)
       into ((nameAge, id) => Reporte(id, nameAge._1, nameAge._2, nameAge._3))
-    ) += (monto, cuenta, cliente)
+    ) += (monto, account, cliente)
   }
 
   def list(): Future[Seq[Reporte]] = db.run {

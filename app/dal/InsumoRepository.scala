@@ -20,7 +20,7 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   import dbConfig._
   import driver.api._
 
-  private class InsumosTable(tag: Tag) extends Table[Insumo](tag, "insumos") {
+  private class InsumosTable(tag: Tag) extends Table[Insumo](tag, "product") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")

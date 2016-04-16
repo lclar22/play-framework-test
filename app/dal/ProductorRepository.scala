@@ -20,25 +20,25 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   import dbConfig._
   import driver.api._
 
-  private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productores") {
+  private class ProductoresTable(tag: Tag) extends Table[Productor](tag, "productor") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")
     def carnet = column[Int]("carnet")
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
-    def cuenta = column[Long]("cuenta")
+    def account = column[Long]("account")
     def asociacion = column[Long]("asociacion")
-    def * = (id, nombre, carnet, telefono, direccion, cuenta, asociacion) <> ((Productor.apply _).tupled, Productor.unapply)
+    def * = (id, nombre, carnet, telefono, direccion, account, asociacion) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
   private val tableQ = TableQuery[ProductoresTable]
 
-  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long): Future[Productor] = db.run {
-    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.cuenta, p.asociacion))
+  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long): Future[Productor] = db.run {
+    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.account, p.asociacion))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Productor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (nombre, carnet, telefono, direccion, cuenta, asociacion)
+    ) += (nombre, carnet, telefono, direccion, account, asociacion)
   }
 
   def list(): Future[Seq[Productor]] = db.run {
@@ -51,15 +51,15 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long): Future[Seq[Productor]] = db.run {
+  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long): Future[Seq[Productor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
     db.run(q2.update(carnet))
     val q3 = for { c <- tableQ if c.id === id } yield c.telefono
     db.run(q3.update(telefono))
-    val q4 = for { c <- tableQ if c.id === id } yield c.cuenta
-    db.run(q4.update(cuenta))
+    val q4 = for { c <- tableQ if c.id === id } yield c.account
+    db.run(q4.update(account))
     val q5 = for { c <- tableQ if c.id === id } yield c.asociacion
     db.run(q5.update(asociacion))
 
