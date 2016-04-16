@@ -19,7 +19,7 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
 
   val newForm: Form[CreateTransaccionForm] = Form {
     mapping(
-      "fecha" -> nonEmptyText,
+      "date" -> nonEmptyText,
       "descripcion" -> text
     )(CreateTransaccionForm.apply)(CreateTransaccionForm.unapply)
   }
@@ -34,7 +34,7 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
         Future.successful(Ok(views.html.transaccion_add(errorForm)))
       },
       transaccion => {
-        repo.create(transaccion.fecha, transaccion.descripcion).map { _ =>
+        repo.create(transaccion.date, transaccion.descripcion).map { _ =>
           Redirect(routes.TransaccionController.getTransaccionListView)
         }
       }
@@ -56,4 +56,4 @@ class TransaccionController @Inject() (repo: TransaccionRepository, val messages
   }
 }
 
-case class CreateTransaccionForm(fecha: String, descripcion: String)
+case class CreateTransaccionForm(date: String, descripcion: String)
