@@ -176,7 +176,6 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       }
     )
   }
-
 }
 
 case class CreateProductRequestForm(date: String, veterinario: Long, storekeeper: Long, status: String, detail: String)

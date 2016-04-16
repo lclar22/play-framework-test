@@ -26,7 +26,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "cuenta" -> longNumber,
+      "account" -> longNumber,
       "asociacion" -> longNumber
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
@@ -48,7 +48,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
         Future.successful(Ok(views.html.productor_index(errorForm, asociaciones)))
       },
       productor => {
-        repo.create(productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.cuenta, productor.asociacion).map { _ =>
+        repo.create(productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -75,7 +75,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "cuenta" -> longNumber,
+      "account" -> longNumber,
       "asociacion" -> longNumber
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
   }
@@ -88,7 +88,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "cuenta" -> res.toList(0).cuenta.toString(), "asociacion" -> res.toList(0).asociacion.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(), "asociacion" -> res.toList(0).asociacion.toString())
       Ok(views.html.productor_update(updateForm.bind(anyData)))
     }
   }
@@ -115,7 +115,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
         Future.successful(Ok(views.html.productor_update(errorForm)))
       },
       productor => {
-        repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.cuenta, productor.asociacion).map { _ =>
+        repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -124,7 +124,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
 
 }
 
-case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)
+case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
 
 // Update required
-case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, cuenta: Long, asociacion: Long)
+case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
