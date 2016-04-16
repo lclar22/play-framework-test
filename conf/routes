@@ -183,13 +183,25 @@ POST    /reporte                 		controllers.ReporteController.addReporte
 GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
 
-GET     /transaccion_view               controllers.TransaccionController.getTransaccionView
-GET     /productores_report_pdf        controllers.ProductorController.index_pdf
 
-GET     /transaccion_list               controllers.TransaccionController.getTransaccionListView
-POST    /transaccion                 	controllers.TransaccionController.addTransaccion
-GET     /transacciones         			controllers.TransaccionController.getTransacciones
-GET     /transacciones_view    			controllers.TransaccionController.index
+
+
+# Now for Product requests
+GET     /transaction_show/:id 				controllers.TransactionController.show(id: Long)
+GET     /transaction_update/:id        		controllers.TransactionController.getUpdate(id: Long)
+#GET     /transaction_send/:id        		controllers.TransactionController.getSend(id: Long)
+#GET     /transaction_accept/:id        		controllers.TransactionController.getAccept(id: Long)
+#GET     /transaction_finish/:id        		controllers.TransactionController.getFinish(id: Long)
+GET     /transaction_remove/:id        		controllers.TransactionController.delete(id: Long)
+GET     /transactions/:id 					controllers.TransactionController.getById(id: Long)
+POST    /transaction_update             		controllers.TransactionController.updatePost
+
+POST    /transaction                 		controllers.TransactionController.add
+GET     /transactions         				controllers.TransactionController.getTransactions
+#GET     /transactionsByVeterinario/:id        controllers.TransactionController.gettransactionsByVeterinario(id: Long)
+#GET     /transactionsByStorekeeper/:id        controllers.TransactionController.gettransactionsByStorekeeper(id: Long)
+GET     /transactions_view         			controllers.TransactionController.index
+GET     /transaction_addGet         			controllers.TransactionController.addGet
 
 
 GET     /clientes                    	controllers.ClienteController.getClientes

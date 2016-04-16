@@ -1,0 +1,15 @@
+@(row: Form[CreateTransactionForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Crear") {
+    <div>
+        <a href="/"></a>
+    </div>
+    @form(routes.TransactionController.add()) {
+        @inputText(row("date"))
+        @select(field = row("type_1"), options = options(Map("borrador" -> "Borrador")))
+        @inputText(row("description"))
+        <input type="submit" value="Inicial transaccion" class="btn btn-primary"/> <a href="/" class="btn btn-primary"> Cancelar</a>
+    }
+}
