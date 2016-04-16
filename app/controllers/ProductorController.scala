@@ -55,6 +55,13 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     )
   }
 
+  def getProductorsByModule(id: Long) = Action.async {
+    repo.list().map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+
   def getProductores = Action.async {
     repo.list().map { res =>
       Ok(Json.toJson(res))
