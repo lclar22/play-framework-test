@@ -64,6 +64,17 @@ GET     /storekeepers         			controllers.StorekeeperController.getStorekeepe
 GET     /storekeepers_view     			controllers.StorekeeperController.index
 
 
+# Now for InsumoUsers
+GET     /insumoUser_show/:id 			controllers.InsumoUserController.show(id: Long)
+GET     /insumoUser_update/:id        	controllers.InsumoUserController.getUpdate(id: Long)
+GET     /insumoUser_remove/:id        	controllers.InsumoUserController.delete(id: Long)
+GET     /insumoUsers/:id 				controllers.InsumoUserController.getById(id: Long)
+POST    /insumoUser_update             controllers.InsumoUserController.updatePost
+
+POST    /insumoUser                 	controllers.InsumoUserController.add
+GET     /insumoUsers         			controllers.InsumoUserController.getInsumoUsers
+GET     /insumoUsers_view     			controllers.InsumoUserController.index
+
 
 # Now for provedores
 GET     /proveedor_show/:id 			controllers.ProveedorController.show(id: Long)
@@ -173,6 +184,7 @@ GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
 GET     /storekeeper_profile/:id 			controllers.StorekeeperController.profile(id: Long)
+GET     /insumoUser_profile/:id 			controllers.InsumoUserController.profile(id: Long)
 GET     /veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row
