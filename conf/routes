@@ -27,6 +27,17 @@ GET     /productorsByModule/:id			controllers.ProductorController.getProductorsB
 GET     /productores_report    			controllers.ProductorController.getProductoresReport
 GET     /productores_view         		controllers.ProductorController.index
 
+# accounts routes
+GET     /account_show/:id 			controllers.AccountController.show(id: Long)
+GET     /account_update/:id        	controllers.AccountController.getUpdate(id: Long)
+GET     /account_remove/:id        	controllers.AccountController.delete(id: Long)
+GET     /accounts/:id 				controllers.AccountController.getById(id: Long)
+POST    /account_update             controllers.AccountController.updatePost
+
+POST    /account                 	controllers.AccountController.add
+GET     /accounts         			controllers.AccountController.getAccounts
+GET     /accounts_view         		controllers.AccountController.index
+
 
 # modules routes
 GET     /module_show/:id 			controllers.ModuleController.show(id: Long)

@@ -1,0 +1,31 @@
+@(row: Form[CreateAccountForm], associations: Map[String, String])(implicit messages: Messages)
+
+@import helper._
+
+@main("Agregar") {
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/account_index.js")'></script>
+    <div>
+        <a href="/">Muro</a>
+    </div>
+    @form(routes.AccountController.add()) {
+        @inputText(row("code"), '_label -> "Nombre Productor")
+        @inputText(row("name"))
+        @inputText(row("type_1"))
+        @inputText(row("description"))
+
+        <input type="submit" value="Guardar" class="btn btn-primary"/>
+    }
+    <div class="table-responsive">
+        <table class="table" id="rows">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                    <th>Tipo</th>
+                    <th>Descripcion</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+}
