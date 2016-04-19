@@ -1,6 +1,12 @@
+import com.github.play2war.plugin._
+
 name := """play-scala-intro"""
 
 version := "1.0-SNAPSHOT"
+
+Play2WarPlugin.play2WarSettings
+
+Play2WarKeys.servletVersion := "3.0"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
@@ -20,6 +26,12 @@ libraryDependencies ++= Seq(
 // Play provides two styles of routers, one expects its actions to be injected, the
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
+
+
+fork in run := true
+
+fork in run := true
+
 
 
 fork in run := true
