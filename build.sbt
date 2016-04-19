@@ -13,6 +13,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-slick-evolutions" % "1.1.0",
   "it.innove" % "play2-pdf" % "1.4.0",
   "com.h2database" % "h2" % "1.4.177",
+  "mysql" % "mysql-connector-java" % "5.1.36",
   specs2 % Test
 )     
 
