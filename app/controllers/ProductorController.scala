@@ -83,7 +83,10 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
       "account" -> longNumber,
-      "asociacion" -> longNumber
+      "asociacion" -> longNumber,
+      "totalDebt" -> longNumber,
+      "numberPayment" -> number,
+      "position" -> text
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
   }
 
@@ -122,7 +125,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
         Future.successful(Ok(views.html.productor_update(errorForm)))
       },
       productor => {
-        repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion).map { _ =>
+        repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion, productor.totalDebt, productor.numberPayment, productor.position).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -134,4 +137,4 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
 case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
 
 // Update required
-case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
+case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Long, numberPayment: Int, position: String)
