@@ -38,6 +38,12 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
     Ok(views.html.productInv_index(newForm, insumosNames, proveeNames))
   }
 
+  def addByProduct(productId: Long) = Action {
+    val insumosNames = getInsumoNamesMapByProduct(productId)
+    val proveeNames = getProveeNamesMap()
+    Ok(views.html.productInv_index(newForm, insumosNames, proveeNames))
+  }
+
   def request = Action {
     val insumosNames = getInsumoNamesMap()
     val proveeNames = getProveeNamesMap()
@@ -118,6 +124,17 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
 
   def getInsumoNamesMap(): Map[String, String] = {
     Await.result(repoInsum.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getInsumoNamesMapByProduct(product: Long): Map[String, String] = {
+    Await.result(repoInsum.getListNamesById(product).map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)

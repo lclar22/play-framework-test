@@ -122,6 +122,7 @@ POST    /productInv                 		controllers.ProductInvController.add
 GET     /productInvs         				controllers.ProductInvController.getProductInvs
 GET     /ProductInvsByInsumo/:id				controllers.ProductInvController.getProductInvsByInsumo(id: Long)
 GET     /productInvs_view         			controllers.ProductInvController.index
+GET     /productInvs_addByProduct/:productId		controllers.ProductInvController.addByProduct(productId: Long)
 
 
 # Now for Discount Detail
