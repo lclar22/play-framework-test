@@ -98,7 +98,12 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(), "asociacion" -> res.toList(0).asociacion.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre,
+        "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(),
+        "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(),
+        "asociacion" -> res.toList(0).asociacion.toString(), "asociacion" -> res.toList(0).asociacion.toString(),
+        "totalDebt" -> res.toList(0).totalDebt.toString(), "numberPayment" -> res.toList(0).numberPayment.toString(),
+        "position" -> res.toList(0).position.toString())
       Ok(views.html.productor_update(updateForm.bind(anyData)))
     }
   }

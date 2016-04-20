@@ -6,6 +6,7 @@
         <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista de Productores</span></a>
     </div>
     <div class="container">
+    <div class="col-lg-6">
         <div>
             <div style="display: inline-block;"> Nombre: </div>
             <div style="display: inline-block;" id="name">  </div>
@@ -23,13 +24,28 @@
             <div style="display: inline-block;" id="direccion">  </div>
         </div>
         <div>
+            <div style="display: inline-block;"> Asociacion: </div>
+            <div style="display: inline-block;" id="asociacion">  </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+         <div>
             <div style="display: inline-block;"> Cuenta: </div>
             <div style="display: inline-block;" id="cuenta">  </div>
         </div>
         <div>
-            <div style="display: inline-block;"> Asociacion: </div>
-            <div style="display: inline-block;" id="asociacion">  </div>
+            <div style="display: inline-block;"> Deuda Total: </div>
+            <div style="display: inline-block;" id="totalDebt">  </div>
         </div>
+        <div>
+            <div style="display: inline-block;"> Cantidad De Pagos: </div>
+            <div style="display: inline-block;" id="numberPayment">  </div>
+        </div>
+        <div>
+            <div style="display: inline-block;"> Cargo: </div>
+            <div style="display: inline-block;" id="position">  </div>
+        </div>
+    </div>
     </div>
     <div class="container">
         <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowByProductor.js")'></script>

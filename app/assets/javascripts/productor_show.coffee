@@ -9,3 +9,6 @@ $ ->
       $("#direccion").html row.direccion
       $("#cuenta").html row.cuenta
       $("#asociacion").html row.asociacion
+      $("#totalDebt").html row.totalDebt
+      $("#numberPayment").html row.numberPayment
+      $("#position").html row.position
