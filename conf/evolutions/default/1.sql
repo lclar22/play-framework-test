@@ -123,7 +123,7 @@ create table requestRow (
 
 create table requestRowProductor (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  requestId INT,
+  requestRowId INT,
   productId INT,
   productorId INT,
   quantity int,

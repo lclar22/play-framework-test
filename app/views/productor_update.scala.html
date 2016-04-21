@@ -1,28 +1,23 @@
 @(row: Form[UpdateProductorForm])(implicit messages: Messages)
 
 @import helper._
-<style>
-    .myClass {
-        width: 100px;
-    }
-</style>
 
-@main("Actualizar Cuenta") {
+@main("Actualizar Productor") {
     @form(routes.ProductorController.updatePost()) {
     <div class="container">
-    <div class="col-lg-6">
-        @inputText(row("nombre"))
-        @inputText(row("carnet"))
-        @inputText(row("telefono"))
-        @inputText(row("direccion"))
-        @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
-        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        <div class="col-lg-6">
+            @inputText(row("nombre"))
+            @inputText(row("carnet"))
+            @inputText(row("telefono"))
+            @inputText(row("direccion"))
+            @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
+            @inputText(row("id"), 'hidden -> "true", '_label -> "")
          </div>
         <div class="col-lg-6">
-        @inputText(row("account"))
-        @inputText(row("totalDebt"), 'readonly -> "readonly")
-        @inputText(row("numberPayment"))
-        @inputText(row("position"), 'readonly -> "readonly")
+            @inputText(row("account"))
+            @inputText(row("totalDebt"), 'readonly -> "readonly")
+            @inputText(row("numberPayment"))
+            @inputText(row("position"), 'readonly -> "readonly")
         </div>
     </div>
         <input type="submit" value="Actualizar"  class="btn btn-primary"/>
