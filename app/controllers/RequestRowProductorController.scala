@@ -19,7 +19,7 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: ProductRequestRepository, repoInsum: InsumoRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: RequestRowRepository, repoInsum: InsumoRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowProductorForm] = Form {
@@ -101,8 +101,8 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   def getProductReqNamesMap(): Map[String, String] = {
     Await.result(repoProductReq.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
-      res1.foreach{ case (key: Long, value: String) => 
-        cache put (key.toString(), value)
+      res1.foreach{ case (key: Long, value: Long) => 
+        cache put (key.toString(), value.toString())
       }
       println(cache)
       cache.toMap

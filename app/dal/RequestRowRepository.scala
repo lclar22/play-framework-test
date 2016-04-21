@@ -60,8 +60,8 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     tableQ.filter(_.productorId === id).result
   }
 
-  def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.productorId.toString())).result
+  def getListNames(): Future[Seq[(Long, Long)]] = db.run {
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.productId)).result
   }
 
   // update required to copy

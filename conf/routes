@@ -192,6 +192,22 @@ GET     /requestRows_view         			controllers.RequestRowController.index
 GET     /requestRowsByProductor/:id    		controllers.RequestRowController.requestRowsByProductor(id: Long)
 GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 
+# Now for Product requests Rows Productors
+GET     /requestRowProductor_show/:id 				controllers.RequestRowProductorController.show(id: Long)
+GET     /requestRowProductor_update/:id        		controllers.RequestRowProductorController.getUpdate(id: Long)
+GET     /requestRowProductor_send/:id        		controllers.RequestRowProductorController.getSend(id: Long)
+GET     /requestRowProductor_fill/:id        		controllers.RequestRowProductorController.getAccept(id: Long)
+GET     /requestRowProductor_finish/:id        		controllers.RequestRowProductorController.getFinish(id: Long)
+GET     /requestRowProductor_remove/:id        		controllers.RequestRowProductorController.delete(id: Long)
+GET     /requestRowProductors/:id 					controllers.RequestRowProductorController.getById(id: Long)
+POST    /requestRowProductor_update             	controllers.RequestRowProductorController.updatePost
+
+POST    /requestRowProductor                 		controllers.RequestRowProductorController.add
+GET     /requestRowProductors         				controllers.RequestRowProductorController.getRequestRowProductors
+GET     /requestRowProductors_view         			controllers.RequestRowProductorController.index
+GET     /requestRowProductorsByProductor/:id    	controllers.RequestRowProductorController.requestRowProductorsByProductor(id: Long)
+GET     /requestRowProductor_addGet         		controllers.RequestRowProductorController.addGet
+
 
 # profiles
 GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
