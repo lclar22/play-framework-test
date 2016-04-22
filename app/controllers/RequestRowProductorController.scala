@@ -55,7 +55,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       },
       res => {
         repo.create(res.requestRowId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
-          Redirect(routes.ProductRequestController.show(1L))
+          Redirect(routes.RequestRowController.show(res.requestRowId))
         }
       }
     )
@@ -182,7 +182,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       },
       res => {
         repo.update(res.id, res.requestRowId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
-          Redirect(routes.RequestRowProductorController.index)
+          Redirect(routes.RequestRowController.show(res.requestRowId))
         }
       }
     )
