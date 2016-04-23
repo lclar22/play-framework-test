@@ -160,13 +160,15 @@ GET     /discountReport_addGet         			controllers.DiscountReportController.a
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
-GET     /productRequest_update/:id        		controllers.ProductRequestController.getUpdate(id: Long)
+GET     /productRequestByVeterinaria_update/:id controllers.ProductRequestController.getUpdateByVeterinaria(id: Long)
+GET     /productRequestByInsumo_update/:id      controllers.ProductRequestController.getUpdateByInsumo(id: Long)
 GET     /productRequest_send/:id        		controllers.ProductRequestController.getSend(id: Long)
 GET     /productRequest_accept/:id        		controllers.ProductRequestController.getAccept(id: Long)
 GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
 GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
 GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
-POST    /productRequest_update             		controllers.ProductRequestController.updatePostVeterinaria
+POST    /productRequestByVeterinaria_update     controllers.ProductRequestController.updatePostVeterinaria
+POST    /productRequestByInsumo_update          controllers.ProductRequestController.updatePostInsumo
 
 POST    /productRequest                 		controllers.ProductRequestController.addVeterinaria
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
@@ -174,7 +176,8 @@ GET     /productRequestsByVeterinario/:id        controllers.ProductRequestContr
 GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
 GET     /productRequestsByInsumoUser/:id        controllers.ProductRequestController.getProductRequestsByInsumoUser(id: Long)
 GET     /productRequests_view         			controllers.ProductRequestController.index
-GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
+GET     /productRequestByVeterinaria_addGet     controllers.ProductRequestController.addGetByVeterinaria
+GET     /productRequestByInsumo_addGet         	controllers.ProductRequestController.addGetByInsumo
 
 
 # Now for Product requests Rows
