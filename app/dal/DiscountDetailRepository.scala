@@ -18,7 +18,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  */
 @Singleton
 class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,  repoRequestRow: RequestRowRepository
-                                          ,  repoProductor: ProductorRepository)(implicit ec: ExecutionContext) {
+                                          , repoProductor: ProductorRepository, repoDiscount: DiscountReportRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -64,35 +64,14 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   def getById(id: Long): Future[Seq[DiscountDetail]] = db.run {
     tableQ.filter(_.id === id).result
   }
-        //if (prod.numberPayment > 0) {
-        //}
-          //println(prod)
-      //repoProductor.getById(requestRow.productorId).map { case (prod) => 
 
-  //def generarReporte(requestRows: Seq[RequestRowProductor], discountReportId: Long) = {
-  //  // I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
-  //  requestRows.foreach { case (requestRow) => 
-  //    repoProductor.getById(requestRow.productorId).map { case (prod) => 
-  //      println(prod)
-  //      if (prod(0).numberPayment > 0 && prod(0).totalDebt > 0) {
-  //        val insertResult = db.run {
-  //                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
-  //                    returning tableQ.map(_.id)
-  //                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-  //                  ) += (discountReportId, requestRow.productorId, "borrador", prod(0).totalDebt / prod(0).numberPayment, requestRow.id)
-  //                };
-  //        // after insert it we need to decrease the number payment of the productor
-  //        insertResult.map(insertResultRow => repoProductor.updateNumberPayment(requestRow.productorId, -1).map(mm => println("DONE")))
-  //        println("DONE")
-  //      }
-  //    }
-  //    // This updates the paid of the row but should go when I finished the discount retail
-  //  }
-  //}
+// I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
+// I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
 def generarReporte(requestRows: Seq[Productor], discountReportId: Long) = {
-    // I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
+    var totalDiscount = 0.0
     requestRows.foreach { case (productor) => 
       if (productor.numberPayment > 0 && productor.totalDebt > 0) {
+        totalDiscount =  totalDiscount + productor.totalDebt / productor.numberPayment;
         val insertResult = db.run {
           (tableQ.map(discountDetail => (discountDetail.discountReport, discountDetail.productorId, discountDetail.status, discountDetail.discount, discountDetail.requestRow))
             returning tableQ.map(_.id)
@@ -103,6 +82,8 @@ def generarReporte(requestRows: Seq[Productor], discountReportId: Long) = {
         insertResult.map(insertResultRow => repoProductor.updateNumberPayment(productor.id, -1).map(mm => println("DONE")));
       }
     }
+    repoDiscount.updateTotal(discountReportId, totalDiscount)
+    println(totalDiscount)
   }
 
 

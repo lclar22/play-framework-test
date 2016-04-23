@@ -26,17 +26,17 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     def startDate = column[String]("startDate")
     def endDate = column[String]("endDate")
     def status = column[String]("status")
-    def total = column[Int]("total")
+    def total = column[Double]("total")
     def * = (id, startDate, endDate, status, total) <> ((DiscountReport.apply _).tupled, DiscountReport.unapply)
   }
 
   private val tableQ = TableQuery[DiscountReportTable]
 
-  def create(startDate: String, endDate: String, status: String, total: Int): Future[DiscountReport] = db.run {
+  def create(startDate: String, endDate: String, status: String): Future[DiscountReport] = db.run {
     (tableQ.map(p => (p.startDate, p.endDate, p.status, p.total))
       returning tableQ.map(_.id)
       into ((nameAge, id) => DiscountReport(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4))
-    ) += (startDate, endDate, status, total)
+    ) += (startDate, endDate, status, 0.0)
   }
 
   def list(): Future[Seq[DiscountReport]] = db.run {
@@ -62,7 +62,7 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // update required to copy
-  def update(id: Long, startDate: String, endDate: String, status: String, total: Int): Future[Seq[DiscountReport]] = db.run {
+  def update(id: Long, startDate: String, endDate: String, status: String, total: Double): Future[Seq[DiscountReport]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.startDate
     db.run(q.update(startDate))
     val q2 = for { c <- tableQ if c.id === id } yield c.endDate
@@ -102,5 +102,14 @@ class DiscountReportRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     val affectedRowsCount: Future[Int] = db.run(action)
     println("removed " + affectedRowsCount);
     tableQ.result
+  }
+
+    // Update the status to enviado status
+  def updateTotal(id: Long, monto: Double): Future[Seq[DiscountReport]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.total
+    getById(id).map { row =>
+      db.run(q.update(monto))
+    }
+    tableQ.filter(_.id === id).result
   }
 }

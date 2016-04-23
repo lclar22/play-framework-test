@@ -18,6 +18,8 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import play.api.data.format.Formats._ 
+
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
                                           repoSto: StorekeeperRepository, repoDiscDetail: DiscountDetailRepository
@@ -29,8 +31,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     mapping(
       "startDate" -> text,
       "endDate" -> text,
-      "status" -> text,
-      "total" -> number
+      "status" -> text
     )(CreateDiscountReportForm.apply)(CreateDiscountReportForm.unapply)
   }
 
@@ -58,7 +59,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
         Future.successful(Ok(views.html.discountReport_index(Map[String, String]())))
       },
       res => {
-        repo.create(res.startDate, res.endDate, res.status, res.total).map { _ =>
+        repo.create(res.startDate, res.endDate, res.status).map { _ =>
           Redirect(routes.DiscountReportController.index)
         }
       }
@@ -78,7 +79,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
       "startDate" -> text,
       "endDate" -> text,
       "status" -> text,
-      "total" -> number
+      "total" -> of[Double]
     )(UpdateDiscountReportForm.apply)(UpdateDiscountReportForm.unapply)
   }
 
@@ -178,6 +179,6 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
 
 }
 
-case class CreateDiscountReportForm(startDate: String, endDate: String, status: String, total: Int)
+case class CreateDiscountReportForm(startDate: String, endDate: String, status: String)
 
-case class UpdateDiscountReportForm(id: Long, startDate: String, endDate: String, status: String, total: Int)
+case class UpdateDiscountReportForm(id: Long, startDate: String, endDate: String, status: String, total: Double)

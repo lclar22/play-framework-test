@@ -143,7 +143,7 @@ create table discountReport (
   startDate VARCHAR(30),
   endDate VARCHAR(30),
   status VARCHAR(30),
-  total int,
+  total double,
   user_id INT
 );
 
@@ -153,7 +153,7 @@ create table discountDetail (
   requestRow INT,
   productorId INT,
   status VARCHAR(30),
-  discount Int
+  discount double
 );
 
 # --- !Downs
