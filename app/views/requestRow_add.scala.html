@@ -1,4 +1,4 @@
-@(row: Form[CreateRequestRowForm], requests: Map[String, String], products: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
+@(row: Form[CreateRequestRowForm], requests: Map[String, String], products: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -8,7 +8,6 @@
     </div>
     @form(routes.RequestRowController.add()) {
         @select(field = row("requestId"), options = options(requests))
-        @select(field = row("productorId"), options = options(productors))
         @select(field = row("productId"), options = options(products))
         @inputText(row("quantity"))
         @inputText(row("precio"))

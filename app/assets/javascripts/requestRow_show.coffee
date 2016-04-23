@@ -4,6 +4,5 @@ $ ->
     $.each rows, (index, row) ->
       $("#requestId").html row.requestId
       $("#productId").html row.productId
-      $("#productorId").html row.productorId
       $("#quantity").html row.quantity
       $("#status").html row.status

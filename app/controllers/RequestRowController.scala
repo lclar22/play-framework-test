@@ -27,7 +27,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     mapping(
       "requestId" -> longNumber,
       "productId" -> longNumber,
-      "productorId" -> longNumber,
       "quantity" -> number,
       "precio" -> of[Double],
       "status" -> text
@@ -45,8 +44,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
   def addGet = Action {
     val productReqNames = getProductReqNamesMap()
     val insumoNames = getInsumoNamesMap()
-    val productorNames = getProductorNamesMap()
-    Ok(views.html.requestRow_add(newForm, productReqNames, insumoNames, productorNames))
+    Ok(views.html.requestRow_add(newForm, productReqNames, insumoNames))
   }
 
   def add = Action.async { implicit request =>
@@ -55,7 +53,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         Future.successful(Ok(views.html.requestRow_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.requestId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
+        repo.create(res.requestId, res.productId, res.quantity, res.precio, res.status).map { _ =>
           Redirect(routes.ProductRequestController.show(res.requestId))
         }
       }
@@ -74,7 +72,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       "id" -> longNumber,
       "requestId" -> longNumber,
       "productId" -> longNumber,
-      "productorId" -> longNumber,
       "quantity" -> number,
       "precio" -> of[Double],
       "status" -> text
@@ -90,12 +87,11 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
-                                "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
+                                "productId" -> res.toList(0).productId.toString(),
                                 "quantity" -> res.toList(0).quantity.toString(), "precio" -> res.toList(0).precio.toString(), "status" -> res.toList(0).status.toString())
       val productReqNames = getProductReqNamesMap()
       val insumoNames = getInsumoNamesMap()
-      val productorNames = getProductorNamesMap()
-      Ok(views.html.requestRow_update(updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
+      Ok(views.html.requestRow_update(updateForm.bind(anyData), productReqNames, insumoNames))
     }
   }
 
@@ -168,21 +164,14 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }
   }
 
-  // to copy
-  def requestRowsByProductor(id: Long) = Action.async {
-    repo.requestRowsByProductor(id).map { res =>
-      Ok(Json.toJson(res))
-    }
-  }
-
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRow_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.requestId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
+        repo.update(res.id, res.requestId, res.productId, res.quantity, res.precio, res.status).map { _ =>
           Redirect(routes.ProductRequestController.show(res.requestId))
         }
       }
@@ -191,6 +180,6 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
 
 }
 
-case class CreateRequestRowForm(requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)
+case class CreateRequestRowForm(requestId: Long, productId: Long, quantity: Int, precio: Double, status: String)
 
-case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, productorId: Long, quantity: Int, precio: Double, status: String)
+case class UpdateRequestRowForm(id: Long, requestId: Long, productId: Long, quantity: Int, precio: Double, status: String)

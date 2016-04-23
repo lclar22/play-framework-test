@@ -1,4 +1,4 @@
-@(row: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String], productors: Map[String, String])(implicit messages: Messages)
+@(row: Form[UpdateRequestRowForm], requests: Map[String, String], productos: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -8,7 +8,6 @@
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @select(field = row("requestId"), options = options(requests))
         @select(field = row("productId"), options = options(productos))
-        @select(field = row("productorId"), options = options(productors))
         @inputText(row("quantity"))
         @inputText(row("precio"))
         @inputText(row("status"))
