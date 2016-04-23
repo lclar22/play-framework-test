@@ -98,7 +98,8 @@ create table productRequest (
   veterinario INT,
   storekeeper INT,
   status VARCHAR(30),
-  detail VARCHAR(30)
+  detail VARCHAR(30),
+  type VARCHAR(30)
 );
 
 create table requestRow (

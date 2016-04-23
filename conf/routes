@@ -166,12 +166,13 @@ GET     /productRequest_accept/:id        		controllers.ProductRequestController
 GET     /productRequest_finish/:id        		controllers.ProductRequestController.getFinish(id: Long)
 GET     /productRequest_remove/:id        		controllers.ProductRequestController.delete(id: Long)
 GET     /productRequests/:id 					controllers.ProductRequestController.getById(id: Long)
-POST    /productRequest_update             		controllers.ProductRequestController.updatePost
+POST    /productRequest_update             		controllers.ProductRequestController.updatePostVeterinaria
 
-POST    /productRequest                 		controllers.ProductRequestController.add
+POST    /productRequest                 		controllers.ProductRequestController.addVeterinaria
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
 GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
 GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
+GET     /productRequestsByInsumoUser/:id        controllers.ProductRequestController.getProductRequestsByInsumoUser(id: Long)
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet         			controllers.ProductRequestController.addGet
 
@@ -189,7 +190,6 @@ POST    /requestRow_update             		controllers.RequestRowController.update
 POST    /requestRow                 		controllers.RequestRowController.add
 GET     /requestRows         				controllers.RequestRowController.getRequestRows
 GET     /requestRows_view         			controllers.RequestRowController.index
-GET     /requestRowsByProductor/:id    		controllers.RequestRowController.requestRowsByProductor(id: Long)
 GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 
 # Now for Product requests Rows Productors

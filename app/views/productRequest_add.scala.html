@@ -6,7 +6,7 @@
     <div>
         <a href="/"></a>
     </div>
-    @form(routes.ProductRequestController.add()) {
+    @form(routes.ProductRequestController.addVeterinaria()) {
         @inputText(row("date"))
         @select(field = row("veterinario"), options = options(veterinarios))
         @select(field = row("storekeeper"), options = options(storekeepers))

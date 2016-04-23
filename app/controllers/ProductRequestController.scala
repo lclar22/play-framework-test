@@ -44,14 +44,27 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     val storeNames = getStorekeepersNamesMap()
     Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
   }
-  
-  def add = Action.async { implicit request =>
+
+  def addVeterinaria = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail).map { _ =>
+        repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "veterinaria").map { _ =>
+          Redirect(routes.VeterinarioController.profile(res.veterinario))
+        }
+      }
+    )
+  }
+
+  def addInsumo = Action.async { implicit request =>
+    newForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
+      },
+      res => {
+        repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "insumo").map { _ =>
           Redirect(routes.VeterinarioController.profile(res.veterinario))
         }
       }
@@ -66,6 +79,12 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
 
   def getProductRequestsByStorekeeper(id: Long) = Action.async {
     repo.listByStorekeeper(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
+  def getProductRequestsByInsumoUser(id: Long) = Action.async {
+    repo.listByInsumoUser(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
@@ -164,13 +183,27 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   }
 
   // update required
-  def updatePost = Action.async { implicit request =>
+  def updatePostVeterinaria = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.date, res.veterinario, res.storekeeper, res.status, res.detail).map { _ =>
+        repo.update(res.id, res.date, res.veterinario, res.storekeeper, res.status, res.detail, "veterinaria").map { _ =>
+          Redirect(routes.ProductRequestController.index)
+        }
+      }
+    )
+  }
+
+  // update required
+  def updatePostInsumo = Action.async { implicit request =>
+    updateForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.productRequest_update(errorForm, Map[String, String](), Map[String, String]())))
+      },
+      res => {
+        repo.update(res.id, res.date, res.veterinario, res.storekeeper, res.status, res.detail, "insumo").map { _ =>
           Redirect(routes.ProductRequestController.index)
         }
       }
