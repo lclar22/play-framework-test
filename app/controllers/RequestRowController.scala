@@ -170,7 +170,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
 
   // to copy
   def requestRowsByProductor(id: Long) = Action.async {
-    repo.getById(id).map { res =>
+    repo.requestRowsByProductor(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
