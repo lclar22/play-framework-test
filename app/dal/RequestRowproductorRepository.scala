@@ -28,7 +28,7 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
     def productorId = column[Long]("productorId")
     def quantity = column[Int]("quantity")
     def precio = column[Double]("precio")
-    def paid = column[Int]("paid")
+    def paid = column[Double]("paid")
     def status = column[String]("status")
     def * = (id, requestRowId, productId, productorId, quantity, precio, paid, status) <> ((RequestRowProductor.apply _).tupled, RequestRowProductor.unapply)
   }
@@ -96,7 +96,7 @@ class RequestRowProductorRepository @Inject() (dbConfigProvider: DatabaseConfigP
   }
 
   // Update the status to enviado status
-  def updatePaid(id: Long, monto: Int): Future[Seq[RequestRowProductor]] = db.run {
+  def updatePaid(id: Long, monto: Double): Future[Seq[RequestRowProductor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.paid
     getById(id).map { row =>
       db.run(q.update(row(0).paid + monto))

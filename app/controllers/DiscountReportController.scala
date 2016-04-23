@@ -20,7 +20,8 @@ import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
-                                          repoSto: StorekeeperRepository, repoDiscDetail: DiscountDetailRepository, repoRequestRows: RequestRowRepository, 
+                                          repoSto: StorekeeperRepository, repoDiscDetail: DiscountDetailRepository
+                                          , repoRequestRows: RequestRowRepository, repoRequestRowProductors: RequestRowProductorRepository, 
                                           val messagesApi: MessagesApi)
                                          (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -41,7 +42,7 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
   }
 
   def generarReporte(id: Long) = Action {
-    val productRequestRowsByProduct = getProductoRequestsByQuantity()
+    val productRequestRowsByProduct = getProductoByTotalDebt()
     repoDiscDetail.generarReporte(productRequestRowsByProduct, id)
     Ok(views.html.discountReport_show(id.toString()))
   }
@@ -119,12 +120,11 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }, 500.millis)
   }
 
-  def getProductoRequestsByQuantity(): Seq[RequestRow] = {
-    Await.result(repoRequestRows.listByQuantity().map{ case (res1) => 
+  def getProductoByTotalDebt(): Seq[Productor] = {
+    Await.result(repoProd.listByTotalDebt().map{ case (res1) => 
       res1
     }, 3000.millis)
   }
-
 
   def getDiscountDetailList(id: Long): Seq[DiscountDetail] = {
     Await.result(repoDiscDetail.listByReport(id).map{ case (res1) => 
@@ -139,11 +139,15 @@ class DiscountReportController @Inject() (repo: DiscountReportRepository, repoPr
     }
   }
 
-  // update required
+  /* Update all report details to dinalized
+  * Update all productors totalDebt with -discount
+  */
   def finalizeReport(id: Long) = Action.async {
     val discountDetails = getDiscountDetailList(id)
     discountDetails.foreach{ case (discountDetail) => 
-      repoRequestRows.updatePaid(discountDetail.requestRow, discountDetail.discount)
+      // maybe I will need to update this to repoRequestRowProductors
+      repoRequestRowProductors.updatePaid(discountDetail.requestRow, discountDetail.discount);
+      repoProd.updateTotalDebt(discountDetail.productorId, - discountDetail.discount);
     }
 
     repo.finalizeById(id).map {case (res) =>

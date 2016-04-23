@@ -14,6 +14,8 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import play.api.data.format.Formats._ 
+
 
 class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -40,8 +42,6 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     Ok(generator.toBytes(views.html.reporte_productores(), "http://localhost:9000/")).as("application/pdf")
   }
 
-
-
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -60,7 +60,6 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       Ok(Json.toJson(res))
     }
   }
-
 
   def getProductores = Action.async {
     repo.list().map { res =>
@@ -84,7 +83,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "direccion" -> nonEmptyText,
       "account" -> longNumber,
       "asociacion" -> longNumber,
-      "totalDebt" -> longNumber,
+      "totalDebt" -> of[Double],
       "numberPayment" -> number,
       "position" -> text
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
@@ -122,7 +121,6 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     }
   }
 
-
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
@@ -142,4 +140,4 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
 case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
 
 // Update required
-case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Long, numberPayment: Int, position: String)
+case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Double, numberPayment: Int, position: String)

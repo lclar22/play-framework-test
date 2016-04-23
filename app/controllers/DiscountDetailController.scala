@@ -15,6 +15,8 @@ import scala.collection.mutable.ListBuffer
 import java.util.LinkedHashMap
 import collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import play.api.data.format.Formats._ 
+
 
 import javax.inject._
 
@@ -26,7 +28,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       "discountReport" -> longNumber,
       "productorId" -> longNumber,
       "status" -> text,
-      "discount" -> number
+      "discount" -> of[Double]
     )(CreateDiscountDetailForm.apply)(CreateDiscountDetailForm.unapply)
   }
 
@@ -90,7 +92,7 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       "discountReport" -> longNumber,
       "productorId" -> longNumber,
       "status" -> text,
-      "discount" -> number
+      "discount" -> of[Double]
     )(UpdateDiscountDetailForm.apply)(UpdateDiscountDetailForm.unapply)
   }
 
@@ -162,9 +164,8 @@ class DiscountDetailController @Inject() (repo: DiscountDetailRepository, repoDi
       }
     )
   }
-
 }
 
-case class CreateDiscountDetailForm(discountReport: Long, productorId: Long, status: String, discount: Int)
+case class CreateDiscountDetailForm(discountReport: Long, productorId: Long, status: String, discount: Double)
 
-case class UpdateDiscountDetailForm(id: Long, discountReport: Long, productorId: Long, status: String, discount: Int)
+case class UpdateDiscountDetailForm(id: Long, discountReport: Long, productorId: Long, status: String, discount: Double)

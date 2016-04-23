@@ -29,7 +29,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     def direccion = column[String]("direccion")
     def account = column[Long]("account")
     def asociacion = column[Long]("asociacion")
-    def totalDebt = column[Long]("totalDebt")
+    def totalDebt = column[Double]("totalDebt")
     def numberPayment = column[Int]("numberPayment")
     def position = column[String]("position")
     def * = (id, nombre, carnet, telefono, direccion, account, asociacion, totalDebt, numberPayment, position) <> ((Productor.apply _).tupled, Productor.unapply)
@@ -54,7 +54,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Long, numberPayment: Int, position: String): Future[Seq[Productor]] = db.run {
+  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Double, numberPayment: Int, position: String): Future[Seq[Productor]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
@@ -78,9 +78,30 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     tableQ.result
   }
 
-
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
     tableQ.filter(_.id < 10L).map(s => (s.id, s.nombre)).result
+  }
+
+    // Update the status to enviado status
+  def updateTotalDebt(id: Long, monto: Double): Future[Seq[Productor]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.totalDebt
+    getById(id).map { row =>
+      db.run(q.update(row(0).totalDebt + monto))
+    }
+    tableQ.filter(_.id === id).result
+  }
+
+    // Update it when generate the report
+  def updateNumberPayment(id: Long, numberPayment: Int): Future[Seq[Productor]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.numberPayment
+    getById(id).map { row =>
+      db.run(q.update(row(0).numberPayment + numberPayment))
+    }
+    tableQ.filter(_.id === id).result
+  }
+
+  def listByTotalDebt(): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.totalDebt > 0.0).result
   }
 
 }

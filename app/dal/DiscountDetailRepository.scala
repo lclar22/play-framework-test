@@ -6,6 +6,8 @@ import slick.driver.JdbcProfile
 
 import models.DiscountDetail
 import models.RequestRow
+import models.RequestRowProductor
+import models.Productor
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -15,7 +17,8 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,  repoRequestRow: RequestRowRepository)(implicit ec: ExecutionContext) {
+class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvider,  repoRequestRow: RequestRowRepository
+                                          ,  repoProductor: ProductorRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -27,14 +30,14 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     def discountReport = column[Long]("discountReport")
     def productorId = column[Long]("productorId")
     def status = column[String]("status")
-    def discount = column[Int]("discount")
+    def discount = column[Double]("discount")
     def requestRow = column[Long]("requestRow")
     def * = (id, discountReport, productorId, status, discount, requestRow) <> ((DiscountDetail.apply _).tupled, DiscountDetail.unapply)
   }
 
   private val tableQ = TableQuery[DiscountDetailsTable]
 
-  def create(discountReport: Long, productorId: Long, status: String, discount: Int): Future[DiscountDetail] = db.run {
+  def create(discountReport: Long, productorId: Long, status: String, discount: Double): Future[DiscountDetail] = db.run {
     (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
       returning tableQ.map(_.id)
       into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
@@ -61,25 +64,51 @@ class DiscountDetailRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   def getById(id: Long): Future[Seq[DiscountDetail]] = db.run {
     tableQ.filter(_.id === id).result
   }
+        //if (prod.numberPayment > 0) {
+        //}
+          //println(prod)
+      //repoProductor.getById(requestRow.productorId).map { case (prod) => 
 
-  def generarReporte(requestRows: Seq[RequestRow], discountReportId: Long) = {
-    requestRows.foreach { case (requestRow) => 
-       val insertResult = db.run {
-                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
-                    returning tableQ.map(_.id)
-                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
-                  ) += (discountReportId, requestRow.productorId, "borrador", requestRow.quantity, requestRow.id)
-                };
-        println("DONE")
-      // This updates the paid of the row but should go when I finished the discount retail
-      //insertResult.map(insertResultRow => repoRequestRow.updatePaid(requestRow.id, insertResultRow.discount).map(mm => println("DONE")))
+  //def generarReporte(requestRows: Seq[RequestRowProductor], discountReportId: Long) = {
+  //  // I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
+  //  requestRows.foreach { case (requestRow) => 
+  //    repoProductor.getById(requestRow.productorId).map { case (prod) => 
+  //      println(prod)
+  //      if (prod(0).numberPayment > 0 && prod(0).totalDebt > 0) {
+  //        val insertResult = db.run {
+  //                  (tableQ.map(p => (p.discountReport, p.productorId, p.status, p.discount, p.requestRow))
+  //                    returning tableQ.map(_.id)
+  //                    into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+  //                  ) += (discountReportId, requestRow.productorId, "borrador", prod(0).totalDebt / prod(0).numberPayment, requestRow.id)
+  //                };
+  //        // after insert it we need to decrease the number payment of the productor
+  //        insertResult.map(insertResultRow => repoProductor.updateNumberPayment(requestRow.productorId, -1).map(mm => println("DONE")))
+  //        println("DONE")
+  //      }
+  //    }
+  //    // This updates the paid of the row but should go when I finished the discount retail
+  //  }
+  //}
+def generarReporte(requestRows: Seq[Productor], discountReportId: Long) = {
+    // I will need the productor totalDebt / numberPayments = next discount/*prod.totalDebt / prod.numberPayment*//*Instead of price I have to have a price that gives me the next discount*/
+    requestRows.foreach { case (productor) => 
+      if (productor.numberPayment > 0 && productor.totalDebt > 0) {
+        val insertResult = db.run {
+          (tableQ.map(discountDetail => (discountDetail.discountReport, discountDetail.productorId, discountDetail.status, discountDetail.discount, discountDetail.requestRow))
+            returning tableQ.map(_.id)
+            into ((nameAge, id) => DiscountDetail(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5))
+          ) += (discountReportId, productor.id, "borrador", productor.totalDebt / productor.numberPayment, 0)
+        };
+        // after insert it we need to decrease the number payment of the productor
+        insertResult.map(insertResultRow => repoProductor.updateNumberPayment(productor.id, -1).map(mm => println("DONE")));
+      }
     }
   }
 
 
 
   // update required to copy
-  def update(id: Long, discountReport: Long, productorId: Long, status: String, discount: Int): Future[Seq[DiscountDetail]] = db.run {
+  def update(id: Long, discountReport: Long, productorId: Long, status: String, discount: Double): Future[Seq[DiscountDetail]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.discountReport
     db.run(q.update(discountReport))
     val q2 = for { c <- tableQ if c.id === id } yield c.productorId

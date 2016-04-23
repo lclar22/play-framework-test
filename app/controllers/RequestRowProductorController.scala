@@ -19,7 +19,9 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: RequestRowRepository, repoInsum: InsumoRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: RequestRowRepository, 
+                                               repoInsum: InsumoRepository, repoProductor: ProductorRepository,
+                                               val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowProductorForm] = Form {
@@ -55,6 +57,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       },
       res => {
         repo.create(res.requestRowId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
+          repoProductor.updateTotalDebt(res.productorId, res.precio);
           Redirect(routes.RequestRowController.show(res.requestRowId))
         }
       }

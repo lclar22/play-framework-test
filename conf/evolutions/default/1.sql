@@ -1,12 +1,5 @@
 # --- !Ups
 
-create table clientes (
-  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(30) not null,
-  carnet int not null,
-  id_asociacion int not null
-);
-
 create table asociacion (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(30) not null
@@ -145,14 +138,6 @@ create table productInv (
   total_cost int
 );
 
-create table debt (
-  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  total int,
-  paid int,
-  status VARCHAR(30),
-  producto_id INT
-);
-
 create table discountReport (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   startDate VARCHAR(30),
@@ -171,17 +156,7 @@ create table discountDetail (
   discount Int
 );
 
-create table discountDetailTest (
-  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  discountReport INT,
-  requestRow INT,
-  productorId INT,
-  status VARCHAR(30),
-  discount Int
-);
-
 # --- !Downs
-drop table clientes;
 drop table asociacion;
 drop table module;
 drop table account;
@@ -196,7 +171,6 @@ drop table user;
 drop table productInv;
 drop table discountReport;
 drop table discountDetail;
-drop table discountDetailTest;
 drop table requestRow;
 drop table productRequest;
 drop table requestRowProductor;
