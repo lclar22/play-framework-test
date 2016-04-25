@@ -1,0 +1,17 @@
+@(row: Form[UpdateInsumoForm])(implicit messages: Messages)
+
+@import helper._
+
+@main("Actualizar") {
+    @form(routes.InsumoController.updatePost()) {
+        @inputText(row("id"), 'hidden -> "true", '_label -> "")
+        @inputText(row("nombre"))
+        @inputText(row("costo"))
+        @inputText(row("porcentage"))
+        @inputText(row("descripcion"))
+        @inputText(row("unidad"))
+        @inputText(row("currentAmount"))
+        <input type="submit" class="btn btn-primary" value="Actualizar"/>
+        <a href="/insumos_view" class="btn btn-primary">Cancel</a>
+    }
+}
