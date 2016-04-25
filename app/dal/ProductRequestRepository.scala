@@ -54,7 +54,7 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   def listByInsumoUser(id: Long): Future[Seq[ProductRequest]] = db.run {
-    tableQ.filter(_.storekeeper === id).result
+    tableQ.filter(_.veterinario === id).result
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {

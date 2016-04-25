@@ -44,13 +44,13 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   def addGetByVeterinaria = Action {
     val veterinariosNames = getVeterinarioNamesMap()
     val storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
+    Ok(views.html.productRequestByVeterinaria_add(newForm, veterinariosNames, storeNames))
   }
 
   def addGetByInsumo = Action {
     val insumoUsersNames = getInsumoUserNamesMap()
     val storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_add(newForm, insumoUsersNames, storeNames))
+    Ok(views.html.productRequestByInsumo_add(newForm, insumoUsersNames, storeNames))
   }
 
   def addByVeterinaria = Action.async { implicit request =>
@@ -127,7 +127,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
       val insumosMap = getVeterinarioNamesMap()
       val storeMap = getStorekeepersNamesMap()
-      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, storeMap))
+      Ok(views.html.productRequestByVeterinaria_update(updateForm.bind(anyData), insumosMap, storeMap))
     }
   }
 
@@ -137,7 +137,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
       val insumosMap = getVeterinarioNamesMap()
       val storeMap = getStorekeepersNamesMap()
-      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, storeMap))
+      Ok(views.html.productRequestByInsumo_update(updateForm.bind(anyData), insumosMap, storeMap))
     }
   }
 

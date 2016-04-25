@@ -171,7 +171,7 @@ POST    /productRequestByVeterinaria_update     controllers.ProductRequestContro
 POST    /productRequestByInsumo_update          controllers.ProductRequestController.updatePostInsumo
 
 POST    /productRequestByVeterinaria      		controllers.ProductRequestController.addByVeterinaria
-POST    /productRequestByInsumo      		controllers.ProductRequestController.addByInsumo
+POST    /productRequestByInsumo      			controllers.ProductRequestController.addByInsumo
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
 GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
 GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
