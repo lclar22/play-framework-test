@@ -26,3 +26,6 @@ account = Cuenta
 telefono = Telefono
 direccion = Direccion
 asociacion = Asociacion
+type_1 = Tipo
+name = Nombre
+code = Codigo

@@ -3,7 +3,7 @@
 @main("Mostrar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/account_show.js")'></script>
     <div>
-        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista de Cuentas</span></a>
+        <a href="/accounts_view"><span class="glyphicon glyphicon-plus">Lista de Cuentas</span></a>
     </div>
     <div class="container">
         <div>
@@ -23,46 +23,4 @@
             <div style="display: inline-block;" id="description">  </div>
         </div>
     </div>
-    <div class="container">
-        <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowByProductor.js")'></script>
-        <div>
-            <a href="/"><span class="glyphicon glyphicon-plus">Muro</span></a>
-        </div>
-        <div>Lista de Pedidos</div>
-        <div class="table-responsive">
-            <table class="table" id="rows">
-                <thead>
-                    <tr>
-                        <th>Pedido</th>
-                        <th>Producto</th>
-                        <th>Productor</th>
-                        <th>Cantidad</th>
-                        <th>Precio</th>
-                        <th>Pagado</th>
-                        <th>Estado</th>
-                        <th>-----------</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-    </div>
-   
-   <div class="container">
-       <script type='text/javascript' src='@routes.Assets.versioned("javascripts/discountDetailByReport.js")'></script>
-        <div>Lista de Descuentos</div>
-        <div class="table-responsive">
-            <table class="table" id="descuentos_rows">
-                <thead>
-                    <tr>
-                        <th>Report</th>
-                        <th>Productor</th>
-                        <th>Estado</th>
-                        <th>Descuento</th>
-                        <th>-----------</th>
-                    </tr>
-                </thead>
-            </table>
-        </div>
-   </div>
-
 }
