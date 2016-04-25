@@ -1,13 +1,13 @@
-@(row: Form[CreateInsumoForm])(implicit messages: Messages)
+@(row: Form[CreateProductForm])(implicit messages: Messages)
 
 @import helper._
 
 @main("Agregar") {
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/insumo_index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/product_index.js")'></script>
     <div>
         <a href="/" >Muro</a>
     </div>
-    @form(routes.InsumoController.addInsumo()) {
+    @form(routes.ProductController.addProduct()) {
         <div class="container">
         <div class="col-md-6">
             @inputText(row("nombre"))

@@ -18,7 +18,7 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
-class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: InsumoRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
+class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: ProductRepository, repoProvee: ProveedorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductInvForm] = Form {
@@ -64,7 +64,7 @@ class ProductInvController @Inject() (repo: ProductInvRepository, repoInsum: Ins
       res => {
         repo.create(res.productId, res.proveedorId, res.amount, res.amountLeft).map { _ =>
           repoInsum.updateAmount(res.productId, res.amount)
-          Redirect(routes.InsumoController.show(res.productId))
+          Redirect(routes.ProductController.show(res.productId))
         }
       }
     )

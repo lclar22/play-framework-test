@@ -4,7 +4,7 @@ import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
-import models.Insumo
+import models.Product
 
 import scala.concurrent.{ Future, ExecutionContext }
 
@@ -14,13 +14,13 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import driver.api._
 
-  private class InsumosTable(tag: Tag) extends Table[Insumo](tag, "product") {
+  private class ProductsTable(tag: Tag) extends Table[Product](tag, "product") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def nombre = column[String]("nombre")
@@ -29,19 +29,19 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     def descripcion = column[String]("descripcion")
     def unidad = column[Long]("unidad")
     def currentAmount = column[Int]("currentAmount")
-    def * = (id, nombre, costo, porcentage, descripcion, unidad, currentAmount) <> ((Insumo.apply _).tupled, Insumo.unapply)
+    def * = (id, nombre, costo, porcentage, descripcion, unidad, currentAmount) <> ((Product.apply _).tupled, Product.unapply)
   }
 
-  private val tableQ = TableQuery[InsumosTable]
+  private val tableQ = TableQuery[ProductsTable]
 
-  def create(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Insumo] = db.run {
+  def create(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Product] = db.run {
     (tableQ.map(p => (p.nombre, p.costo, p.porcentage, p.descripcion, p.unidad, p.currentAmount))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => Insumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
+      into ((nameAge, id) => Product(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
     ) += (nombre, costo, porcentage, descripcion, unidad, currentAmount)
   }
 
-  def list(): Future[Seq[Insumo]] = db.run {
+  def list(): Future[Seq[Product]] = db.run {
     tableQ.result
   }
 
@@ -54,12 +54,12 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   }
 
     // to cpy
-  def getById(id: Long): Future[Seq[Insumo]] = db.run {
+  def getById(id: Long): Future[Seq[Product]] = db.run {
     tableQ.filter(_.id === id).result
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Seq[Insumo]] = db.run {
+  def update(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int): Future[Seq[Product]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.porcentage
@@ -76,7 +76,7 @@ class InsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   }
 
   // delete required
-  def delete(id: Long): Future[Seq[Insumo]] = db.run {
+  def delete(id: Long): Future[Seq[Product]] = db.run {
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)

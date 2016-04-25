@@ -99,17 +99,17 @@ GET     /proveedores         			controllers.ProveedorController.getProveedores
 GET     /proveedores_view         		controllers.ProveedorController.index
 
 # Now for insumos or products
-GET     /insumo_show/:id 				controllers.InsumoController.show(id: Long)
-GET     /insumo_update/:id        		controllers.InsumoController.getUpdate(id: Long)
-GET     /insumo_remove/:id        		controllers.InsumoController.delete(id: Long)
-GET     /insumos/:id 					controllers.InsumoController.getById(id: Long)
-POST    /insumo_update             		controllers.InsumoController.updatePost
-POST    /insumoUpload/:id             		controllers.InsumoController.upload(id: Long)
+GET     /product_show/:id 				controllers.ProductController.show(id: Long)
+GET     /product_update/:id        		controllers.ProductController.getUpdate(id: Long)
+GET     /product_remove/:id        		controllers.ProductController.delete(id: Long)
+GET     /products/:id 					controllers.ProductController.getById(id: Long)
+POST    /product_update             		controllers.ProductController.updatePost
+POST    /productUpload/:id             		controllers.ProductController.upload(id: Long)
 
-POST    /insumo                 		controllers.InsumoController.addInsumo
-GET     /insumos         				controllers.InsumoController.getInsumos
-GET     /insumos_view         			controllers.InsumoController.index
-GET     /insumo_list         			controllers.InsumoController.list
+POST    /product                 		controllers.ProductController.addProduct
+GET     /products         				controllers.ProductController.getProducts
+GET     /products_view         			controllers.ProductController.index
+GET     /product_list         			controllers.ProductController.list
 
 # Now for product Invs
 GET     /productInv_show/:id 				controllers.ProductInvController.show(id: Long)
@@ -170,7 +170,8 @@ GET     /productRequests/:id 					controllers.ProductRequestController.getById(i
 POST    /productRequestByVeterinaria_update     controllers.ProductRequestController.updatePostVeterinaria
 POST    /productRequestByInsumo_update          controllers.ProductRequestController.updatePostInsumo
 
-POST    /productRequest                 		controllers.ProductRequestController.addVeterinaria
+POST    /productRequestByVeterinaria      		controllers.ProductRequestController.addByVeterinaria
+POST    /productRequestByInsumo      		controllers.ProductRequestController.addByInsumo
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
 GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
 GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)

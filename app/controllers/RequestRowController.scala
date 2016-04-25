@@ -20,7 +20,7 @@ import play.api.data.format.Formats._
 import javax.inject._
 
 class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository,
-                                      repoInsum: InsumoRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
+                                      repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateRequestRowForm] = Form {

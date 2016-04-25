@@ -14,7 +14,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoInsum: InsumoRepository)(implicit ec: ExecutionContext) {
+class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoInsum: ProductRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._

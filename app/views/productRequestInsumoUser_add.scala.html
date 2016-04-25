@@ -6,7 +6,7 @@
     <div>
         <a href="/"></a>
     </div>
-    @form(routes.ProductRequestController.addInsumo()) {
+    @form(routes.ProductRequestController.addByInsumo()) {
         @inputText(row("date"))
         @select(field = row("veterinario"), options = options(insumoUsers))
         @select(field = row("storekeeper"), options = options(storekeepers))

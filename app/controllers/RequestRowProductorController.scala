@@ -20,7 +20,7 @@ import play.api.data.format.Formats._
 import javax.inject._
 
 class RequestRowProductorController @Inject() (repo: RequestRowProductorRepository, repoProductReq: RequestRowRepository, 
-                                               repoInsum: InsumoRepository, repoProductor: ProductorRepository,
+                                               repoInsum: ProductRepository, repoProductor: ProductorRepository,
                                                val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 

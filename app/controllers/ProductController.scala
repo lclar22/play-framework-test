@@ -14,10 +14,10 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 
-class ProductController @Inject() (repo: ProductController, val messagesApi: MessagesApi)
+class ProductController @Inject() (repo: ProductRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val newForm: Form[CreateInsumoForm] = Form {
+  val newForm: Form[CreateProductForm] = Form {
     mapping(
       "nombre" -> nonEmptyText,
       "costo" -> number,
@@ -25,23 +25,23 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
       "descripcion" -> text,
       "unidad" -> longNumber,
       "currentAmount" -> number
-    )(CreateInsumoForm.apply)(CreateInsumoForm.unapply)
+    )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
 
   def index = Action {
-    Ok(views.html.insumo_index(newForm))
+    Ok(views.html.product_index(newForm))
   }
 
   def list = Action {
-    Ok(views.html.insumo_list())
+    Ok(views.html.product_list())
   }
 
-  def addInsumo = Action.async { implicit request =>
+  def addProduct = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.insumo_index(errorForm)))
+        Future.successful(Ok(views.html.product_index(errorForm)))
       },
       res => {
         repo.create(res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad, res.currentAmount).map { _ =>
@@ -51,14 +51,14 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
     )
   }
 
-  def getInsumos = Action.async {
+  def getProducts = Action.async {
   	repo.list().map { insumos =>
       Ok(Json.toJson(insumos))
     }
   }
 
   // update required
-  val updateForm: Form[UpdateInsumoForm] = Form {
+  val updateForm: Form[UpdateProductForm] = Form {
     mapping(
       "id" -> longNumber,
       "nombre" -> nonEmptyText,
@@ -67,26 +67,26 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
       "descripcion" -> text,
       "unidad" -> longNumber,
       "currentAmount" -> number
-    )(UpdateInsumoForm.apply)(UpdateInsumoForm.unapply)
+    )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
 
   // to copy
   def show(id: Long) = Action {
-    Ok(views.html.insumo_show(id))
+    Ok(views.html.product_show(id))
   }
 
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "costo" -> res.toList(0).costo.toString(), "porcentage" -> res.toList(0).porcentage.toString(), "descripcion" -> res.toList(0).descripcion, "unidad" -> res.toList(0).unidad.toString(), "currentAmount" -> res.toList(0).currentAmount.toString())
-      Ok(views.html.insumo_update(updateForm.bind(anyData)))
+      Ok(views.html.product_update(updateForm.bind(anyData)))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.insumo_index(newForm))
+      Ok(views.html.product_index(newForm))
     }
   }
 
@@ -101,7 +101,7 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.insumo_update(errorForm)))
+        Future.successful(Ok(views.html.product_update(errorForm)))
       },
       res => {
         repo.update(res.id, res.nombre, res.costo, res.porcentage, res.descripcion, res.unidad, res.currentAmount).map { _ =>
@@ -126,7 +126,7 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
         case e: Exception => println(e)
       }
       picture.ref.moveTo(new File(s"$path_1$fileNewName"))
-      Ok(views.html.insumo_show(id))
+      Ok(views.html.product_show(id))
     }.getOrElse {
       Redirect(routes.ProductController.show(id)).flashing(
         "error" -> "Missing file")
@@ -135,6 +135,6 @@ class ProductController @Inject() (repo: ProductController, val messagesApi: Mes
 
 }
 
-case class CreateInsumoForm(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)
+case class CreateProductForm(nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)
 
-case class UpdateInsumoForm(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)
+case class UpdateProductForm(id: Long, nombre: String, costo: Int, porcentage: Int, descripcion: String, unidad: Long, currentAmount: Int)
