@@ -48,9 +48,9 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   }
 
   def addGetByInsumo = Action {
-    val veterinariosNames = getInsumoUserNamesMap()
+    val insumoUsersNames = getInsumoUserNamesMap()
     val storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
+    Ok(views.html.productRequest_add(newForm, insumoUsersNames, storeNames))
   }
 
   def addByVeterinaria = Action.async { implicit request =>
@@ -73,7 +73,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       },
       res => {
         repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "insumo").map { _ =>
-          Redirect(routes.VeterinarioController.profile(res.veterinario))
+          Redirect(routes.InsumoUserController.profile(res.veterinario))
         }
       }
     )
