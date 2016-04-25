@@ -41,10 +41,10 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     Ok(views.html.productRequest_index(veterinariosNames, storeNames))
   }
 
-  def addGetByVeterinaria = Action {
+  def addGet = Action {
     val veterinariosNames = getVeterinarioNamesMap()
     val storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequestByVeterinaria_add(newForm, veterinariosNames, storeNames))
+    Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
   }
 
   def addGetByInsumo = Action {
@@ -53,7 +53,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     Ok(views.html.productRequestByInsumo_add(newForm, insumoUsersNames, storeNames))
   }
 
-  def addByVeterinaria = Action.async { implicit request =>
+  def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
@@ -121,13 +121,18 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     Ok(views.html.productRequest_show())
   }
 
+  // to copy
+  def showByInsumo(id: Long) = Action {
+    Ok(views.html.productRequestByInsumo_show())
+  }
+
   // update required
-  def getUpdateByVeterinaria(id: Long) = Action.async {
+  def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
       val insumosMap = getVeterinarioNamesMap()
       val storeMap = getStorekeepersNamesMap()
-      Ok(views.html.productRequestByVeterinaria_update(updateForm.bind(anyData), insumosMap, storeMap))
+      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, storeMap))
     }
   }
 
