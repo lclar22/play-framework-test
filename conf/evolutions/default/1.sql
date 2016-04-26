@@ -31,7 +31,8 @@ create table transactionDetail (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   transaction INT,
   account INT,
-  amount double
+  debit double,
+  credit double
 );
 
 create table bancos (

@@ -71,7 +71,7 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
-    tableQ.filter(_.id < 10L).map(s => (s.id, s.code + " " + s.name)).result
+    tableQ.filter(_.id < 10L).map(s => (s.id, s.name)).result
   }
 
 }

@@ -9,7 +9,8 @@
     @form(routes.TransactionDetailController.add()) {
         @select(field = row("transactionId"), options = options(transactions))
         @select(field = row("accountId"), options = options(accounts))
-        @inputText(row("amount"))
+        @inputText(row("debit"))
+        @inputText(row("credit"))
         <input type="submit" value="Guardar"/>
     }
 }

@@ -20,14 +20,15 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository, repoProductors: ProductorRepository, val messagesApi: MessagesApi)
+class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository, repoAccounts: AccountRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateTransactionDetailForm] = Form {
     mapping(
       "transactionId" -> longNumber,
       "accountId" -> longNumber,
-      "amount" -> of[Double]
+      "debit" -> of[Double],
+      "credit" -> of[Double]
     )(CreateTransactionDetailForm.apply)(CreateTransactionDetailForm.unapply)
   }
 
@@ -35,7 +36,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
 
   def index = Action {
     val transactionsNames = getTransactionsMap()
-    val productorsNames = getProductorsNamesMap()
+    val productorsNames = getAccountsMap()
     Ok(views.html.transactionDetail_index(newForm, transactionsNames, productorsNames))
   }
 
@@ -45,7 +46,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
         Future.successful(Ok(views.html.transactionDetail_index(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.transactionId, res.accountId, res.amount).map { _ =>
+        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
           Redirect(routes.TransactionController.show(res.transactionId))
         }
       }
@@ -54,7 +55,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
 
   def addGet = Action {
     val transactionsNames = getTransactionsMap()
-    val productorsNames = getProductorsNamesMap()
+    val productorsNames = getAccountsMap()
     Ok(views.html.transactionDetail_add(newForm, transactionsNames, productorsNames))
   }
 
@@ -82,7 +83,8 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       "id" -> longNumber,
       "transactionId" -> longNumber,
       "accountId" -> longNumber,
-      "amount" -> of[Double]
+      "debit" -> of[Double],
+      "credit" -> of[Double]
     )(UpdateTransactionDetailForm.apply)(UpdateTransactionDetailForm.unapply)
   }
 
@@ -94,9 +96,9 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "amount" -> res.toList(0).amount.toString())
+      val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "debit" -> res.toList(0).debit.toString(), "credit" -> res.toList(0).debit.toString())
       val discountRepMap = getTransactionsMap()
-      val proveeMap = getProductorsNamesMap()
+      val proveeMap = getAccountsMap()
       Ok(views.html.transactionDetail_update(updateForm.bind(anyData), discountRepMap, proveeMap))
     }
   }
@@ -112,8 +114,8 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
     }, 3000.millis)
   }
 
-  def getProductorsNamesMap(): Map[String, String] = {
-    Await.result(repoProductors.getListNames().map{ case (res1) => 
+  def getAccountsMap(): Map[String, String] = {
+    Await.result(repoAccounts.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
         cache put (key.toString(), value)
@@ -148,14 +150,14 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
         Future.successful(Ok(views.html.transactionDetail_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.transactionId, res.accountId, res.amount).map { _ =>
-          Redirect(routes.TransactionDetailController.index)
+        repo.update(res.id, res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
+          Redirect(routes.TransactionController.show(res.transactionId))
         }
       }
     )
   }
 }
 
-case class CreateTransactionDetailForm(transactionId: Long, accountId: Long, amount: Double)
+case class CreateTransactionDetailForm(transactionId: Long, accountId: Long, debit: Double, credit: Double)
 
-case class UpdateTransactionDetailForm(id: Long, transactionId: Long, accountId: Long, amount: Double)
+case class UpdateTransactionDetailForm(id: Long, transactionId: Long, accountId: Long, debit: Double, credit: Double)

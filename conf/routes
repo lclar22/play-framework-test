@@ -141,6 +141,21 @@ GET     /discountDetails_view         			controllers.DiscountDetailController.in
 GET     /discountDetail_addGet         			controllers.DiscountDetailController.addGet
 
 
+# Now for Transaction Detail
+GET     /transactionDetail_show/:id 				controllers.TransactionDetailController.show(id: Long)
+GET     /transactionDetail_update/:id        		controllers.TransactionDetailController.getUpdate(id: Long)
+GET     /transactionDetail_remove/:id        		controllers.TransactionDetailController.delete(id: Long)
+GET     /transactionDetails/:id 					controllers.TransactionDetailController.getById(id: Long)
+POST    /transactionDetail_update             		controllers.TransactionDetailController.updatePost
+
+POST    /transactionDetail                 			controllers.TransactionDetailController.add
+GET     /transactionDetails         				controllers.TransactionDetailController.getTransactionDetails
+GET     /transactionDetailsByTransaction/:id		controllers.TransactionDetailController.getTransactionDetailsByTransaction(id: Long)
+GET     /transactionDetailsByAccount/:id			controllers.TransactionDetailController.getTransactionDetailsByAccount(id: Long)
+GET     /transactionDetails_view         			controllers.TransactionDetailController.index
+GET     /transactionDetail_addGet         			controllers.TransactionDetailController.addGet
+
+
 
 # Now for  Discount Report
 GET     /discountReport_show/:id 				controllers.DiscountReportController.show(id: Long)
