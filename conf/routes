@@ -4,6 +4,8 @@
 
 # Home page
 GET     /                			 	controllers.MainController.index
+GET     /                			 	controllers.Application.index
+GET     /login                			controllers.Auth.login
 GET     /pdf               			 	controllers.MainController.index_pdf
 
 # Cuentas routes

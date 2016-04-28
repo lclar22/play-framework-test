@@ -14,4 +14,3 @@ $ ->
       totalCredit += row.credit
       $("#totalDebit").html totalDebit
       $("#totalCredit").html totalCredit
-      console.log totalCredit
