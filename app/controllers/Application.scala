@@ -3,8 +3,8 @@ package controllers
 import javax.inject.Inject
 
 import be.objectify.deadbolt.scala.DeadboltActions
-import play.api.mvc.Controller
 import security.MyDeadboltHandler
+import play.api.mvc.Controller
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future

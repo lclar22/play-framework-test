@@ -14,8 +14,11 @@ import it.innove.play.pdf.PdfGenerator
 import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
+import be.objectify.deadbolt.scala.DeadboltActions
+import security.MyDeadboltHandler
 
-class MainController @Inject() (val messagesApi: MessagesApi)
+
+class MainController @Inject() (val messagesApi: MessagesApi, deadbolt: DeadboltActions)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   /**
