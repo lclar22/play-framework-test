@@ -20,7 +20,8 @@ libraryDependencies ++= Seq(
   "it.innove" % "play2-pdf" % "1.4.0",
   "com.h2database" % "h2" % "1.4.177",
   "mysql" % "mysql-connector-java" % "5.1.36",
-  specs2 % Test
+  specs2 % Test,
+  "be.objectify" %% "deadbolt-scala" % "2.5.0"
 )     
 
 // Play provides two styles of routers, one expects its actions to be injected, the
@@ -33,5 +34,9 @@ fork in run := true
 fork in run := true
 
 
+
+fork in run := true
+
+fork in run := true
 
 fork in run := true
