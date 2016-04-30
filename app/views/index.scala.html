@@ -1,3 +1,6 @@
+@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: AuthenticatedRequest[Any])
+@import be.objectify.deadbolt.scala.views.html._
 @import helper._
 
 @main("Pagina Principal") {
@@ -10,15 +13,17 @@
                     <th>Acciones</th>
                 </tr>
             </thead>
-            <tr>
-                <td>
-                    Productos
-                </td>
-                <td>
-                    <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    <a href="/products"><span class="glyphicon glyphicon-th-list"></span></a>
-                </td>
-            </tr>
+            @restrict(roles = List(Array("admin"))) {
+                <tr>
+                    <td>
+                        Productos
+                    </td>
+                    <td>
+                        <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                        <a href="/products"><span class="glyphicon glyphicon-th-list"></span></a>
+                    </td>
+                </tr>
+            }
             <tr>
                 <td>
                     Proveedores
@@ -104,3 +109,13 @@
         </table>
     </div>
 }
+
+<p>roles:</p>
+@defining(utils.TemplateUtils.getSubjectNow(handler, request).get) { subject =>
+<ul>
+@for(role <- subject.roles){
+    <li>@role.name</li>
+}
+</ul>
+}
+

@@ -6,7 +6,6 @@
 
 GET     /                				controllers.MainController.index
 GET     /index2                			controllers.Application.index
-GET     /pdf               			 	controllers.MainController.index_pdf
 GET     /restrict1                  	controllers.RestrictController.restrictOne
 GET     /restrict2                  	controllers.RestrictController.restrictTwo
 GET     /restrict3                  	controllers.RestrictController.restrictThree

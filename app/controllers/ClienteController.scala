@@ -28,12 +28,6 @@ class ClienteController @Inject() (repo: ClienteRepository, val messagesApi: Mes
     )(CreateClienteForm.apply)(CreateClienteForm.unapply)
   }
 
-  /**
-   * The index action.
-   */
-  def index = Action {
-    Ok(views.html.index())
-  }
 
   /**
    * The index action.

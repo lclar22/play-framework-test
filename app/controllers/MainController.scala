@@ -21,15 +21,14 @@ import security.MyDeadboltHandler
 class MainController @Inject() (val messagesApi: MessagesApi, deadbolt: DeadboltActions)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  /**
-   * The index action.
-   */
-  def index = Action {
-    Ok(views.html.index())
-  }
 
-  def index_pdf = Action {
-  	val generator = new PdfGenerator
-    Ok(generator.toBytes(views.html.index(), "http://localhost:9000/")).as("application/pdf")
-  }
+  def index = deadbolt.WithAuthRequest()() { authRequest =>
+    Future {
+             Ok(views.html.index(new MyDeadboltHandler)(authRequest))
+           }
+   }
+  //def index_pdf = Action {
+  //	val generator = new PdfGenerator
+  //  Ok(generator.toBytes(views.html.index(), "http://localhost:9000/")).as("application/pdf")
+  //}
 }
