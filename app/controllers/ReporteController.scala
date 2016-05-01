@@ -29,6 +29,10 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
     Ok(views.html.reporte_index(newForm))
   }
 
+  def balance = Action {
+    Ok(views.html.reporte_balance())
+  }
+
   def addReporte = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {

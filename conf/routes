@@ -43,6 +43,7 @@ GET     /productores_report    			controllers.ProductorController.getProductores
 GET     /productores_view         		controllers.ProductorController.index
 
 # accounts routes
+GET     /accountChildren/:id 		controllers.AccountController.accountChildren(id: Long)
 GET     /account_show/:id 			controllers.AccountController.show(id: Long)
 GET     /account_update/:id        	controllers.AccountController.getUpdate(id: Long)
 GET     /account_remove/:id        	controllers.AccountController.delete(id: Long)
@@ -271,6 +272,7 @@ GET     /account_names         			controllers.BancoController.getBankNames
 POST    /reporte                 		controllers.ReporteController.addReporte
 GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
+GET     /reportes_balance      			controllers.ReporteController.balance
 
 
 

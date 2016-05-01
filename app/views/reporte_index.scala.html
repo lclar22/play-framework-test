@@ -4,7 +4,7 @@
 
 @main("Agregar réporte") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/reporte_index.js")'></script>
-
+    <div>Lista de reporte de descuentos</div>
     <div class="table-responsive">
         <table class="table" id="reportes">
             <thead>
@@ -13,12 +13,16 @@
                     <th>-----------</th>
                 </tr>
             </thead>
-        </table>
         <tbody>
             <tr>
                 <td>Reporte de descuentos</td>
                 <td><a href="/productores_report_pdf" class="btn btn-info">Mostrar</a><a href="/discountReports_view" class="btn btn-info">Lista</a></td>
             </tr>
+            <tr>
+                <td>Balance General</td>
+                <td><a href="/reportes_balance" class="btn btn-info">Mostrar</a></td>
+            </tr>
         </tbody>
+        </table>
     </div>
 }

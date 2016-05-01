@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,7 +11,7 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
@@ -18,28 +19,31 @@ import it.innove.play.pdf.PdfGenerator
 class AccountController @Inject() (repo: AccountRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val asociaciones = scala.collection.immutable.Map[String, String]("1" -> "Asociacion 1", "2" -> "Asociacion 2")
+  val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
+  val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO")
 
   val newForm: Form[CreateAccountForm] = Form {
     mapping(
       "code" -> nonEmptyText,
       "name" -> nonEmptyText,
       "type_1" -> nonEmptyText,
-      "description" -> nonEmptyText
+      "negativo" -> nonEmptyText,
+      "parent" -> longNumber,
+      "description" -> text
     )(CreateAccountForm.apply)(CreateAccountForm.unapply)
   }
 
   def index = Action {
-    Ok(views.html.account_index(newForm, asociaciones))
+    Ok(views.html.account_index(newForm, yes_no, account_type, getAccountNamesMap()))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_index(errorForm, asociaciones)))
+        Future.successful(Ok(views.html.account_index(errorForm, yes_no, account_type, getAccountNamesMap())))
       },
       res => {
-        repo.create(res.code, res.name, res.type_1, res.description).map { _ =>
+        repo.create(res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
           Redirect(routes.AccountController.index)
         }
       }
@@ -51,7 +55,6 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
       Ok(Json.toJson(res))
     }
   }
-
 
   def getAccounts = Action.async {
     repo.list().map { res =>
@@ -72,7 +75,9 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
       "code" -> nonEmptyText,
       "name" -> nonEmptyText,
       "type_1" -> nonEmptyText,
-      "description" -> nonEmptyText
+      "negativo" -> nonEmptyText,
+      "parent" -> longNumber,
+      "description" -> text
     )(UpdateAccountForm.apply)(UpdateAccountForm.unapply)
   }
 
@@ -84,15 +89,15 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "code" -> res.toList(0).code, "name" -> res.toList(0).name.toString(), "type_1" -> res.toList(0).type_1.toString(), "description" -> res.toList(0).description)
-      Ok(views.html.account_update(updateForm.bind(anyData)))
+      val anyData = Map("id" -> id.toString().toString(), "code" -> res.toList(0).code, "name" -> res.toList(0).name.toString(), "negativo" -> res.toList(0).negativo.toString(), "parent" -> res.toList(0).parent.toString(), "type_1" -> res.toList(0).type_1.toString(), "negativo" -> res.toList(0).negativo.toString(), "parent" -> res.toList(0).parent.toString(), "description" -> res.toList(0).description)
+      Ok(views.html.account_update(updateForm.bind(anyData), yes_no, account_type, getAccountNamesMap()))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.account_index(newForm, asociaciones))
+      Ok(views.html.account_index(newForm, yes_no, account_type, getAccountNamesMap()))
     }
   }
 
@@ -103,24 +108,42 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     }
   }
 
+  // to copy
+  def accountChildren(id: Long) = Action.async {
+    repo.getByParent(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
 
   // update required
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.account_update(errorForm)))
+        Future.successful(Ok(views.html.account_update(errorForm, yes_no, account_type, getAccountNamesMap())))
       },
       res => {
-        repo.update(res.id, res.code, res.name, res.type_1, res.description).map { _ =>
+        repo.update(res.id, res.code, res.name, res.type_1, res.negativo, res.parent, res.description).map { _ =>
           Redirect(routes.AccountController.index)
         }
       }
     )
   }
 
+  def getAccountNamesMap(): Map[String, String] = {
+    val cache = collection.mutable.Map[String, String]()
+    cache put ("0", "--- Ninguno ---")
+    Await.result(
+      repo.getListObjs().map { accountResult => 
+      accountResult.foreach {
+        account => cache put (account.id.toString, account.code + " ------------- " + account.name)
+      }
+    }, 1000.millis)
+    cache.toMap
+  }
+
 }
 
-case class CreateAccountForm(code: String, name: String, type_1: String, description: String)
+case class CreateAccountForm(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String)
 
 // Update required
-case class UpdateAccountForm(id: Long, code: String, name: String, type_1: String, description: String)
+case class UpdateAccountForm(id: Long, code: String, name: String, type_1: String, negativo: String, parent: Long, description: String)

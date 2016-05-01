@@ -17,7 +17,10 @@ create table account (
   code VARCHAR(30),
   name VARCHAR(30),
   type VARCHAR(30),
-  description VARCHAR(30)
+  parent INT(6),
+  negativo VARCHAR(30),
+  description VARCHAR(30),
+  child boolean
 );
 
 create table transaction (
