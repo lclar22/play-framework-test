@@ -47,6 +47,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       },
       res => {
         repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
+          repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
           Redirect(routes.TransactionController.show(res.transactionId))
         }
       }
@@ -96,7 +97,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "debit" -> res.toList(0).debit.toString(), "credit" -> res.toList(0).debit.toString())
+      val anyData = Map("id" -> id.toString().toString(), "transactionId" -> res.toList(0).transactionId.toString(), "accountId" -> res.toList(0).accountId.toString(), "debit" -> res.toList(0).debit.toString(), "credit" -> res.toList(0).credit.toString())
       val discountRepMap = getTransactionsMap()
       val proveeMap = getAccountsMap()
       Ok(views.html.transactionDetail_update(updateForm.bind(anyData), discountRepMap, proveeMap))

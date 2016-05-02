@@ -1,3 +1,4 @@
+@(activos: Seq[Account], pasivos: Seq[Account], patrimonios: Seq[Account])
 @import helper._
 
 @main("Balance General") {
@@ -6,58 +7,42 @@
     <table class="table">
         <tr>
             <td>
-                <table id="activos_table">
+                <div>ACTIVOS</div>
+                <table id="activos_table" style="width: 100%;">
                 <tbody>
-                    <tr>
-                        <td>ACTIVO</td>
-                    </tr>
-                    <tr>
-                        <td>CIRCULANTE</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta Activo 1</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta Activo 2</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta Activo 3</td>
-                    </tr>
-                    <tr>
-                        <td>TOTAL CIRCULANTE</td>
-                    </tr>
-                    <tr>
-                        <td>FIJOS</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta Activo FIJO 4</td>
-                    </tr>
-                    <tr>
-                        <td>TOTAL FIJOS</td>
-                    </tr>
+                    @for(activo <- activos) {
+                        <tr>
+                            <td>@activo.code @activo.name</td>
+                            <td>@(activo.credit - activo.debit)</td>
+                        </tr>
+                    }
                 </tbody>
                 </table>
             </td>
             <td>
-                <table id="pasivo_table">
+                <div>PASIVOS</div>
+                <table id="pasivo_table" style="width: 100%;">
                 <tbody>
-                    <tr>
-                        <td>PASIVO</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta pasivo 1</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta pasivo 2</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta pasivo 3</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta pasivo 4</td>
-                    </tr>
+                    @for(pasivo <- pasivos) {
+                        <tr>
+                            <td>@pasivo.code @pasivo.name</td>
+                            <td>@(pasivo.debit - pasivo.credit)</td>
+                        </tr>
+                    }
                 </tbody>
                 </table>
+                <div>PATRIMONIO</div>
+                <table id="pasivo_table" style="width: 100%;">
+                <tbody>
+                    @for(patrimonio <- patrimonios) {
+                        <tr>
+                            <td>@patrimonio.code @patrimonio.name</td>
+                            <td>@(patrimonio.debit - patrimonio.credit)</td>
+                        </tr>
+                    }
+                </tbody>
+                </table>
+
             </td>
         </tr>
     </table>

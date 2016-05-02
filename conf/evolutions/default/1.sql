@@ -20,7 +20,9 @@ create table account (
   parent INT(6),
   negativo VARCHAR(30),
   description VARCHAR(30),
-  child boolean
+  child boolean,
+  debit double,
+  credit double
 );
 
 create table transaction (

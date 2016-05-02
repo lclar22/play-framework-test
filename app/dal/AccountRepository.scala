@@ -5,8 +5,7 @@ import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.Account
-
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Future, ExecutionContext, Await }
 
 /**
  * A repository for people.
@@ -30,17 +29,19 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     def parent = column[Long]("parent")
     def description = column[String]("description")
     def child = column[Boolean]("child")
-    def * = (id, code, name, type_1, negativo, parent, description, child) <> ((Account.apply _).tupled, Account.unapply)
+    def debit = column[Double]("debit")
+    def credit = column[Double]("credit")
+    def * = (id, code, name, type_1, negativo, parent, description, child, debit, credit) <> ((Account.apply _).tupled, Account.unapply)
   }
 
   private val tableQ = TableQuery[AccountesTable]
 
   def create(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String): Future[Account] = db.run {
     updateParentFlag(parent, false, 0)
-    (tableQ.map(p => (p.code, p.name, p.type_1, p.negativo, p.parent, p.description, p.child))
+    (tableQ.map(p => (p.code, p.name, p.type_1, p.negativo, p.parent, p.description, p.child, p.debit, p.credit))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => Account(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
-    ) += (code, name, type_1, negativo, parent, description, true)
+      into ((nameAge, id) => Account(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8, nameAge._9))
+    ) += (code, name, type_1, negativo, parent, description, true, 0, 0)
   }
 
   def list(): Future[Seq[Account]] = db.run {
@@ -57,18 +58,18 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // to cpy
-  def getByPasivo(id: Long): Future[Seq[Account]] = db.run {
-    tableQ.sortBy(m => (m.code)).filter(_.id === id).result
+  def getByPasivo(): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.type_1 === "PASIVO").sortBy(m => (m.code)).result
   }
 
   // to cpy
-  def getByActivo(id: Long): Future[Seq[Account]] = db.run {
-    tableQ.sortBy(m => (m.code)).filter(_.id === id).result
+  def getByActivo(): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.type_1 === "ACTIVO").sortBy(m => (m.code)).result
   }
 
-// to cpy
+  // to cpy
   def getByPatrimonio(id: Long): Future[Seq[Account]] = db.run {
-    tableQ.filter(_.id === id).result
+    tableQ.filter(_.type_1 === "PATRIMONIO").filter(_.id === id).result
   }
 
   // update required to copy
@@ -110,6 +111,19 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       }
     }
     tableQ.filter(_.id === id).result
+  }
+
+  def updateParentDebitCredit(id: Long, debit: Double, credit: Double): Future[Seq[Account]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.debit
+    val q2 = for { c <- tableQ if c.id === id } yield c.credit
+    getById(id).map { res => 
+      db.run(q.update(debit + res(0).debit))
+      db.run(q2.update(credit + res(0).credit))
+      if (res(0).parent > 0) {
+        updateParentDebitCredit(res(0).parent, credit, debit)
+      }
+    }
+    tableQ.filter(_.id === id).result 
   }
 
   def delete(id: Long): Future[Seq[Account]] = db.run {

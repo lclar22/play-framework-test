@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,11 +11,11 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ Future, ExecutionContext, Await }
 
 import javax.inject._
 
-class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: MessagesApi)
+class ReporteController @Inject() (repo: ReporteRepository, repoAccount: AccountRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateReporteForm] = Form {
@@ -30,8 +31,24 @@ class ReporteController @Inject() (repo: ReporteRepository, val messagesApi: Mes
   }
 
   def balance = Action {
-    Ok(views.html.reporte_balance())
+    val activos = getByActivo()
+    val pasivos = getByPasivo()
+    val patrimonios = Seq[Account]()
+    Ok(views.html.reporte_balance(activos, pasivos, patrimonios))
   }
+
+  def getByActivo(): Seq[Account] = {
+    Await.result(repoAccount.getByActivo().map {
+      res => res;
+    }, 1000.millis)
+  }
+
+  def getByPasivo(): Seq[Account] = {
+    Await.result(repoAccount.getByPasivo().map {
+      res => res;
+    }, 1000.millis)
+  }
+
 
   def addReporte = Action.async { implicit request =>
     newForm.bindFromRequest.fold(

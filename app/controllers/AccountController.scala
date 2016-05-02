@@ -50,11 +50,6 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     )
   }
 
-  def getAccountsByModule(id: Long) = Action.async {
-    repo.list().map { res =>
-      Ok(Json.toJson(res))
-    }
-  }
 
   def getAccounts = Action.async {
     repo.list().map { res =>
@@ -140,7 +135,6 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     }, 1000.millis)
     cache.toMap
   }
-
 }
 
 case class CreateAccountForm(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String)
