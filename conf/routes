@@ -21,14 +21,6 @@ GET     /printersFoo                	controllers.PatternController.printersFoo
 GET     /printersRegex              	controllers.PatternController.printersRegex
 
 
-# Cuentas routes
-POST    /cuenta                 		controllers.BancoController.addBanco
-
-GET     /cuentas_view         			controllers.BancoController.index
-GET     /cuentas_show/:id 				controllers.BancoController.show_view(id: Long)
-GET     /cuentas_update/:id        		controllers.BancoController.index_update(id: Long)
-GET     /cuentas/:id 					controllers.BancoController.getCuentaById(id: Long)
-
 # productores routes
 GET     /productor_show/:id 			controllers.ProductorController.show(id: Long)
 GET     /productor_update/:id        	controllers.ProductorController.getUpdate(id: Long)
@@ -253,14 +245,6 @@ GET     /veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row
 
-
-GET     /cuentas         				controllers.BancoController.getBancos
-POST    /cuenta_update             		controllers.BancoController.updateBanco
-GET     /cuentas/all       				controllers.BancoController.list()
-GET     /cuenta_example_action         	controllers.BancoController.getExampleAction(name: String)
-GET     /cuenta_example_action_2        controllers.BancoController.getExampleAction_2(name: String)
-GET     /cuenta_example_action_3        controllers.BancoController.getExampleAction_3(name: String)
-GET     /account_names         			controllers.BancoController.getBankNames
 
 
 #POST    /insumo                 		controllers.InsumoController.addInsumo
