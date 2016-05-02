@@ -1,4 +1,4 @@
-@(transaccionDetails: Seq[TransactionDetail])
+@(transaccions: Seq[Transaction])
 @import helper._
 
 @main("Libro Diario") {
@@ -16,15 +16,25 @@
                 </tr>
             </thead>
         <tbody>
-            @for(transaccionDetail <- transaccionDetails) {
+            @for(transaccion <- transaccions) {
                 <tr>
-                    <td>Date</td>
-                    <td>Account Code</td>
-                    <td>Transaccion Detail</td>
-                    <td>@(transaccionDetail.id)</td>
-                    <td>@(transaccionDetail.debit)</td>
-                    <td>@(transaccionDetail.credit)</td>
+                    <td>@(transaccion.date)</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
+                @for(detail <- transaccion.details) {
+                <tr>
+                    <td></td>
+                    <td>@(detail.accountCode)</td>
+                    <td>@(detail.accountName)</td>
+                    <td>@(detail.id)</td>
+                    <td>@(detail.debit)</td>
+                    <td>@(detail.credit)</td>
+                </tr>
+                }
             }
         </tbody>
         </table>

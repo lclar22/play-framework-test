@@ -37,7 +37,10 @@ create table transactionDetail (
   transaction INT,
   account INT,
   debit double,
-  credit double
+  credit double,
+  transactionDate VARCHAR(30),
+  accountCode VARCHAR(30),
+  accountName VARCHAR(30)
 );
 
 create table bancos (

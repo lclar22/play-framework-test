@@ -1,12 +1,14 @@
 package dal
 
+import scala.concurrent.duration._
 import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
 import models.Transaction
+import models.TransactionDetail
 
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Future, ExecutionContext, Await }
 
 /**
  * A repository for people.
@@ -14,7 +16,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class TransactionRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class TransactionRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoTransDetail: TransactionDetailRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -45,10 +47,15 @@ class TransactionRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     tableQ.filter(_.id < 10L).map(s => (s.id, s.date)).result
   }
 
-    // to cpy
+  def getListPopulated(): Future[Seq[Transaction]] = db.run {
+    tableQ.result
+  }
+
+  // to cpy
   def getById(id: Long): Future[Seq[Transaction]] = db.run {
     tableQ.filter(_.id === id).result
   }
+
 
   // update required to copy
   def update(id: Long, date: String, type_1: String, description: String): Future[Seq[Transaction]] = db.run {

@@ -257,6 +257,8 @@ POST    /reporte                 		controllers.ReporteController.addReporte
 GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
 GET     /reportes_balance      			controllers.ReporteController.balance
+GET     /reportes_diary      			controllers.ReporteController.diary
+GET     /reportes_mayor      			controllers.ReporteController.mayor
 
 
 

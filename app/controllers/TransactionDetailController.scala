@@ -20,8 +20,9 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository, repoAccounts: AccountRepository, val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+class TransactionDetailController @Inject() (repo: TransactionDetailRepository, repoTransReport: TransactionRepository,
+                                             repoAccounts: AccountRepository, val messagesApi: MessagesApi)
+                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateTransactionDetailForm] = Form {
     mapping(
@@ -46,8 +47,11 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
         Future.successful(Ok(views.html.transactionDetail_index(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { _ =>
+        repo.create(res.transactionId, res.accountId, res.debit, res.credit).map { value =>
           repoAccounts.updateParentDebitCredit(res.accountId, res.debit, res.credit);
+          repoTransReport.getById(res.transactionId).map{ res => repo.updateTransactionParams(value.id, res(0).date)}
+          repoAccounts.getById(res.accountId).map{ res => repo.updateAccountParams(value.id, res(0).code, res(0).name)}
+          
           Redirect(routes.TransactionController.show(res.transactionId))
         }
       }
@@ -71,7 +75,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
       Ok(Json.toJson(res))
     }
   }
-  
+
   def getTransactionDetailsByAccount(id: Long) = Action.async {
     repo.listByAccount(id).map { res =>
       Ok(Json.toJson(res))

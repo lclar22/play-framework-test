@@ -5,8 +5,10 @@ Accounts
 Reports
 - Balance General
 - Libros del mayor
-- Libro diario
-- Reporte de descuentos
+-- create the page to generate this source code
+- Libro Diario (Add date, Account code, Add Folio, Add Descripcion in TransctionDetail Table)
+- Reporte de Descuentos
+-- 
 Users
 - Login, Logout
 DONE
