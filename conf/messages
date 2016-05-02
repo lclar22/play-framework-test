@@ -29,3 +29,4 @@ asociacion = Asociacion
 type_1 = Tipo
 name = Nombre
 code = Codigo
+child = Hoja

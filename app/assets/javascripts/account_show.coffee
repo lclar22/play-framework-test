@@ -7,3 +7,4 @@ $ ->
       $("#name").html row.name
       $("#type_1").html row.type_1
       $("#description").html row.description
+      $("#child").html row.child

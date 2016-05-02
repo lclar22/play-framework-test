@@ -14,7 +14,6 @@
         @select(field = row("negativo"), options = options(yes_no))
         @select(field = row("parent"), options = options(accounts))
         @inputText(row("description"))
-
         <input type="submit" value="Guardar" class="btn btn-primary"/>
     }
     <div class="table-responsive">
@@ -26,6 +25,7 @@
                     <th>Tipo</th>
                     <th>Parent</th>
                     <th>Descripcion</th>
+                    <th>Hoja</th>
                     <th>---</th>
                 </tr>
             </thead>

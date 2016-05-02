@@ -36,6 +36,7 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   private val tableQ = TableQuery[AccountesTable]
 
   def create(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String): Future[Account] = db.run {
+    updateParentFlag(parent, false, 0)
     (tableQ.map(p => (p.code, p.name, p.type_1, p.negativo, p.parent, p.description, p.child))
       returning tableQ.map(_.id)
       into ((nameAge, id) => Account(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
@@ -81,16 +82,33 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     val q4 = for { c <- tableQ if c.id === id } yield c.negativo
     db.run(q4.update(negativo))
     val q5 = for { c <- tableQ if c.id === id } yield c.parent
-    db.run(q5.update(parent))
+    getById(id).map { res => 
+      if (res(0).parent != parent) {
+        updateParentFlag(parent, false, id)
+        updateParentFlag(res(0).parent, true, id)
+        db.run(q5.update(parent))
+      }
+    }
     val q6 = for { c <- tableQ if c.id === id } yield c.description
     db.run(q6.update(description))
     tableQ.filter(_.id === id).result
   }
 
-  // Update it when generate the report
-  def updateParentFlag(id: Long): Future[Seq[Account]] = db.run {
+  // Update the parent flag to true or false
+  def updateParentFlag(id: Long, flag: Boolean, actualId: Long): Future[Seq[Account]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.child
-    db.run(q.update(true))
+    if (!flag) {
+      db.run(q.update(flag))
+    } else {
+      getByParent(id).map { res =>
+        println(res)
+        if (res.length == 0) {
+          db.run(q.update(flag))
+        } else if (res.length == 1 && res(0).id == actualId) {
+          db.run(q.update(flag))
+        }
+      }
+    }
     tableQ.filter(_.id === id).result
   }
 
