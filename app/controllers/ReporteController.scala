@@ -49,10 +49,14 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
     Ok(views.html.reporte_diary(transactions))
   }
 
-
   def mayor = Action {
     val details = getTransactionDetails()
     Ok(views.html.reporte_mayor(details))
+  }
+
+  def sumasYSaldos = Action {
+    val accounts = getChilAccounts()
+    Ok(views.html.reporte_sumasYSaldos(accounts))
   }
 
   def getTransactionDetails(): Seq[TransactionDetail] = {
@@ -69,6 +73,12 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
 
   def getByActivo(): Seq[Account] = {
     Await.result(repoAccount.getByActivo().map {
+      res => res;
+    }, 1000.millis)
+  }
+
+  def getChilAccounts(): Seq[Account] = {
+    Await.result(repoAccount.getChilAccounts().map {
       res => res;
     }, 1000.millis)
   }

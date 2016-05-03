@@ -246,11 +246,9 @@ GET     /productInv_request_row         	controllers.ProductInvController.reques
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row
 
 
-
 #POST    /insumo                 		controllers.InsumoController.addInsumo
 #GET     /insumos         				controllers.InsumoController.getInsumos
 #GET     /insumos_view         			controllers.InsumoController.index
-
 
 
 POST    /reporte                 		controllers.ReporteController.addReporte
@@ -259,8 +257,7 @@ GET     /reportes_view         			controllers.ReporteController.index
 GET     /reportes_balance      			controllers.ReporteController.balance
 GET     /reportes_diary      			controllers.ReporteController.diary
 GET     /reportes_mayor      			controllers.ReporteController.mayor
-
-
+GET     /reportes_sumasYSaldos      	controllers.ReporteController.sumasYSaldos
 
 
 # Now for Product requests

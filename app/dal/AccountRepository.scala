@@ -63,6 +63,11 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // to cpy
+  def getChilAccounts(): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.child === true).sortBy(m => (m.code)).result
+  }
+
+  // to cpy
   def getByActivo(): Future[Seq[Account]] = db.run {
     tableQ.filter(_.type_1 === "ACTIVO").sortBy(m => (m.code)).result
   }
