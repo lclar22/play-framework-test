@@ -34,7 +34,7 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
   def balance = Action {
     val activos = getByActivo()
     val pasivos = getByPasivo()
-    val patrimonios = Seq[Account]()
+    val patrimonios = getByPatrimonio()
     Ok(views.html.reporte_balance(activos, pasivos, patrimonios))
   }
 
@@ -79,6 +79,11 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
     }, 1000.millis)
   }
 
+  def getByPatrimonio(): Seq[Account] = {
+    Await.result(repoAccount.getByPatrimonio().map {
+      res => res;
+    }, 1000.millis)
+  }
 
   def addReporte = Action.async { implicit request =>
     newForm.bindFromRequest.fold(

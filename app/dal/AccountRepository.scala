@@ -68,8 +68,8 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   }
 
   // to cpy
-  def getByPatrimonio(id: Long): Future[Seq[Account]] = db.run {
-    tableQ.filter(_.type_1 === "PATRIMONIO").filter(_.id === id).result
+  def getByPatrimonio(): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.type_1 === "PATRIMONIO").sortBy(m => (m.code)).result
   }
 
   // update required to copy
@@ -120,7 +120,7 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
       db.run(q.update(debit + res(0).debit))
       db.run(q2.update(credit + res(0).credit))
       if (res(0).parent > 0) {
-        updateParentDebitCredit(res(0).parent, credit, debit)
+        updateParentDebitCredit(res(0).parent, debit, credit)
       }
     }
     tableQ.filter(_.id === id).result 

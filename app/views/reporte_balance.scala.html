@@ -9,38 +9,38 @@
             <td>
                 <div>ACTIVOS</div>
                 <table id="activos_table" style="width: 100%;">
-                <tbody>
-                    @for(activo <- activos) {
-                        <tr>
-                            <td>@activo.code @activo.name</td>
-                            <td>@(activo.credit - activo.debit)</td>
-                        </tr>
-                    }
-                </tbody>
+                    <tbody>
+                        @for(activo <- activos) {
+                            <tr>
+                                <td>@activo.code @activo.name</td>
+                                <td style="padding: @((activo.code.length - 0) * 5)px">@(activo.debit - activo.credit)</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             </td>
             <td>
                 <div>PASIVOS</div>
                 <table id="pasivo_table" style="width: 100%;">
-                <tbody>
-                    @for(pasivo <- pasivos) {
-                        <tr>
-                            <td>@pasivo.code @pasivo.name</td>
-                            <td>@(pasivo.debit - pasivo.credit)</td>
-                        </tr>
-                    }
-                </tbody>
+                    <tbody>
+                        @for(pasivo <- pasivos) {
+                            <tr>
+                                <td>@pasivo.code @pasivo.name</td>
+                                <td style="padding: @((pasivo.code.length - 0) * 5)px">@(pasivo.credit - pasivo.debit)</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
                 <div>PATRIMONIO</div>
-                <table id="pasivo_table" style="width: 100%;">
-                <tbody>
-                    @for(patrimonio <- patrimonios) {
-                        <tr>
-                            <td>@patrimonio.code @patrimonio.name</td>
-                            <td>@(patrimonio.debit - patrimonio.credit)</td>
-                        </tr>
-                    }
-                </tbody>
+                <table id="patrimonio_table" style="width: 100%;">
+                    <tbody>
+                        @for(patrimonio <- patrimonios) {
+                            <tr>
+                                <td>@patrimonio.code @patrimonio.name</td>
+                                <td style="padding: @((patrimonio.code.length - 0) * 5)px">@(patrimonio.credit - patrimonio.debit)</td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
 
             </td>
