@@ -24,12 +24,13 @@ class MainController @Inject() (val messagesApi: MessagesApi, deadbolt: Deadbolt
 
   def index = deadbolt.WithAuthRequest()() { authRequest =>
     Future {
+            authRequest.session.get("userSecurity").map(user => println(user));
              Ok(views.html.index(new MyDeadboltHandler)(authRequest))
            }
    }
 
   def index3 = Action { request =>
-    request.session.get("connected").map { user =>
+    request.session.get("userSecurity").map { user =>
       Ok("Hello " + user)
     }.getOrElse {
       Unauthorized("Oops, you are not connected")

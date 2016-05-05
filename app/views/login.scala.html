@@ -8,9 +8,8 @@
         <a href="/">Muro</a>
     </div>
     @form(routes.LoginController.login()) {
-        @inputText(row("login"))
+        @inputText(row("user"))
         @inputText(row("password"))
-
         <input type="submit" value="Login" class="btn btn-primary"/>
     }
 }

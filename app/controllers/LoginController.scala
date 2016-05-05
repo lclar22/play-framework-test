@@ -31,14 +31,16 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
   }
 
   def login = Action.async { implicit request =>
+    println("GOING TO LOGIN");
     newForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(Ok(views.html.login(errorForm)))
       },
       res => {
-        repo.getByLogin(res.user, res.password).map { res =>
-          if (res.length > 0) {
-            Ok("Welcome!").withSession("connected" -> "user@gmail.com")
+        repo.getByLogin(res.user, res.password).map { res2 =>
+          if (res2.length > 0) {
+            println("LOGGED");
+            Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre)
             //request.session("login") = res(0).name
             /*if (res(0).type_1 == "veterinario") {
               Ok(routes.VeterinarioController.profile(res(0).id)).withSession("connected" -> "user@gmail.com")
@@ -50,6 +52,7 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
               //Redirect(routes.AccountController.profile(res(0).id))
             } */
           } else {
+            println("NO logged");
             Ok(views.html.login(newForm))
           }
         }
