@@ -1,4 +1,4 @@
-@(row: Form[(String, String)])(implicit messages: Messages)
+@(row: Form[LoginForm])(implicit messages: Messages)
 
 @import helper._
 
@@ -7,8 +7,8 @@
     <div>
         <a href="/">Muro</a>
     </div>
-    @form(routes.AccountController.add()) {
-        @inputText(row("email"))
+    @form(routes.LoginController.login()) {
+        @inputText(row("login"))
         @inputText(row("password"))
 
         <input type="submit" value="Login" class="btn btn-primary"/>

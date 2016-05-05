@@ -54,6 +54,10 @@ class VeterinarioRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)
     tableQ.filter(_.id === id).result
   }
 
+  def getByLogin(user: String, password: String): Future[Seq[User]] = db.run {
+    tableQ.filter(_.nombre === user).result
+  }
+
   // update required to copy
   def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int): Future[Seq[User]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre

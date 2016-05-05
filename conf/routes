@@ -5,6 +5,8 @@
 # Home page
 
 GET     /                				controllers.MainController.index
+GET     /login                			controllers.LoginController.index
+POST    /login                			controllers.LoginController.login
 GET     /index2                			controllers.Application.index
 GET     /restrict1                  	controllers.RestrictController.restrictOne
 GET     /restrict2                  	controllers.RestrictController.restrictTwo
