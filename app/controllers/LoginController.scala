@@ -30,6 +30,10 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
     Ok(views.html.login(newForm))
   }
 
+  def logout = Action {
+    Ok("Bye").withNewSession
+  }
+
   def login = Action.async { implicit request =>
     println("GOING TO LOGIN");
     newForm.bindFromRequest.fold(
@@ -40,17 +44,18 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
         repo.getByLogin(res.user, res.password).map { res2 =>
           if (res2.length > 0) {
             println("LOGGED");
-            Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre)
-            //request.session("login") = res(0).name
-            /*if (res(0).type_1 == "veterinario") {
-              Ok(routes.VeterinarioController.profile(res(0).id)).withSession("connected" -> "user@gmail.com")
-            } else if (res(0).type_1 == "insumo") {
-              Ok(routes.InsumoUserController.profile(res(0).id))
-            } else if (res(0).type_1 == "storekeeper") {
-              Ok(routes.StorekeeperController.profile(res(0).id))
-            } else if (res(0).type_1 == "account") {
-              //Redirect(routes.AccountController.profile(res(0).id))
-            } */
+            Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre, "userSecurity2" -> res2(0).nombre)
+            Ok(views.html.veterinario_profile())
+            //if (res2(0).type_1 == "veterinario") {
+            //  Ok(routes.VeterinarioController.profile(res2(0).id)).withSession("role" -> "veterinario", "userSecurity" -> res2(0).nombre)
+            //} 
+            //else if (res2(0).type_1 == "insumo") {
+            //  Ok(routes.InsumoUserController.profile(res2(0).id)).withSession("role" -> "insumo", "userSecurity" -> res2(0).nombre)
+            //} else if (res2(0).type_1 == "storekeeper") {
+            //  Ok(routes.StorekeeperController.profile(res2(0).id)).withSession("role" -> "storekeeper", "userSecurity" -> res2(0).nombre)
+            //} else if (res2(0).type_1 == "account") {
+            //  //Redirect(routes.AccountController.profile(res(0).id)).withSession("role" -> "veterinario", "userSecurity" -> res2(0).nombre)
+            //}
           } else {
             println("NO logged");
             Ok(views.html.login(newForm))
@@ -59,6 +64,7 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
       }
     )
   }
+
 }
 
 case class LoginForm(user: String, password: String)
