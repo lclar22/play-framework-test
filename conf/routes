@@ -6,6 +6,7 @@
 
 GET     /                				controllers.MainController.index
 GET     /login                			controllers.LoginController.index
+GET     /logout                			controllers.LoginController.logout
 POST    /login                			controllers.LoginController.login
 GET     /index2                			controllers.Application.index
 GET     /restrict1                  	controllers.RestrictController.restrictOne
