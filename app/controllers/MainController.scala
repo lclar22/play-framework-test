@@ -22,20 +22,25 @@ class MainController @Inject() (val messagesApi: MessagesApi, deadbolt: Deadbolt
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
 
-  def index = deadbolt.WithAuthRequest()() { authRequest =>
-    Future {
-            authRequest.session.get("userSecurity").map(user => println(user));
-             Ok(views.html.index(new MyDeadboltHandler)(authRequest))
-           }
-   }
+    def index = Action {
+                implicit request =>
+                Ok(views.html.index(new MyDeadboltHandler))
+              }
 
-  def index3 = Action { request =>
-    request.session.get("userSecurity").map { user =>
-      Ok("Hello " + user)
-    }.getOrElse {
-      Unauthorized("Oops, you are not connected")
-    }
-  }
+  //def index = deadbolt.WithAuthRequest()() { authRequest =>
+  //  Future {
+  //          authRequest.session.get("userSecurity").map(user => println(user));
+  //           Ok(views.html.index(new MyDeadboltHandler)(authRequest))
+  //         }
+  // }
+//
+//  //def index3 = Action { request =>
+//  //  request.session.get("userSecurity").map { user =>
+//  //    Ok("Hello " + user)
+//  //  }.getOrElse {
+//  //    Unauthorized("Oops, you are not connected")
+//  //  }
+  //}
   //def index_pdf = Action {
   //	val generator = new PdfGenerator
   //  Ok(generator.toBytes(views.html.index(), "http://localhost:9000/")).as("application/pdf")

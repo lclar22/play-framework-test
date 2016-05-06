@@ -1,5 +1,4 @@
 import com.github.play2war.plugin._
-
 name := """play-scala-intro"""
 
 version := "1.0-SNAPSHOT"
@@ -21,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.h2database" % "h2" % "1.4.177",
   "mysql" % "mysql-connector-java" % "5.1.36",
   specs2 % Test,
-  "be.objectify" %% "deadbolt-scala" % "2.5.0"
+  "be.objectify" %% "deadbolt-scala" % "2.4.1"
 )     
 
 // Play provides two styles of routers, one expects its actions to be injected, the
@@ -34,6 +33,10 @@ fork in run := true
 fork in run := true
 
 
+
+fork in run := true
+
+fork in run := true
 
 fork in run := true
 

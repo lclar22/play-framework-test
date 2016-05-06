@@ -1,6 +1,7 @@
-@import be.objectify.deadbolt.scala.AuthenticatedRequest
+@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: Request[Any])
+
 @import be.objectify.deadbolt.scala.views.html._
-@(handler: be.objectify.deadbolt.scala.DeadboltHandler)(implicit request: AuthenticatedRequest[Any])
+@import be.objectify.deadbolt.core.utils.TemplateUtils._
 
 <div class="row-fluid" id="template-subjectPresent">
     <div class="span10">
@@ -22,7 +23,7 @@
     <div class="span5">
         <pre>
 @@subjectPresent(handler) {
-  This content should be visible 2222
+  This content should be visible
 }</pre>
     </div>
     <div class="span2">
@@ -38,12 +39,12 @@
     </div>
     <div class="span5">
         <pre>
-@@subjectPresent(new security.MyUserlessDeadboltHandler) {
+@@subjectPresent(new security.MyUserSecuritylessDeadboltHandler) {
   This content should NOT be visible
 }</pre>
     </div>
     <div class="span2">
-        @subjectPresent(new security.MyUserlessDeadboltHandler) {
+        @subjectPresent(new security.MyUserSecuritylessDeadboltHandler) {
         This content should NOT be visible
         }
     </div>
@@ -73,12 +74,12 @@
     </div>
     <div class="span5">
         <pre>
-@@subjectPresentOr(new security.MyUserlessDeadboltHandler) {
+@@subjectPresentOr(new security.MyUserSecuritylessDeadboltHandler) {
   This content should be NOT visible
 }{Sorry, no access}</pre>
     </div>
     <div class="span2">
-        @subjectPresentOr(new security.MyUserlessDeadboltHandler) {
+        @subjectPresentOr(new security.MyUserSecuritylessDeadboltHandler) {
         This content should be NOT visible
         }{Sorry, no access}
     </div>

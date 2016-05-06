@@ -1,16 +1,23 @@
 package models
 
-import be.objectify.deadbolt.scala.models.Subject
+import play.libs.Scala
+import be.objectify.deadbolt.core.models.Subject
 
 /**
-  *
-  * @author Steve Chaloner (steve@objectify.be)
-  */
-class UserSecurity(val userName: String) extends Subject {
-  override def roles: List[SecurityRole] = List(SecurityRole("foo"), SecurityRole("bar"))
+ *
+ * @author Steve Chaloner (steve@objectify.be)
+ */
 
-  override def permissions: List[UserPermission] =
-    List(UserPermission("printers.edit"))
+class UserSecurity(val userName: String) extends Subject
+{
+  def getRoles: java.util.List[SecurityRole] = {
+    Scala.asJava(List(new SecurityRole("foo"),
+                      new SecurityRole("bar")))
+  }
 
-  override def identifier: String = userName
+  def getPermissions: java.util.List[UserPermission] = {
+    Scala.asJava(List(new UserPermission("printers.edit")))
+  }
+
+  def getIdentifier: String = userName
 }

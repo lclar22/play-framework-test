@@ -1,17 +1,20 @@
 package models
-import be.objectify.deadbolt.scala.models.Subject
+import be.objectify.deadbolt.core.models.Subject
+import play.libs.Scala
 
 import play.api.libs.json._
 
 case class User(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String) extends Subject {
-  override def roles: List[SecurityRole] =
-    List(SecurityRole("foo"),
-         SecurityRole("bar"))
+  def getRoles: java.util.List[SecurityRole] = {
+    Scala.asJava(List(new SecurityRole("foo"),
+                      new SecurityRole("bar")))
+  }
 
-  override def permissions: List[UserPermission] =
-    List(UserPermission("printers.edit"))
+  def getPermissions: java.util.List[UserPermission] = {
+    Scala.asJava(List(new UserPermission("printers.edit")))
+  }
 
-  override def identifier: String = nombre
+  def getIdentifier: String = nombre
 }
 
 object User {

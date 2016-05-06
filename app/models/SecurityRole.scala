@@ -1,10 +1,13 @@
 package models
 
-import be.objectify.deadbolt.scala.models.Role
+import be.objectify.deadbolt.core.models.Role
 
 /**
  *
  * @author Steve Chaloner (steve@objectify.be)
  */
 
-case class SecurityRole(name: String) extends Role
+class SecurityRole(val roleName: String) extends Role
+{
+  def getName: String = roleName
+}

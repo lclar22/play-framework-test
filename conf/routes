@@ -5,7 +5,6 @@
 # Home page
 
 GET     /                				controllers.MainController.index
-GET     /index3                			controllers.MainController.index3
 GET     /login                			controllers.LoginController.index
 POST    /login                			controllers.LoginController.login
 GET     /index2                			controllers.Application.index
