@@ -10,9 +10,14 @@ import be.objectify.deadbolt.core.models.Subject
 
 class UserSecurity(val userName: String) extends Subject
 {
+  var rol = "veterinario";
+
+  var rolesList: Map[String, List[SecurityRole]] = Map("veterinario" -> List(new SecurityRole("product"), new SecurityRole("user"),
+                                                                              new SecurityRole("productor"), new SecurityRole("foo"))
+                                                      )
+
   def getRoles: java.util.List[SecurityRole] = {
-    Scala.asJava(List(new SecurityRole("foo"),
-                      new SecurityRole("bar")))
+    Scala.asJava(rolesList(rol))
   }
 
   def getPermissions: java.util.List[UserPermission] = {
