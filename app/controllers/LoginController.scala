@@ -45,17 +45,18 @@ class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: M
           if (res2.length > 0) {
             println("LOGGED");
             Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre, "userSecurity2" -> res2(0).nombre)
-            Ok(views.html.veterinario_profile())
-            //if (res2(0).type_1 == "veterinario") {
-            //  Ok(routes.VeterinarioController.profile(res2(0).id)).withSession("role" -> "veterinario", "userSecurity" -> res2(0).nombre)
-            //} 
-            //else if (res2(0).type_1 == "insumo") {
-            //  Ok(routes.InsumoUserController.profile(res2(0).id)).withSession("role" -> "insumo", "userSecurity" -> res2(0).nombre)
-            //} else if (res2(0).type_1 == "storekeeper") {
-            //  Ok(routes.StorekeeperController.profile(res2(0).id)).withSession("role" -> "storekeeper", "userSecurity" -> res2(0).nombre)
-            //} else if (res2(0).type_1 == "account") {
-            //  //Redirect(routes.AccountController.profile(res(0).id)).withSession("role" -> "veterinario", "userSecurity" -> res2(0).nombre)
-            //}
+            if (res2(0).type_1 == "veterinario") {
+              Ok(views.html.veterinario_profile2(res2(0)))
+            }
+            else if (res2(0).type_1 == "insumo") {
+              Ok(views.html.insumo_profile2(res2(0)))
+            } else if (res2(0).type_1 == "storekeeper") {
+              Ok(views.html.storekeeper_profile2(res2(0)))
+            } else if (res2(0).type_1 == "account") {
+              Ok(views.html.veterinario_profile2(res2(0)))
+            } else {
+              Ok(views.html.veterinario_profile2(res2(0)))
+            }
           } else {
             println("NO logged");
             Ok(views.html.login(newForm))
