@@ -73,6 +73,17 @@ POST    /veterinario                 	controllers.VeterinarioController.add
 GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios
 GET     /veterinarios_view     			controllers.VeterinarioController.index
 
+# Now for users
+GET     /user_show/:id 			controllers.UserController.show(id: Long)
+GET     /user_update/:id        controllers.UserController.getUpdate(id: Long)
+GET     /user_remove/:id        controllers.UserController.delete(id: Long)
+GET     /users/:id 				controllers.UserController.getById(id: Long)
+POST    /user_update            controllers.UserController.updatePost
+
+POST    /user                 	controllers.UserController.add
+GET     /users         			controllers.UserController.getUsers
+GET     /users_view     		controllers.UserController.index
+
 
 # Now for Storekeepers
 GET     /storekeeper_show/:id 			controllers.StorekeeperController.show(id: Long)

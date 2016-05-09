@@ -14,7 +14,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 
-class VeterinarioController @Inject() (repo: VeterinarioRepository, val messagesApi: MessagesApi)
+class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateVeterinarioForm] = Form {
@@ -37,7 +37,7 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
         Future.successful(Ok(views.html.veterinario_index(errorForm)))
       },
       veterinario => {
-        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo).map { _ =>
+        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo, "veterinario").map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }
@@ -101,7 +101,7 @@ class VeterinarioController @Inject() (repo: VeterinarioRepository, val messages
         Future.successful(Ok(views.html.veterinario_update(errorForm)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo).map { _ =>
+        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, "veterinario").map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }

@@ -27,9 +27,19 @@ create table account (
 
 create table transaction (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  date VARCHAR(30) not null,
+  date VARCHAR(30),
   type VARCHAR(30),
-  description VARCHAR(30)
+  description VARCHAR(30),
+  createdBy INT(6),
+  updatedBy INT(6)
+);
+
+create table logEntry (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  date VARCHAR(30),
+  action VARCHAR(30),
+  tableName_1 VARCHAR(30),
+  userId INT(6)
 );
 
 create table transactionDetail (
@@ -98,7 +108,9 @@ create table user (
   telefono int,
   direccion VARCHAR(30),
   sueldo int,
-  type VARCHAR(30)
+  type VARCHAR(30),
+  login VARCHAR(30),
+  password VARCHAR(30)
 );
 
 create table productRequest (
@@ -184,3 +196,4 @@ drop table discountDetail;
 drop table requestRow;
 drop table productRequest;
 drop table requestRowProductor;
+drop table logEntry;

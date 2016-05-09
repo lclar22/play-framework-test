@@ -16,7 +16,7 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 
-class LoginController @Inject() (repo: VeterinarioRepository, val messagesApi: MessagesApi)
+class LoginController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[LoginForm] = Form {
