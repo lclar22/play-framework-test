@@ -15,7 +15,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 import javax.inject._
 
 class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
-                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport{
+                                 (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
   val newForm: Form[CreateUserForm] = Form {
     mapping(
@@ -24,21 +24,24 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       "telefono" -> number,
       "direccion" -> text,
       "sueldo" -> number,
-      "type_1" -> text
+      "type_1" -> text,
+      "login" -> text,
+      "password" -> text
     )(CreateUserForm.apply)(CreateUserForm.unapply)
   }
+  val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen")
 
   def index = Action {
-    Ok(views.html.user_index(newForm))
+    Ok(views.html.user_index(newForm, types))
   }
 
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_index(errorForm)))
+        Future.successful(Ok(views.html.user_index(errorForm, types)))
       },
       res => {
-        repo.create(res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1).map { _ =>
+        repo.create(res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
           Redirect(routes.UserController.index)
         }
       }
@@ -60,7 +63,9 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
       "sueldo" -> number,
-      "type_1" -> text
+      "type_1" -> text,
+      "login" -> text,
+      "password" -> text
     )(UpdateUserForm.apply)(UpdateUserForm.unapply)
   }
 
@@ -73,14 +78,14 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> res.toList(0).type_1.toString())
-      Ok(views.html.user_update(updateForm.bind(anyData)))
+      Ok(views.html.user_update(updateForm.bind(anyData), types))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.user_index(newForm))
+      Ok(views.html.user_index(newForm, types))
     }
   }
 
@@ -95,10 +100,10 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.user_update(errorForm)))
+        Future.successful(Ok(views.html.user_update(errorForm, types)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1).map { _ =>
+        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, res.type_1, res.login, res.password).map { _ =>
           Redirect(routes.UserController.index)
         }
       }
@@ -106,6 +111,6 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   }
 }
 
-case class CreateUserForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String)
+case class CreateUserForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
 
-case class UpdateUserForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String)
+case class UpdateUserForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)

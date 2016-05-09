@@ -14,7 +14,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 import javax.inject._
 
-class StorekeeperController @Inject() (repo: StorekeeperRepository, val messagesApi: MessagesApi)
+class StorekeeperController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateStorekeeperForm] = Form {
@@ -23,7 +23,10 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
       "carnet" -> number,
       "telefono" -> number,
       "direccion" -> text,
-      "sueldo" -> number
+      "sueldo" -> number,
+      "type_1" -> text,
+      "login" -> text,
+      "password" -> text
     )(CreateStorekeeperForm.apply)(CreateStorekeeperForm.unapply)
   }
 
@@ -36,8 +39,8 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
       errorForm => {
         Future.successful(Ok(views.html.storekeeper_index(errorForm)))
       },
-      veterinario => {
-        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo).map { _ =>
+      res => {
+        repo.create(res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, "Almacen", res.login, res.password).map { _ =>
           Redirect(routes.StorekeeperController.index)
         }
       }
@@ -58,7 +61,10 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "sueldo" -> number
+      "sueldo" -> number,
+      "type_1" -> nonEmptyText,
+      "login" -> nonEmptyText,
+      "password" -> nonEmptyText
     )(UpdateStorekeeperForm.apply)(UpdateStorekeeperForm.unapply)
   }
 
@@ -75,7 +81,7 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> "Almacen", "login" -> res.toList(0).login, "password" -> res.toList(0).password.toString())
       Ok(views.html.storekeeper_update(updateForm.bind(anyData)))
     }
   }
@@ -101,7 +107,7 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
         Future.successful(Ok(views.html.storekeeper_update(errorForm)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo).map { _ =>
+        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, "Almacen", res.login, res.password).map { _ =>
           Redirect(routes.StorekeeperController.index)
         }
       }
@@ -109,6 +115,6 @@ class StorekeeperController @Inject() (repo: StorekeeperRepository, val messages
   }
 }
 
-case class CreateStorekeeperForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)
+case class CreateStorekeeperForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
 
-case class UpdateStorekeeperForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)
+case class UpdateStorekeeperForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)

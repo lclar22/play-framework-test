@@ -1,3 +1,7 @@
+Test Planning
+- User creation
+- 
+
 Administracion de usuarios
 - Contabilidad
 - Session Save
@@ -5,4 +9,6 @@ Administracion de usuarios
 	- User Name
 	- User login
 	. User Password
+- Session Managemenet
+
 

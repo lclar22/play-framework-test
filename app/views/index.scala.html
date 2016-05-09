@@ -67,6 +67,17 @@
                     </td>
                 </tr>
             }
+            @restrict(roles = List(Array("user"))) {
+                <tr>
+                    <td>
+                        Usuarios
+                    </td>
+                    <td>
+                        <a href="/users_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                        <a href="/users"><span class="glyphicon glyphicon-th-list"></span></a>
+                    </td>
+                </tr>
+            }
             @restrict(roles = List(Array("storekeeper"))) {
                 <tr>
                     <td>

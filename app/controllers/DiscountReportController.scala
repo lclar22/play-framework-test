@@ -22,7 +22,7 @@ import play.api.data.format.Formats._
 
 
 class DiscountReportController @Inject() (repo: DiscountReportRepository, repoProd: ProductorRepository, 
-                                          repoSto: StorekeeperRepository, repoDiscDetail: DiscountDetailRepository
+                                          repoSto: UserRepository, repoDiscDetail: DiscountDetailRepository
                                           , repoRequestRows: RequestRowRepository, repoRequestRowProductors: RequestRowProductorRepository, 
                                           val messagesApi: MessagesApi)
                                          (implicit ec: ExecutionContext) extends Controller with I18nSupport {

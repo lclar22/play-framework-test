@@ -23,7 +23,10 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
       "carnet" -> number,
       "telefono" -> number,
       "direccion" -> text,
-      "sueldo" -> number
+      "sueldo" -> number,
+      "type_1" -> nonEmptyText,
+      "login" -> text,
+      "password" -> text
     )(CreateVeterinarioForm.apply)(CreateVeterinarioForm.unapply)
   }
 
@@ -37,7 +40,7 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
         Future.successful(Ok(views.html.veterinario_index(errorForm)))
       },
       veterinario => {
-        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo, "veterinario").map { _ =>
+        repo.create(veterinario.nombre, veterinario.carnet, veterinario.telefono, veterinario.direccion, veterinario.sueldo, "veterinario", veterinario.login, veterinario.password).map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }
@@ -45,12 +48,11 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
   }
 
   def getVeterinarios = Action.async {
-  	repo.list().map { res =>
+  	repo.listVeterinarios().map { res =>
       Ok(Json.toJson(res))
     }
   }
 
-  // update required
   val updateForm: Form[UpdateVeterinarioForm] = Form {
     mapping(
       "id" -> longNumber,
@@ -58,7 +60,10 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "sueldo" -> number
+      "sueldo" -> number,
+      "type_1" -> nonEmptyText,
+      "login" -> nonEmptyText,
+      "password" -> nonEmptyText
     )(UpdateVeterinarioForm.apply)(UpdateVeterinarioForm.unapply)
   }
 
@@ -75,7 +80,7 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> res.toList(0).type_1.toString(), "login" -> res.toList(0).login.toString(), "password" -> res.toList(0).password.toString())
       Ok(views.html.veterinario_update(updateForm.bind(anyData)))
     }
   }
@@ -101,7 +106,7 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
         Future.successful(Ok(views.html.veterinario_update(errorForm)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, "veterinario").map { _ =>
+        repo.update(res.id, res.nombre, res.carnet, res.telefono, res.direccion, res.sueldo, "veterinario", res.login, res.password).map { _ =>
           Redirect(routes.VeterinarioController.index)
         }
       }
@@ -109,6 +114,6 @@ class VeterinarioController @Inject() (repo: UserRepository, val messagesApi: Me
   }
 }
 
-case class CreateVeterinarioForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)
+case class CreateVeterinarioForm(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)
 
-case class UpdateVeterinarioForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int)
+case class UpdateVeterinarioForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String)

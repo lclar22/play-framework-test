@@ -252,10 +252,10 @@ GET     /requestRowProductor_addGet         		controllers.RequestRowProductorCon
 
 
 # profiles
-GET     /veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
-GET     /storekeeper_profile/:id 			controllers.StorekeeperController.profile(id: Long)
-GET     /insumoUser_profile/:id 			controllers.InsumoUserController.profile(id: Long)
-GET     /veterinario_request         		controllers.ProductInvController.request
+GET     /Veterinario_profile/:id 			controllers.VeterinarioController.profile(id: Long)
+GET     /Almacen_profile/:id 			controllers.StorekeeperController.profile(id: Long)
+GET     /Insumo_profile/:id 			controllers.InsumoUserController.profile(id: Long)
+GET     /Veterinario_request         		controllers.ProductInvController.request
 GET     /productInv_request_row         	controllers.ProductInvController.request_row
 POST    /productInv_request_row             controllers.ProductInvController.add_request_row
 

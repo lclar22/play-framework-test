@@ -19,7 +19,7 @@ import scala.collection.mutable.ArrayBuffer
 import javax.inject._
 
 class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVete: UserRepository,
-                                          repoSto: StorekeeperRepository, repoInsUser: InsumoUserRepository,
+                                          repoSto: UserRepository, repoInsUser: UserRepository,
                                           val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 

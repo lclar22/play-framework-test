@@ -1,4 +1,4 @@
-@(row: Form[UpdateUserForm])(implicit messages: Messages)
+@(row: Form[UpdateUserForm], types: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -11,7 +11,7 @@
         @inputText(row("telefono"))
         @inputText(row("direccion"))
         @inputText(row("sueldo"))
-        @inputText(row("type_1"))
+        @select(field = row("type_1"), options = options(types))
         <input type="submit" value="Actualizar"/>
         <a href="/veterinarios_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
     }

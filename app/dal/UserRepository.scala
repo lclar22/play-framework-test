@@ -29,16 +29,27 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
     def direccion = column[String]("direccion")
     def sueldo = column[Int]("sueldo")
     def type_1 = column[String]("type")
-    def * = (id, nombre, carnet, telefono, direccion, sueldo, type_1) <> ((User.apply _).tupled, User.unapply)
+    def login = column[String]("login")
+    def password = column[String]("password")
+    def * = (id, nombre, carnet, telefono, direccion, sueldo, type_1, login, password) <> ((User.apply _).tupled, User.unapply)
   }
+
+  val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen")
 
   private val tableQ = TableQuery[UsersTable]
 
-  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[User] = db.run {
-    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1))
+//  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[User] = db.run {
+//    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1, p.login, p.password))
+//      returning tableQ.map(_.id)
+//      into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
+//    ) += (nombre, carnet, telefono, direccion, sueldo, type_1, "", "")
+//  }
+
+  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String): Future[User] = db.run {
+    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.sueldo, p.type_1, p.login, p.password))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (nombre, carnet, telefono, direccion, sueldo, type_1)
+      into ((nameAge, id) => User(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
+    ) += (nombre, carnet, telefono, direccion, sueldo, type_1, login, password)
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
@@ -47,6 +58,10 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
 
   def list(): Future[Seq[User]] = db.run {
     tableQ.result
+  }
+
+  def listVeterinarios(): Future[Seq[User]] = db.run {
+    tableQ.filter(_.type_1 === "Veterinario").result
   }
 
   // to cpy
@@ -59,7 +74,22 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[Seq[User]] = db.run {
+//  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[Seq[User]] = db.run {
+//    val q = for { c <- tableQ if c.id === id } yield c.nombre
+//    db.run(q.update(nombre))
+//    val q2 = for { c <- tableQ if c.id === id } yield c.carnet
+//    db.run(q2.update(carnet))
+//    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
+//    db.run(q3.update(telefono))
+//    val q4 = for { c <- tableQ if c.id === id } yield c.sueldo
+//    db.run(q4.update(sueldo))
+//    val q5 = for { c <- tableQ if c.id === id } yield c.type_1
+//    db.run(q5.update(type_1))
+//    tableQ.filter(_.id === id).result
+//  }
+
+  // update required to copy
+  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String): Future[Seq[User]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
@@ -70,6 +100,10 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
     db.run(q4.update(sueldo))
     val q5 = for { c <- tableQ if c.id === id } yield c.type_1
     db.run(q5.update(type_1))
+    val q6 = for { c <- tableQ if c.id === id } yield c.login
+    db.run(q6.update(login))
+    val q7 = for { c <- tableQ if c.id === id } yield c.password
+    db.run(q7.update(password))
     tableQ.filter(_.id === id).result
   }
 

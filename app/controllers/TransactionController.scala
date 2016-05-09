@@ -18,7 +18,7 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
-class TransactionController @Inject() (repo: TransactionRepository, repoVete: UserRepository, repoSto: StorekeeperRepository, val messagesApi: MessagesApi)
+class TransactionController @Inject() (repo: TransactionRepository, repoVete: UserRepository, repoSto: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateTransactionForm] = Form {
