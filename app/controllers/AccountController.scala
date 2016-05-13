@@ -20,7 +20,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val yes_no = scala.collection.immutable.Map[String, String]("NO" -> "NO", "SI" -> "SI")
-  val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO")
+  val account_type = scala.collection.immutable.Map[String, String]("ACTIVO" -> "ACTIVO", "PASIVO" -> "PASIVO", "PATRIMONIO" -> "PATRIMONIO", "EGRESO" -> "EGRESO", "INGRESO" -> "INGRESO")
 
   val newForm: Form[CreateAccountForm] = Form {
     mapping(
@@ -49,7 +49,6 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
       }
     )
   }
-
 
   def getAccounts = Action.async {
     repo.list().map { res =>
@@ -135,6 +134,7 @@ class AccountController @Inject() (repo: AccountRepository, val messagesApi: Mes
     }, 1000.millis)
     cache.toMap
   }
+  
 }
 
 case class CreateAccountForm(code: String, name: String, type_1: String, negativo: String, parent: Long, description: String)

@@ -45,6 +45,10 @@
 
             </td>
         </tr>
+        <tr>
+            <td>Total activo: @(activos(0).debit - activos(0).credit)</td>
+            <td>Total pasivo: @(pasivos(0).credit -  pasivos(0).debit + patrimonios(0).credit - patrimonios(0).debit)</td>
+        </tr>
     </table>
     </div>
 }

@@ -121,7 +121,7 @@ class TransactionDetailController @Inject() (repo: TransactionDetailRepository, 
 
   def getAccountsMap(): Map[String, String] = {
     val cache = collection.mutable.Map[String, String]()
-    Await.result(repoAccounts.getListObjs().map{ case (res1) => 
+    Await.result(repoAccounts.getListObjsChild().map{ case (res1) => 
       res1.foreach{ res2 => 
         cache put (res2.id.toString(), res2.code + " " + res2.name)
       }

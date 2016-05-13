@@ -270,6 +270,7 @@ GET     /reportes         				controllers.ReporteController.getReportes
 GET     /reportes_view         			controllers.ReporteController.index
 GET     /reportes_balance      			controllers.ReporteController.balance
 GET     /reportes_diary      			controllers.ReporteController.diary
+GET     /result_finance      			controllers.ReporteController.resultFinance
 GET     /reportes_mayor      			controllers.ReporteController.mayor
 GET     /reportes_sumasYSaldos      	controllers.ReporteController.sumasYSaldos
 

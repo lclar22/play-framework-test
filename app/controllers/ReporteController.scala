@@ -43,6 +43,7 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
     transactions.foreach { transaction => 
       Await.result(repoTransDetails.listByTransaction(transaction.id).map {
         res =>  
+        print(res)
         transaction.details = res;
       }, 500.millis)
     }
@@ -57,6 +58,52 @@ class ReporteController @Inject() (repo: ReporteRepository, repoAccount: Account
   def sumasYSaldos = Action {
     val accounts = getChilAccounts()
     Ok(views.html.reporte_sumasYSaldos(accounts))
+  }
+
+//  RFB = 510 - 410
+//  ROB = RFB + 540 - 440
+//  RODI = ROB + 530 - 430
+//  RON = RODI - 450
+//  RDADC = RON - ADADC
+//  RNEGA = RDADC + 570 - 470
+//  RAIYI = RNEGA + 580 - 480
+//  RAI = RAIYI - ACEI
+//  RNG = RAI - 460
+
+  def resultFinance = Action {
+    val account510: Seq[Account] = getAccountByCode("510")
+    val account410: Seq[Account] = getAccountByCode("410")
+    val account540: Seq[Account] = getAccountByCode("540")
+    val account440: Seq[Account] = getAccountByCode("440")
+    val account530: Seq[Account] = getAccountByCode("530")
+    val account430: Seq[Account] = getAccountByCode("430")
+    val accountADADC: Seq[Account] = getAccountByCode("ADADC") // ADADC
+    val account450: Seq[Account] = getAccountByCode("450")
+    val account570: Seq[Account] = getAccountByCode("570")
+    val account470: Seq[Account] = getAccountByCode("470")
+    val account580: Seq[Account] = getAccountByCode("580")
+    val account480: Seq[Account] = getAccountByCode("480")
+    val accountACEI: Seq[Account] = getAccountByCode("ACEI")// ACEI
+    val account460: Seq[Account] = getAccountByCode("460")
+
+    var hello: String = ""
+    if (account510.length > 0 && account410.length > 0 && account540.length > 0 && account440.length > 0
+        && account530.length > 0 && account430.length > 0 && accountADADC.length > 0 && account450.length > 0
+        && account570.length > 0 && account470.length > 0 && account580.length > 0 && account480.length > 0 &&
+         accountACEI.length > 0 && account460.length > 0) {
+      Ok(views.html.report_result(account510(0), account410(0), account540(0), account440(0), account530(0),
+       account430(0), accountADADC(0), account450(0), account570(0), account470(0), account580(0), account480(0), 
+       accountACEI(0), account460(0)))
+    } else {
+      hello = "It is not complete"
+      Ok("This is an example: " + hello)
+    }
+  }
+
+  def getAccountByCode(code: String): Seq[Account] = {
+    Await.result(repoAccount.getByCode(code).map {
+      res => res;
+    }, 500.millis)
   }
 
   def getTransactionDetails(): Seq[TransactionDetail] = {

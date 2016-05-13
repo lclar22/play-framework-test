@@ -1,6 +1,9 @@
 Test Planning
 - User creation
-- 
+- Request creation
+- Insumo Planning
+- Transaction register
+- Account reports
 
 Administracion de usuarios
 - Contabilidad
@@ -12,3 +15,13 @@ Administracion de usuarios
 - Session Managemenet
 
 
+
+RFB = 510 - 410
+ROB = RFB + 540 - 440
+RODI = ROB + 530 - 430
+RON = RODI - 450
+RDADC = RON - ADADC
+RNEGA = RDADC + 570 - 470
+RAIYI = RNEGA + 580 - 480
+RAI = RAIYI - ACEI
+RNG = RAI - 460

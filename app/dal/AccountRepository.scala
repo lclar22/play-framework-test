@@ -53,6 +53,11 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     tableQ.filter(_.id === id).result
   }
 
+  // to cpy
+  def getByCode(code: String): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.code === code).result
+  }
+
   def getByParent(id: Long): Future[Seq[Account]] = db.run {
     tableQ.sortBy(m => (m.code)).filter(_.parent === id).result
   }
@@ -145,6 +150,10 @@ class AccountRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
 
   def getListObjs(): Future[Seq[Account]] = db.run {
     tableQ.sortBy(m => (m.code)).sortBy(m => (m.code)).result
+  }
+
+  def getListObjsChild(): Future[Seq[Account]] = db.run {
+    tableQ.filter(_.child === true).sortBy(m => (m.code)).sortBy(m => (m.code)).result
   }
 
 }
