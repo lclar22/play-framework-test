@@ -15,6 +15,8 @@ import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
+import security.MyDeadboltHandler
+
 
 class LoginController @Inject() (repo: UserRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
@@ -34,34 +36,48 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
     Ok("Bye").withNewSession
   }
 
-  def login = Action.async { implicit request =>
-    println("GOING TO LOGIN");
+  def login = Action { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.login(errorForm)))
+        Ok(views.html.login(errorForm))
       },
       res => {
-        repo.getByLogin(res.user, res.password).map { res2 =>
+        Await.result(repo.getByLogin(res.user, res.password).map { res2 =>
           if (res2.length > 0) {
-            println("LOGGED");
             Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre, "userSecurity2" -> res2(0).nombre)
-            if (res2(0).type_1 == "veterinario") {
-              Ok(views.html.veterinario_profile2(res2(0)))
-            }
-            else if (res2(0).type_1 == "insumo") {
-              Ok(views.html.insumo_profile2(res2(0)))
-            } else if (res2(0).type_1 == "storekeeper") {
-              Ok(views.html.storekeeper_profile2(res2(0)))
-            } else if (res2(0).type_1 == "account") {
-              Ok(views.html.veterinario_profile2(res2(0)))
+            if (res2(0).type_1 == "Admin") {
+              Redirect("/")
+            } else if (res2(0).type_1 == "veterinario") {
+              Redirect(routes.VeterinarioController.profile(res2(0).id))
+            } else if (res2(0).type_1 == "Insumo") {
+              Redirect(routes.InsumoUserController.profile(res2(0).id))
+            } else if (res2(0).type_1 == "Almacen") {
+              Redirect(routes.StorekeeperController.profile(res2(0).id))
             } else {
+              Ok(views.html.storekeeper_profile2(res2(0)))
+              Redirect("/error")
+            }
+          } else {
+            Ok(views.html.login(newForm))
+          }
+        }, 3000.millis)
+        /*repo.getByLogin(res.user, res.password).map { res2 =>
+          if (res2.length > 0) {
+            Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre, "userSecurity2" -> res2(0).nombre)
+            if (res2(0).type_1 == "Admin") {
+              Ok(views.html.index(new MyDeadboltHandler))
+            } else if (res2(0).type_1 == "Veterinario") {
               Ok(views.html.veterinario_profile2(res2(0)))
+            } else if (res2(0).type_1 == "Insumo") {
+              Ok(views.html.insumo_profile2(res2(0)))
+            } else if (res2(0).type_1 == "Almacen") {
+              Ok(views.html.storekeeper_profile2(res2(0)))
             }
           } else {
             println("NO logged");
             Ok(views.html.login(newForm))
           }
-        }
+        }*/
       }
     )
   }

@@ -70,7 +70,7 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
   }
 
   def getByLogin(user: String, password: String): Future[Seq[User]] = db.run {
-    tableQ.filter(_.nombre === user).result
+    tableQ.filter(_.login === user).result
   }
 
   // update required to copy
