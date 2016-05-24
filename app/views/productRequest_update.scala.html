@@ -3,7 +3,7 @@
 @import helper._
 
 @main("Actualizar") {
-	<a href="/productInvs_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+	<a href="/profile"><span class="glyphicon glyphicon-plus">Lista</span></a>
     @form(routes.ProductRequestController.updatePostVeterinaria()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("date"))

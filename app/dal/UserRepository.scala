@@ -64,6 +64,14 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
     tableQ.filter(_.type_1 === "Veterinario").result
   }
 
+  def listInsumoUsers(): Future[Seq[User]] = db.run {
+    tableQ.filter(_.type_1 === "Insumo").result
+  }
+
+  def listStorekeepers(): Future[Seq[User]] = db.run {
+    tableQ.filter(_.type_1 === "Almacen").result
+  }
+
   // to cpy
   def getById(id: Long): Future[Seq[User]] = db.run {
     tableQ.filter(_.id === id).result
@@ -73,20 +81,6 @@ class UserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implic
     tableQ.filter(_.login === user).result
   }
 
-  // update required to copy
-//  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String): Future[Seq[User]] = db.run {
-//    val q = for { c <- tableQ if c.id === id } yield c.nombre
-//    db.run(q.update(nombre))
-//    val q2 = for { c <- tableQ if c.id === id } yield c.carnet
-//    db.run(q2.update(carnet))
-//    val q3 = for { c <- tableQ if c.id === id } yield c.telefono
-//    db.run(q3.update(telefono))
-//    val q4 = for { c <- tableQ if c.id === id } yield c.sueldo
-//    db.run(q4.update(sueldo))
-//    val q5 = for { c <- tableQ if c.id === id } yield c.type_1
-//    db.run(q5.update(type_1))
-//    tableQ.filter(_.id === id).result
-//  }
 
   // update required to copy
   def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, sueldo: Int, type_1: String, login: String, password: String): Future[Seq[User]] = db.run {

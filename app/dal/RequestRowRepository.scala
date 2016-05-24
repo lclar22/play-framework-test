@@ -45,6 +45,10 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     tableQ.result
   }
 
+  def listByParent(id: Long): Future[Seq[RequestRow]] = db.run {
+    tableQ.filter(_.requestId === id).result
+  }
+
   def listByQuantity(): Future[Seq[RequestRow]] = db.run {
     tableQ.filter(_.quantity > 0).result
   }
@@ -85,7 +89,13 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
   def acceptById(id: Long): Future[Seq[RequestRow]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
     db.run(q.update("aceptado"))
+
     tableQ.filter(_.id === id).result
+  }
+
+
+  def getByParentId(id: Long): Future[Seq[RequestRow]] = db.run {
+    tableQ.filter(_.requestId === id).result
   }
 
   // Update the status to enviado status
@@ -115,4 +125,5 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     }
     tableQ.result
   }
+
 }

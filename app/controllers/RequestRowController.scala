@@ -66,6 +66,12 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }
   }
 
+  def getRequestRowsByParent(id: Long) = Action.async {
+    repo.listByParent(id).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
+
   // update required
   val updateForm: Form[UpdateRequestRowForm] = Form {
     mapping(
@@ -127,6 +133,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       cache.toMap
     }, 3000.millis)
   }
+
 
   // update required
   def getAccept(id: Long) = Action.async {

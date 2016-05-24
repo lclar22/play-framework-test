@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,7 +11,7 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 
@@ -29,10 +30,39 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       "password" -> text
     )(CreateUserForm.apply)(CreateUserForm.unapply)
   }
+
+  val loginForm: Form[LoginForm] = Form {
+    mapping(
+      "user" -> nonEmptyText,
+      "password" -> nonEmptyText
+    )(LoginForm.apply)(LoginForm.unapply)
+  }
+
   val types = scala.collection.immutable.Map[String, String]("Veterinario" -> "Veterinario", "Insumo" -> "Insumo", "Admin" -> "Admin", "Almacen" -> "Almacen")
 
   def index = Action {
     Ok(views.html.user_index(newForm, types))
+  }
+
+  def profile() = Action { implicit request =>
+    Await.result(repo.getById(request.session.get("userId").getOrElse("0").toLong).map { res2 =>
+        if (res2.length > 0) {
+          if (res2(0).type_1.toLowerCase == "admin") {
+            Redirect("/")
+          } else if (res2(0).type_1.toLowerCase == "veterinario") {
+            Redirect(routes.VeterinarioController.profile(res2(0).id))
+          } else if (res2(0).type_1.toLowerCase == "insumo") {
+            Redirect(routes.InsumoUserController.profile(res2(0).id))
+          } else if (res2(0).type_1.toLowerCase == "almacen") {
+            Redirect(routes.StorekeeperController.profile(res2(0).id))
+          } else {
+            Ok(views.html.storekeeper_profile2(res2(0)))
+            Redirect("/error")
+          }
+        } else {
+          Redirect("/login")
+        }
+      }, 2000.millis)
   }
 
   def add = Action.async { implicit request =>

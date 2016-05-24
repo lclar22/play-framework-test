@@ -75,6 +75,7 @@ GET     /veterinarios_view     			controllers.VeterinarioController.index
 
 # Now for users
 GET     /user_show/:id 			controllers.UserController.show(id: Long)
+GET     /profile 			controllers.UserController.profile()
 GET     /user_update/:id        controllers.UserController.getUpdate(id: Long)
 GET     /user_remove/:id        controllers.UserController.delete(id: Long)
 GET     /users/:id 				controllers.UserController.getById(id: Long)
@@ -197,6 +198,7 @@ GET     /discountReport_addGet         			controllers.DiscountReportController.a
 
 # Now for Product requests
 GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
+GET     /productRequest_show/:id 				controllers.ProductRequestController.show(id: Long)
 GET     /productRequestByInsumo_show/:id 		controllers.ProductRequestController.showByInsumo(id: Long)
 GET     /productRequest_update/:id controllers.ProductRequestController.getUpdate(id: Long)
 GET     /productRequestByInsumo_update/:id      controllers.ProductRequestController.getUpdateByInsumo(id: Long)
@@ -231,6 +233,7 @@ POST    /requestRow_update             		controllers.RequestRowController.update
 
 POST    /requestRow                 		controllers.RequestRowController.add
 GET     /requestRows         				controllers.RequestRowController.getRequestRows
+GET     /requestRowsByParent/:id         				controllers.RequestRowController.getRequestRowsByParent(id: Long)
 GET     /requestRows_view         			controllers.RequestRowController.index
 GET     /requestRow_addGet         			controllers.RequestRowController.addGet
 

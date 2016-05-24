@@ -33,7 +33,7 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
   }
 
   def logout = Action {
-    Ok("Bye").withNewSession
+    Redirect("/login").withNewSession
   }
 
   def login = Action { implicit request =>
@@ -44,17 +44,16 @@ class LoginController @Inject() (repo: UserRepository, val messagesApi: Messages
       res => {
         Await.result(repo.getByLogin(res.user, res.password).map { res2 =>
           if (res2.length > 0) {
-            Ok("Welcome!").withSession("userSecurity" -> res2(0).nombre, "userSecurity2" -> res2(0).nombre)
-            if (res2(0).type_1 == "Admin") {
-              Redirect("/")
-            } else if (res2(0).type_1 == "veterinario") {
-              Redirect(routes.VeterinarioController.profile(res2(0).id))
-            } else if (res2(0).type_1 == "Insumo") {
-              Redirect(routes.InsumoUserController.profile(res2(0).id))
-            } else if (res2(0).type_1 == "Almacen") {
-              Redirect(routes.StorekeeperController.profile(res2(0).id))
+            Ok("Welcome!").withSession("userSecurity" -> res2(0).login, "role" -> res2(0).login, "userId" -> res2(0).id.toString())
+            if (res2(0).type_1.toLowerCase == "admin") {
+              Redirect("/").withSession("userSecurity" -> res2(0).login, "role" -> res2(0).login, "userId" -> res2(0).id.toString())
+            } else if (res2(0).type_1.toLowerCase == "veterinario") {
+              Redirect(routes.VeterinarioController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).login, "userId" -> res2(0).id.toString())
+            } else if (res2(0).type_1.toLowerCase == "insumo") {
+              Redirect(routes.InsumoUserController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).login, "userId" -> res2(0).id.toString())
+            } else if (res2(0).type_1.toLowerCase == "almacen") {
+              Redirect(routes.StorekeeperController.profile(res2(0).id)).withSession("userSecurity" -> res2(0).login, "role" -> res2(0).login, "userId" -> res2(0).id.toString())
             } else {
-              Ok(views.html.storekeeper_profile2(res2(0)))
               Redirect("/error")
             }
           } else {

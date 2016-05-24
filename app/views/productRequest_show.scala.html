@@ -3,7 +3,7 @@
 @main("Mostrar") {
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/productRequest_show.js")'></script>
     <div>
-        <a href="/productRequests_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
+        <a href="/profile"><span class="glyphicon glyphicon-plus">Cuenta</span></a>
     </div>
     <div class="container">
         <div>
@@ -27,7 +27,7 @@
             <div style="display: inline-block;"> <a href="/requestRow_addGet" class="btn btn-primary">Agregar Productos</a> </div>
     </div>
 
-    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRow_index.js")'></script>
+    <script type='text/javascript' src='@routes.Assets.versioned("javascripts/requestRowByParent.js")'></script>
     <div>Lista de Productos</div>
     <div class="table-responsive">
         <table class="table" id="rows">

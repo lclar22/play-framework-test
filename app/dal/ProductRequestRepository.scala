@@ -6,7 +6,8 @@ import slick.driver.JdbcProfile
 
 import models.ProductRequest
 
-import scala.concurrent.{ Future, ExecutionContext }
+import scala.concurrent.{ Future, ExecutionContext, Await }
+import scala.concurrent.duration._
 
 /**
  * A repository for people.
@@ -14,7 +15,7 @@ import scala.concurrent.{ Future, ExecutionContext }
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
+class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoRequestRow: RequestRowRepository, repoProduct: ProductRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
@@ -90,17 +91,41 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     tableQ.filter(_.id === id).result
   }
 
-  // Update the status to enviado status
+  // Update the status to enviado status, review that the status == borrador or unfill
   def acceptById(id: Long): Future[Seq[ProductRequest]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("aceptado"))
+    getById(id).map { pRequest => 
+      if (pRequest(0).status == "borrador") {
+        val q = for { c <- tableQ if c.id === id } yield c.status
+        db.run(q.update("aceptado"))
+        runUpdateChildren(id)
+      }
+    }
     tableQ.filter(_.id === id).result
+  }
+
+  def runUpdateChildren(id: Long) = {
+    Await.result(repoRequestRow.getByParentId(id).map { rowList => 
+      rowList.foreach { row => 
+        if (row.status == "borrador") {
+          repoRequestRow.acceptById(row.id).map {case (res) =>
+            repoProduct.updateAmount(res(0).productId, - res(0).quantity);
+          }
+        }
+      }
+    }, 3000.millis)
   }
 
   // Update the status to finalizado status
   def finishById(id: Long): Future[Seq[ProductRequest]] = db.run {
-    val q = for { c <- tableQ if c.id === id } yield c.status
-    db.run(q.update("finalizado"))
+    getById(id).map { pRequest =>
+      if (pRequest(0).status == "borrador") {
+        runUpdateChildren(id)
+      }
+      if (pRequest(0).status == "borrador" || pRequest(0).status == "aceptado") {
+        val q = for { c <- tableQ if c.id === id } yield c.status
+        db.run(q.update("finalizado"))
+      }
+    }
     tableQ.filter(_.id === id).result
   }
 
