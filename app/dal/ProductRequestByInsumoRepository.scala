@@ -4,7 +4,7 @@ import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import slick.driver.JdbcProfile
 
-import models.ProductRequest
+import models.ProductRequestByInsumo
 
 import scala.concurrent.{ Future, ExecutionContext, Await }
 import scala.concurrent.duration._
@@ -15,47 +15,47 @@ import scala.concurrent.duration._
  * @param dbConfigProvider The Play db config provider. Play will inject this for you.
  */
 @Singleton
-class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoRequestRow: RequestRowRepository, repoProduct: ProductRepository)(implicit ec: ExecutionContext) {
+class ProductRequestByInsumoRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, repoRequestRow: RequestRowRepository, repoProduct: ProductRepository)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
 
   import dbConfig._
   import driver.api._
 
-  private class ProductRequestTable(tag: Tag) extends Table[ProductRequest](tag, "productRequest") {
+  private class ProductRequestByInsumoTable(tag: Tag) extends Table[ProductRequestByInsumo](tag, "productRequest") {
 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def date = column[String]("date")
-    def veterinario = column[Long]("veterinario")
-    def storekeeper = column[Long]("storekeeper")
+    def user = column[Long]("user")
+    def modulo = column[Long]("modulo")
     def status = column[String]("status")
     def detail = column[String]("detail")
     def type_1 = column[String]("type")
-    def * = (id, date, veterinario, storekeeper, status, detail, type_1) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
+    def * = (id, date, user, modulo, status, detail, type_1) <> ((ProductRequestByInsumo.apply _).tupled, ProductRequestByInsumo.unapply)
   }
 
-  private val tableQ = TableQuery[ProductRequestTable]
+  private val tableQ = TableQuery[ProductRequestByInsumoTable]
 
-  def create(date: String, veterinario: Long, storekeeper: Long, status: String, detail: String, type_1: String): Future[ProductRequest] = db.run {
-    (tableQ.map(p => (p.date, p.veterinario, p.storekeeper, p.status, p.detail, p.type_1))
+  def create(date: String, user: Long, modulo: Long, status: String, detail: String, type_1: String): Future[ProductRequestByInsumo] = db.run {
+    (tableQ.map(p => (p.date, p.user, p.modulo, p.status, p.detail, p.type_1))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (date, veterinario, storekeeper, status, detail, type_1)
+      into ((nameAge, id) => ProductRequestByInsumo(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
+    ) += (date, user, modulo, status, detail, type_1)
   }
 
-  def list(): Future[Seq[ProductRequest]] = db.run {
+  def list(): Future[Seq[ProductRequestByInsumo]] = db.run {
     tableQ.result
   }
 
-  def listByVeterinario(id: Long): Future[Seq[ProductRequest]] = db.run {
-    tableQ.filter(_.veterinario === id).result
+  def listByUser(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
+    tableQ.filter(_.user === id).result
   }
 
-  def listByStorekeeper(id: Long): Future[Seq[ProductRequest]] = db.run {
-    tableQ.filter(_.storekeeper === id).result
+  def listByModulo(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
+    tableQ.filter(_.modulo === id).result
   }
 
-  def listByInsumoUser(id: Long): Future[Seq[ProductRequest]] = db.run {
-    tableQ.filter(_.veterinario === id).result
+  def listByInsumoUser(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
+    tableQ.filter(_.user === id).result
   }
 
   def getListNames(): Future[Seq[(Long, String)]] = db.run {
@@ -63,18 +63,18 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
     // to cpy
-  def getById(id: Long): Future[Seq[ProductRequest]] = db.run {
+  def getById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     tableQ.filter(_.id === id).result
   }
 
   // update required to copy
-  def update(id: Long, date: String, veterinario: Long, storekeeper: Long, status: String, detail: String, type_1: String): Future[Seq[ProductRequest]] = db.run {
+  def update(id: Long, date: String, user: Long, modulo: Long, status: String, detail: String, type_1: String): Future[Seq[ProductRequestByInsumo]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
-    val q2 = for { c <- tableQ if c.id === id } yield c.veterinario
-    db.run(q2.update(veterinario))
-    val q3 = for { c <- tableQ if c.id === id } yield c.storekeeper
-    db.run(q3.update(storekeeper))
+    val q2 = for { c <- tableQ if c.id === id } yield c.user
+    db.run(q2.update(user))
+    val q3 = for { c <- tableQ if c.id === id } yield c.modulo
+    db.run(q3.update(modulo))
     val q4 = for { c <- tableQ if c.id === id } yield c.status
     db.run(q4.update(status))
     val q5 = for { c <- tableQ if c.id === id } yield c.detail
@@ -85,14 +85,14 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // Update the status to enviado status
-  def sendById(id: Long): Future[Seq[ProductRequest]] = db.run {
+  def sendById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.status
     db.run(q.update("enviado"))
     tableQ.filter(_.id === id).result
   }
 
   // Update the status to enviado status, review that the status == borrador or unfill
-  def acceptById(id: Long): Future[Seq[ProductRequest]] = db.run {
+  def acceptById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     getById(id).map { pRequest => 
       if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
         val q = for { c <- tableQ if c.id === id } yield c.status
@@ -116,7 +116,7 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // Update the status to finalizado status
-  def finishById(id: Long): Future[Seq[ProductRequest]] = db.run {
+  def finishById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     getById(id).map { pRequest =>
       if (pRequest(0).status == "borrador" || pRequest(0).status == "enviado") {
         runUpdateChildren(id)
@@ -130,7 +130,7 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // delete required
-  def delete(id: Long): Future[Seq[ProductRequest]] = db.run {
+  def delete(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)

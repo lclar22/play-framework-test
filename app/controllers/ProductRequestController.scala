@@ -47,12 +47,6 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
   }
 
-  def addGetByInsumo = Action {
-    val insumoUsersNames = getInsumoUserNamesMap()
-    val storeNames = getStorekeepersNamesMap()
-    Ok(views.html.productRequestByInsumo_add(newForm, insumoUsersNames, storeNames))
-  }
-
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -61,19 +55,6 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
       res => {
         repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "veterinaria").map { _ =>
           Redirect(routes.VeterinarioController.profile(res.veterinario))
-        }
-      }
-    )
-  }
-
-  def addByInsumo = Action.async { implicit request =>
-    newForm.bindFromRequest.fold(
-      errorForm => {
-        Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
-      },
-      res => {
-        repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "insumo").map { _ =>
-          Redirect(routes.InsumoUserController.profile(res.veterinario))
         }
       }
     )
@@ -136,34 +117,24 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     }
   }
 
-  // update required
-  def getUpdateByInsumo(id: Long) = Action.async { implicit request =>
-    repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
-      val insumosMap = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
-      val storeMap = getStorekeepersNamesMap()
-      Ok(views.html.productRequestByInsumo_update(updateForm.bind(anyData), insumosMap, storeMap))
-    }
-  }
-
 // update required
-  def getSend(id: Long) = Action.async {
+  def getSend(id: Long) = Action.async { implicit request =>
     repo.sendById(id).map {case (res) =>
-      Redirect(routes.VeterinarioController.profile(res.toList(0).veterinario))
+      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
     }
   }
 
 // update required
-  def getAccept(id: Long) = Action.async {
+  def getAccept(id: Long) = Action.async { implicit request =>
     repo.acceptById(id).map {case (res) =>
-      Redirect(routes.VeterinarioController.profile(res.toList(0).veterinario))
+      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
     }
   }
 
 // update required
-  def getFinish(id: Long) = Action.async {
+  def getFinish(id: Long) = Action.async { implicit request =>
     repo.finishById(id).map {case (res) =>
-      Redirect(routes.StorekeeperController.profile(res.toList(0).storekeeper))
+      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
     }
   }
 

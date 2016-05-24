@@ -118,6 +118,8 @@ create table productRequest (
   date VARCHAR(30),
   veterinario INT,
   storekeeper INT,
+  user INT,
+  modulo INT,
   status VARCHAR(30),
   detail VARCHAR(30),
   type VARCHAR(30)

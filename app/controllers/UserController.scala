@@ -65,6 +65,29 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
       }, 2000.millis)
   }
 
+  def profileById(userId: Long) = Action { implicit request =>
+    Await.result(repo.getById(userId).map { res2 =>
+        if (res2.length > 0) {
+          if (res2(0).type_1.toLowerCase == "admin") {
+            Redirect("/")
+          } else if (res2(0).type_1.toLowerCase == "veterinario") {
+            Redirect(routes.VeterinarioController.profile(res2(0).id))
+          } else if (res2(0).type_1.toLowerCase == "insumo") {
+            Redirect(routes.InsumoUserController.profile(res2(0).id))
+          } else if (res2(0).type_1.toLowerCase == "almacen") {
+            Redirect(routes.StorekeeperController.profile(res2(0).id))
+          } else {
+            Ok(views.html.storekeeper_profile2(res2(0)))
+            Redirect("/error")
+          }
+        } else {
+          Redirect("/login")
+        }
+      }, 2000.millis)
+  }
+
+
+
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
@@ -107,7 +130,10 @@ class UserController @Inject() (repo: UserRepository, val messagesApi: MessagesA
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion, "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> res.toList(0).type_1.toString())
+      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "carnet" -> res.toList(0).carnet.toString(),
+                        "telefono" -> res.toList(0).telefono.toString(), "direccion" -> res.toList(0).direccion,
+                        "sueldo" -> res.toList(0).sueldo.toString(), "type_1" -> res.toList(0).type_1.toString(),
+                        "login" -> res.toList(0).login.toString(), "password" -> res.toList(0).password.toString())
       Ok(views.html.user_update(updateForm.bind(anyData), types))
     }
   }

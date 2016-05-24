@@ -1,6 +1,9 @@
 @import helper._
 
 @main("Mostrar") {
+    <div>
+        <a href="/logout">Cerrar session</a>
+    </div>
     <script type='text/javascript' src='@routes.Assets.versioned("javascripts/storekeeper_profile.js")'></script>
     <div class="container">
         <div>
@@ -18,9 +21,6 @@
         <div>
             <div style="display: inline-block;"> Direccion: </div>
             <div style="display: inline-block;" id="direccion">  </div>
-        </div>
-        <div>
-            <div style="display: inline-block;"> <a href="/productRequest_addGet" class="btn btn-primary">Crear Peticion</a> </div>
         </div>
     </div>
     <!-- Copy from productrequest_index.scala.html -->

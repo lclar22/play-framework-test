@@ -37,9 +37,11 @@ class MainController @Inject() (repo: UserRepository, val messagesApi: MessagesA
           } else {
             Ok(views.html.storekeeper_profile2(res2(0)))
             Redirect("/login")
+            //Ok(views.html.index(new MyDeadboltHandler))
           }
         } else {
           Redirect("/login")
+          //Ok(views.html.index(new MyDeadboltHandler))
         }
       }, 2000.millis)
     }
