@@ -1,7 +1,7 @@
 row_id = location.pathname.split('/')[2]
 
 $ ->
-  $.get "/productRequestsByInsumoUser/" + row_id, (rows) ->
+  $.get "/productRequestsByInsumosByUser/" + row_id, (rows) ->
     $.each rows, (index, row) ->
       date = $("<td>").text row.date
       veterinario = $("<td>").text row.veterinario
