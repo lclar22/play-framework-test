@@ -1,0 +1,18 @@
+unidades de medida
+- Por bidon
+Asiento diario
+- Recibido por(lista para seleccionar)
+- Autorizado por(lista para seleccionar)
+- Elaborado por(automatico)
+
+insumos
+bauche -> transaccion
+usario insumo
+- Grupo de personas, registrar despues de crear la planificacion de entrega
+- O un modulo.
+
+cupo ->  Por asociacion
+
+APL 
+- Asociacion tiene modulos
+- Federacion tiene asociaciones
