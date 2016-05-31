@@ -139,21 +139,21 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
   def getAccept(id: Long) = Action.async {
     repo.acceptById(id).map {case (res) =>
       repoInsum.updateAmount(res(0).productId, - res(0).quantity);
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
+      Redirect(routes.ProductRequestByInsumoController.show(res(0).requestId))
     }
   }
 
 // update required
   def getSend(id: Long) = Action.async {
     repo.sendById(id).map {case (res) =>
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
+      Redirect(routes.ProductRequestByInsumoController.show(res(0).requestId))
     }
   }
 
 // update required
   def getFinish(id: Long) = Action.async {
     repo.finishById(id).map {case (res) =>
-      Redirect(routes.ProductRequestController.show(res(0).requestId))
+      Redirect(routes.ProductRequestByInsumoController.show(res(0).requestId))
     }
   }
 
@@ -179,7 +179,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
       },
       res => {
         repo.update(res.id, res.requestId, res.productId, res.quantity, res.precio, res.status).map { _ =>
-          Redirect(routes.ProductRequestController.show(res.requestId))
+          Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }
     )

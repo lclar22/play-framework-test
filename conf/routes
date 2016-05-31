@@ -211,7 +211,6 @@ POST    /productRequest      		controllers.ProductRequestController.add
 GET     /productRequests         				controllers.ProductRequestController.getProductRequests
 GET     /productRequestsByVeterinario/:id        controllers.ProductRequestController.getProductRequestsByVeterinario(id: Long)
 GET     /productRequestsByStorekeeper/:id        controllers.ProductRequestController.getProductRequestsByStorekeeper(id: Long)
-GET     /productRequestsByInsumoUser/:id        controllers.ProductRequestController.getProductRequestsByInsumoUser(id: Long)
 GET     /productRequests_view         			controllers.ProductRequestController.index
 GET     /productRequest_addGet     controllers.ProductRequestController.addGet
 
@@ -223,9 +222,11 @@ GET     /productRequestByInsumo_update/:id 				controllers.ProductRequestByInsum
 GET     /productRequestByInsumo_send/:id        		controllers.ProductRequestByInsumoController.getSend(id: Long)
 GET     /productRequestByInsumo_accept/:id        		controllers.ProductRequestByInsumoController.getAccept(id: Long)
 GET     /productRequestByInsumo_finish/:id        		controllers.ProductRequestByInsumoController.getFinish(id: Long)
+GET     /productRequestByInsumo_cancel/:id        		controllers.ProductRequestByInsumoController.getCancel(id: Long)
 GET     /productRequestByInsumo_remove/:id        		controllers.ProductRequestByInsumoController.delete(id: Long)
 GET     /productRequestByInsumos/:id 					controllers.ProductRequestByInsumoController.getById(id: Long)
 POST    /productRequestByInsumo_update     				controllers.ProductRequestByInsumoController.updatePost
+GET     /productRequestsByInsumosByUser/:id        		controllers.ProductRequestByInsumoController.getProductRequestByInsumosByUser(id: Long)
 
 POST    /productRequestByInsumo      					controllers.ProductRequestByInsumoController.add
 GET     /productRequestByInsumos         				controllers.ProductRequestByInsumoController.getProductRequestByInsumos
@@ -249,6 +250,24 @@ GET     /requestRows         				controllers.RequestRowController.getRequestRows
 GET     /requestRowsByParent/:id         				controllers.RequestRowController.getRequestRowsByParent(id: Long)
 GET     /requestRows_view         			controllers.RequestRowController.index
 GET     /requestRow_addGet         			controllers.RequestRowController.addGet
+GET     /requestRowByInsumo_addGet         			controllers.RequestRowController.addGet
+
+# Now for Product requests Rows
+GET     /requestRowByInsumo_show/:id 				controllers.RequestRowByInsumoController.show(id: Long)
+GET     /requestRowByInsumo_update/:id        		controllers.RequestRowByInsumoController.getUpdate(id: Long)
+GET     /requestRowByInsumo_send/:id        		controllers.RequestRowByInsumoController.getSend(id: Long)
+GET     /requestRowByInsumo_fill/:id        		controllers.RequestRowByInsumoController.getAccept(id: Long)
+GET     /requestRowByInsumo_finish/:id        		controllers.RequestRowByInsumoController.getFinish(id: Long)
+GET     /requestRowByInsumo_remove/:id        		controllers.RequestRowByInsumoController.delete(id: Long)
+GET     /requestRowByInsumos/:id 					controllers.RequestRowByInsumoController.getById(id: Long)
+POST    /requestRowByInsumo_update             		controllers.RequestRowByInsumoController.updatePost
+
+POST    /requestRowByInsumo                 		controllers.RequestRowByInsumoController.add
+GET     /requestRowByInsumos         				controllers.RequestRowByInsumoController.getRequestRowByInsumos
+GET     /requestRowByInsumosByParent/:id         	controllers.RequestRowByInsumoController.getRequestRowByInsumosByParent(id: Long)
+GET     /requestRowByInsumos_view         			controllers.RequestRowByInsumoController.index
+GET     /requestRowByInsumo_addGet         			controllers.RequestRowByInsumoController.addGet
+GET     /requestRowByInsumoByInsumo_addGet         	controllers.RequestRowByInsumoController.addGet
 
 # Now for Product requests Rows Productors
 GET     /requestRowProductor_show/:id 				controllers.RequestRowProductorController.show(id: Long)

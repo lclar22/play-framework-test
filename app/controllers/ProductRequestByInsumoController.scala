@@ -127,6 +127,13 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
     }
   }
 
+// update required
+  def getcancel(id: Long) = Action.async { implicit request =>
+    repo.cancelById(id).map {case (res) =>
+      Redirect(routes.UserController.profileById(request.session.get("userId").getOrElse("0").toLong))
+    }
+  }
+
 
   def getUserNamesMap(id: Long): Map[String, String] = {
     Await.result(repoVete.getById(id).map{ case (res1) => 
