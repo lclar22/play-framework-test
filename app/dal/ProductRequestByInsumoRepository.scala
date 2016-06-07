@@ -91,6 +91,13 @@ class ProductRequestByInsumoRepository @Inject() (dbConfigProvider: DatabaseConf
     tableQ.filter(_.id === id).result
   }
 
+  // Update the status to enviado status
+  def cancelById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
+    val q = for { c <- tableQ if c.id === id } yield c.status
+    db.run(q.update("cancelado"))
+    tableQ.filter(_.id === id).result
+  }
+
   // Update the status to enviado status, review that the status == borrador or unfill
   def acceptById(id: Long): Future[Seq[ProductRequestByInsumo]] = db.run {
     getById(id).map { pRequest => 
