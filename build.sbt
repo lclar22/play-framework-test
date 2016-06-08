@@ -1,7 +1,7 @@
 import com.github.play2war.plugin._
-name := """play-scala-intro"""
+name := """play-scala-intro1"""
 
-version := "1.0-SNAPSHOT"
+version := "1.0.5"
 
 Play2WarPlugin.play2WarSettings
 
@@ -27,12 +27,25 @@ libraryDependencies ++= Seq(
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
+wixProductId := "04d82cef-6726-4d79-9345-9993655185f4"
+
+maintainer := "Josh Suereth <luis.arce22@gmail.com>"
+
+packageSummary := "test-windows"
+
+packageDescription := """Test Windows MSI."""
+
+enablePlugins(JavaServerAppPackaging)
 
 fork in run := true
 
 fork in run := true
 
 
+
+fork in run := true
+
+fork in run := true
 
 fork in run := true
 
