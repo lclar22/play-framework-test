@@ -27,9 +27,9 @@ libraryDependencies ++= Seq(
 // other, legacy style, accesses its actions statically.
 routesGenerator := InjectedRoutesGenerator
 
-wixProductId := "04d82cef-6726-4d79-9345-9993655185f4"
+wixProductId := "c3458b2d-41d2-4943-826b-cf439b0a1eac"
 
-maintainer := "Josh Suereth <luis.arce22@gmail.com>"
+maintainer := "Luis Arce <luis.arce22@gmail.com>"
 
 packageSummary := "test-windows"
 
