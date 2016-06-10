@@ -16,7 +16,6 @@ import scala.concurrent.{ Future, ExecutionContext }
 @Singleton
 class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(implicit ec: ExecutionContext) {
   private val dbConfig = dbConfigProvider.get[JdbcProfile]
-
   import dbConfig._
   import driver.api._
 
@@ -47,7 +46,13 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     tableQ.filter(_.productId === id).result
   }
 
+  def updateInventory() = {
 
+  }
+
+  def getCost() = {
+    
+  }
 
     // to cpy
   def getById(id: Long): Future[Seq[ProductInv]] = db.run {
@@ -75,5 +80,19 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
     val affectedRowsCount: Future[Int] = db.run(action);
     affectedRowsCount.map(s=> println(s))
     res
+  }
+
+  def updateProductInv(productId: Long, quantity: Int) = {
+    // Update the inv item using PEPS methodoloy
+    /*
+      select all quanity order by register date
+      Iterate over that and take the first one and update it 
+        if the quanity of the data base is more than or equal quanity 
+          update it and continue
+        else
+          update it and go to the next row
+
+    */
+    
   }
 }

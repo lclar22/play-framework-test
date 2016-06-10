@@ -22,7 +22,9 @@ create table account (
   description VARCHAR(30),
   child boolean,
   debit double,
-  credit double
+  credit double,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table transaction (
@@ -31,7 +33,9 @@ create table transaction (
   type VARCHAR(30),
   description VARCHAR(30),
   createdBy INT(6),
-  updatedBy INT(6)
+  updatedBy INT(6),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table logEntry (
@@ -50,7 +54,9 @@ create table transactionDetail (
   credit double,
   transactionDate VARCHAR(30),
   accountCode VARCHAR(30),
-  accountName VARCHAR(30)
+  accountName VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table bancos (
@@ -64,11 +70,14 @@ create table bancos (
 create table product (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   nombre VARCHAR(30) not null,
-  costo int,
-  porcentage int,
+  cost double,
+  percent double,
+  price double,
   descripcion VARCHAR(30),
   unidad INT,
-  currentAmount int
+  currentAmount int,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table productor (
@@ -82,7 +91,9 @@ create table productor (
   module INT,
   totalDebt double,
   numberPayment int,
-  position VARCHAR(30)
+  position VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table proveedor (
@@ -91,14 +102,18 @@ create table proveedor (
   telefono int,
   direccion VARCHAR(30),
   contacto VARCHAR(30),
-  account INT
+  account INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table reportes (
   id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   monto int not null,
   account int not null,
-  cliente int not null
+  cliente int not null,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table user (
@@ -110,7 +125,9 @@ create table user (
   sueldo int,
   type VARCHAR(30),
   login VARCHAR(30),
-  password VARCHAR(30)
+  password VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table productRequest (
@@ -122,7 +139,9 @@ create table productRequest (
   modulo INT,
   status VARCHAR(30),
   detail VARCHAR(30),
-  type VARCHAR(30)
+  type VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table requestRow (
@@ -135,7 +154,9 @@ create table requestRow (
   paid int,
   debt int,
   cuota int,
-  status VARCHAR(30)
+  status VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table requestRowProductor (
@@ -149,7 +170,9 @@ create table requestRowProductor (
   debt int,
   cuota int,
   status VARCHAR(30),
-  type VARCHAR(30)
+  type VARCHAR(30),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table productInv (
@@ -158,8 +181,10 @@ create table productInv (
   proveedorId INT,
   amount int,
   amountLeft int,
-  cost_unit int,
-  total_cost int
+  cost_unit double,
+  total_cost double,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table discountReport (
@@ -168,7 +193,9 @@ create table discountReport (
   endDate VARCHAR(30),
   status VARCHAR(30),
   total double,
-  user_id INT
+  user_id INT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 create table discountDetail (
