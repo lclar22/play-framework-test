@@ -84,15 +84,25 @@ class ProductInvRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(
 
   def updateProductInv(productId: Long, quantity: Int) = {
     // Update the inv item using PEPS methodoloy
-    /*
-      select all quanity order by register date
-      Iterate over that and take the first one and update it 
-        if the quanity of the data base is more than or equal quanity 
-          update it and continue
-        else
-          update it and go to the next row
+    var quantityAux = quantity
+    db.run(tableQ.filter(_.amountLeft > 0).result).map { invs =>
+      invs.foreach { inv => 
+        println(inv.id)
+        if (quantityAux > 0) {
+          if (inv.amountLeft <= quantityAux) {
+            udpateAmountLeft(inv, quantityAux)
+            quantityAux = 0
+          } else {
+            quantityAux = quantityAux - inv.amountLeft
+            udpateAmountLeft(inv, inv.amountLeft)
+          }
+        }
+      }
+    }
+  }
 
-    */
-    
+  def udpateAmountLeft(pInv: ProductInv, quantity: Int) = {
+    val q = for { c <- tableQ if c.id === pInv.id } yield c.amountLeft
+    db.run(q.update(pInv.amountLeft - quantity))
   }
 }
