@@ -27,7 +27,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     def carnet = column[Int]("carnet")
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
-    def account = column[Long]("account")
+    def account = column[String]("account")
     def module = column[Long]("module")
     def moduleName = column[String]("moduleName")
     def asociacionName = column[String]("asociacionName")
@@ -43,7 +43,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   private val tableQ = TableQuery[ProductoresTable]
 
   def create(nombre: String, carnet: Int, telefono: Int, direccion: String,
-             account: Long, module: Long): Future[Productor] = db.run {
+             account: String, module: Long, moduleName: String): Future[Productor] = db.run {
     (tableQ.map (
                   p => (
                         p.nombre, p.carnet, p.telefono, p.direccion, p.account,
@@ -58,7 +58,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
                                                                 nameAge._9, nameAge._10, nameAge._11
                                                               )
                                                    )
-    ) += (nombre, carnet, telefono, direccion, account, module, "", "", 0, 0, "Productor")
+    ) += (nombre, carnet, telefono, direccion, account, module, moduleName, "", 0, 0, "Productor")
   }
 
   def list(): Future[Seq[Productor]] = db.run {
@@ -73,7 +73,7 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   // update required to copy
   def update(
               id: Long, nombre: String, carnet: Int, telefono: Int,
-              direccion: String, account: Long, module: Long,
+              direccion: String, account: String, module: Long,
               moduleName: String, asociacionName: String,
               totalDebt: Double, numberPayment: Int,
               position: String
@@ -89,6 +89,8 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     db.run(q4.update(account))
     val q5 = for { c <- tableQ if c.id === id } yield c.module
     db.run(q5.update(module))
+    val q6 = for { c <- tableQ if c.id === id } yield c.moduleName
+    db.run(q6.update(moduleName))
 
     tableQ.filter(_.id === id).result
   }
@@ -126,6 +128,10 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
 
   def listByTotalDebt(): Future[Seq[Productor]] = db.run {
     tableQ.filter(_.totalDebt > 0.0).result
+  }
+
+  def getByAccount(account: String): Future[Seq[Productor]] = db.run {
+    tableQ.filter(_.account like "%" + account + "%").result
   }
 
 }

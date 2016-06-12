@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,17 +11,28 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import it.innove.play.pdf.PdfGenerator
 import play.api.data.format.Formats._ 
 
 
-class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
+class ProductorController @Inject() (repo: ProductorRepository, repoModule: ModuleRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val modules = scala.collection.immutable.Map[String, String]("1" -> "module 1", "2" -> "module 2")
+  var modules = getModuleNamesMap()
+  def getModuleNamesMap(): Map[String, String] = {
+    Await.result(repoModule.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
+
 
   val newForm: Form[CreateProductorForm] = Form {
     mapping(
@@ -28,12 +40,13 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "carnet" -> number.verifying(min(0), max(9999999)),
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
-      "account" -> longNumber,
+      "account" -> text,
       "module" -> longNumber
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
   def index = Action {
+    modules = getModuleNamesMap()
     Ok(views.html.productor_index(newForm, modules))
   }
 
@@ -47,9 +60,9 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       errorForm => {
         Future.successful(Ok(views.html.productor_index(errorForm, modules)))
       },
-      productor => {
-        repo.create (productor.nombre, productor.carnet, productor.telefono, productor.direccion,
-                    productor.account, productor.module).map { _ =>
+      res => {
+        repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
+                    res.account, res.module, modules(res.module.toString)).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -82,10 +95,8 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "carnet" -> number,
       "telefono" -> number,
       "direccion" -> nonEmptyText,
-      "account" -> longNumber,
+      "account" -> text,
       "module" -> longNumber,
-      "moduleName" -> text,
-      "asociacionName" -> text,
       "totalDebt" -> of[Double],
       "numberPayment" -> number,
       "position" -> text
@@ -99,14 +110,15 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
 
   // update required
   def getUpdate(id: Long) = Action.async {
+    modules = getModuleNamesMap()
     repo.getById(id).map { res =>
       val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre,
         "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(),
         "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(),
-        "module" -> res.toList(0).module.toString(), "moduleName" -> res.toList(0).moduleName.toString(),
-        "asociacionName" -> res.toList(0).asociacionName.toString(), "totalDebt" -> res.toList(0).totalDebt.toString(),
+        "module" -> res.toList(0).module.toString(),
+        "totalDebt" -> res.toList(0).totalDebt.toString(),
         "numberPayment" -> res.toList(0).numberPayment.toString(), "position" -> res.toList(0).position.toString())
-      Ok(views.html.productor_update(updateForm.bind(anyData)))
+      Ok(views.html.productor_update(updateForm.bind(anyData), modules))
     }
   }
 
@@ -128,28 +140,34 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_update(errorForm)))
+        Future.successful(Ok(views.html.productor_update(errorForm, modules)))
       },
-      productor => {
+      res => {
         repo.update(
-                      productor.id, productor.nombre, productor.carnet, productor.telefono,
-                      productor.direccion, productor.account, productor.module,
-                      productor.moduleName, productor.asociacionName, productor.totalDebt,
-                      productor.numberPayment, productor.position
+                      res.id, res.nombre, res.carnet, res.telefono,
+                      res.direccion, res.account, res.module,
+                      modules(res.module.toString), "Asociacion Name", res.totalDebt,
+                      res.numberPayment, res.position
                     ).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
     )
   }
+
+  def searchByAccount(account: String) = Action.async {
+    repo.getByAccount(account).map { res =>
+      Ok(Json.toJson(res))
+    }
+  }
 }
 
-case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, module: Long)
+case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: String, module: Long)
 
 // Update required
 case class UpdateProductorForm(
                                 id: Long, nombre: String, carnet: Int, telefono: Int,
-                                direccion: String, account: Long, module: Long,
-                                moduleName: String, asociacionName: String, totalDebt: Double,
+                                direccion: String, account: String, module: Long,
+                                totalDebt: Double,
                                 numberPayment: Int, position: String
                               )

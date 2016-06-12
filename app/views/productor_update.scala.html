@@ -1,4 +1,4 @@
-@(row: Form[UpdateProductorForm])(implicit messages: Messages)
+@(row: Form[UpdateProductorForm], modules: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -10,7 +10,7 @@
             @inputText(row("carnet"))
             @inputText(row("telefono"))
             @inputText(row("direccion"))
-            @select(field = row("asociacion"), options = options(Map("1" -> "Asociacion 1","2"-> "Asociacion 2")))
+            @select(field = row("module"), options = options(modules))
             @inputText(row("id"), 'hidden -> "true", '_label -> "")
          </div>
         <div class="col-lg-6">

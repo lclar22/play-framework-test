@@ -1,4 +1,4 @@
-@(row: Form[CreateProductorForm], associations: Map[String, String])(implicit messages: Messages)
+@(row: Form[CreateProductorForm], modules: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -13,7 +13,7 @@
         @inputText(row("telefono"))
         @inputText(row("direccion"))
         @inputText(row("account"))
-        @select(field = row("asociacion"), options = options(associations))
+        @select(field = row("module"), options = options(modules))
 
         <input type="submit" value="Guardar" class="btn btn-primary"/>
     }
@@ -25,7 +25,7 @@
                     <th>Carnet</th>
                     <th>Telefono</th>
                     <th>Cuenta</th>
-                    <th>Asociacion</th>
+                    <th>Modulo</th>
                     <th>---</th>
                 </tr>
             </thead>

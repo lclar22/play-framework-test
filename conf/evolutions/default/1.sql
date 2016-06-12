@@ -116,7 +116,7 @@ create table productor (
   carnet int not null,
   telefono int,
   direccion VARCHAR(30),
-  account INT,
+  account VARCHAR(30),
   module INT,
   moduleName VARCHAR(30),
   asociacionName VARCHAR(30),

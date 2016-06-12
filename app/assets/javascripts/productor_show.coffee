@@ -7,8 +7,8 @@ $ ->
       $("#carnet").html row.carnet
       $("#telefono").html row.telefono
       $("#direccion").html row.direccion
-      $("#cuenta").html row.cuenta
-      $("#asociacion").html row.asociacion
+      $("#account").html row.account
+      $("#moduleName").html row.moduleName
       $("#totalDebt").html row.totalDebt
       $("#numberPayment").html row.numberPayment
       $("#position").html row.position
