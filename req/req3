@@ -11,7 +11,7 @@
 450	Egreso 4	EGRESO	0	sss	true	EditarEliminarMostrar
 460	Egreso 7	EGRESO	0	ss	true	EditarEliminarMostrar
 470	Egreso 5	EGRESO	0	sss	true	EditarEliminarMostrar
-480	Egreso 6	EGRESO	0	sss	true	EditarEliminarMostrar
+480	Egreso 6	EGRESO	0	sss	true	EditarEliminarMostrarw
 510	Ingreso 1	INGRESO	0	ww	true	EditarEliminarMostrar
 530	Ingreso 3	INGRESO	0	sss	true	EditarEliminarMostrar
 540	Ingreso 2	INGRESO	0	ss	true	EditarEliminarMostrar
@@ -34,7 +34,7 @@ Administracion de usuarios
 - Session Save
 	- User Id
 	- User Name
-	- User login
+	- User Login
 	. User Password
 - Session Managemenet
 

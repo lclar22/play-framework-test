@@ -28,20 +28,37 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     def telefono = column[Int]("telefono")
     def direccion = column[String]("direccion")
     def account = column[Long]("account")
-    def asociacion = column[Long]("asociacion")
+    def module = column[Long]("module")
+    def moduleName = column[String]("moduleName")
+    def asociacionName = column[String]("asociacionName")
     def totalDebt = column[Double]("totalDebt")
     def numberPayment = column[Int]("numberPayment")
     def position = column[String]("position")
-    def * = (id, nombre, carnet, telefono, direccion, account, asociacion, totalDebt, numberPayment, position) <> ((Productor.apply _).tupled, Productor.unapply)
+    def * = (
+              id, nombre, carnet, telefono, direccion, account, module, moduleName,
+              asociacionName, totalDebt, numberPayment, position
+            ) <> ((Productor.apply _).tupled, Productor.unapply)
   }
 
   private val tableQ = TableQuery[ProductoresTable]
 
-  def create(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long): Future[Productor] = db.run {
-    (tableQ.map(p => (p.nombre, p.carnet, p.telefono, p.direccion, p.account, p.asociacion, p.totalDebt, p.numberPayment, p.position))
-      returning tableQ.map(_.id)
-      into ((nameAge, id) => Productor(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8, nameAge._9))
-    ) += (nombre, carnet, telefono, direccion, account, asociacion, 0, 0, "Productor")
+  def create(nombre: String, carnet: Int, telefono: Int, direccion: String,
+             account: Long, module: Long): Future[Productor] = db.run {
+    (tableQ.map (
+                  p => (
+                        p.nombre, p.carnet, p.telefono, p.direccion, p.account,
+                        p.module, p.moduleName, p.asociacionName, p.totalDebt, p.numberPayment, p.position
+                       )
+                ) returning tableQ.map(_.id) into (
+                                                   (nameAge, id) => 
+                                                   Productor (
+                                                                id, nameAge._1, nameAge._2,
+                                                                nameAge._3, nameAge._4, nameAge._5,
+                                                                nameAge._6, nameAge._7, nameAge._8,
+                                                                nameAge._9, nameAge._10, nameAge._11
+                                                              )
+                                                   )
+    ) += (nombre, carnet, telefono, direccion, account, module, "", "", 0, 0, "Productor")
   }
 
   def list(): Future[Seq[Productor]] = db.run {
@@ -54,7 +71,14 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
   }
 
   // update required to copy
-  def update(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Double, numberPayment: Int, position: String): Future[Seq[Productor]] = db.run {
+  def update(
+              id: Long, nombre: String, carnet: Int, telefono: Int,
+              direccion: String, account: Long, module: Long,
+              moduleName: String, asociacionName: String,
+              totalDebt: Double, numberPayment: Int,
+              position: String
+            ) : Future[Seq[Productor]] = db.run {
+
     val q = for { c <- tableQ if c.id === id } yield c.nombre
     db.run(q.update(nombre))
     val q2 = for { c <- tableQ if c.id === id } yield c.carnet
@@ -63,8 +87,8 @@ class ProductorRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(i
     db.run(q3.update(telefono))
     val q4 = for { c <- tableQ if c.id === id } yield c.account
     db.run(q4.update(account))
-    val q5 = for { c <- tableQ if c.id === id } yield c.asociacion
-    db.run(q5.update(asociacion))
+    val q5 = for { c <- tableQ if c.id === id } yield c.module
+    db.run(q5.update(module))
 
     tableQ.filter(_.id === id).result
   }

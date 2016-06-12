@@ -18,13 +18,14 @@ import it.innove.play.pdf.PdfGenerator
 class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val asociaciones = scala.collection.immutable.Map[String, String]("1" -> "Asociacion 1", "2" -> "Asociacion 2")
+  val asociaciones = scala.collection.immutable.Map[String, String]("0" -> "Ninguno", "1" -> "Asociacion 1", "2" -> "Asociacion 2")
 
   val newForm: Form[CreateModuleForm] = Form {
     mapping(
       "name" -> nonEmptyText,
       "president" -> longNumber,
-      "description" -> text
+      "description" -> text,
+      "asociacion" -> longNumber
     )(CreateModuleForm.apply)(CreateModuleForm.unapply)
   }
 
@@ -43,7 +44,7 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
         Future.successful(Ok(views.html.module_index(errorForm, asociaciones)))
       },
       res => {
-        repo.create(res.name, res.president, res.description).map { _ =>
+        repo.create(res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { _ =>
           Redirect(routes.ModuleController.index)
         }
       }
@@ -68,7 +69,8 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
       "id" -> longNumber,
       "name" -> nonEmptyText,
       "president" -> longNumber,
-      "description" -> text
+      "description" -> text,
+      "asociacion" -> longNumber
     )(UpdateModuleForm.apply)(UpdateModuleForm.unapply)
   }
 
@@ -80,8 +82,13 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name, "president" -> res.toList(0).president.toString(), "description" -> res.toList(0).description.toString())
-      Ok(views.html.module_update(updateForm.bind(anyData)))
+      val anyData = Map("id" -> id.toString().toString(), "name" -> res.toList(0).name,
+                        "president" -> res.toList(0).president.toString(),
+                        "description" -> res.toList(0).description.toString(),
+                        "asociacion" -> res.toList(0).asociacion.toString(),
+                        "asociacionName" -> res.toList(0).asociacionName.toString()
+                       )
+      Ok(views.html.module_update(updateForm.bind(anyData), asociaciones))
     }
   }
 
@@ -103,10 +110,10 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.module_update(errorForm)))
+        Future.successful(Ok(views.html.module_update(errorForm, asociaciones)))
       },
       res => {
-        repo.update(res.id, res.name, res.president, res.description).map { _ =>
+        repo.update(res.id, res.name, res.president, res.description, res.asociacion, asociaciones(res.asociacion.toString)).map { _ =>
           Redirect(routes.ModuleController.index)
         }
       }
@@ -115,7 +122,7 @@ class ModuleController @Inject() (repo: ModuleRepository, val messagesApi: Messa
 
 }
 
-case class CreateModuleForm(name: String, president: Long, description: String)
+case class CreateModuleForm(name: String, president: Long, description: String, asociacion: Long)
 
 // Update required
-case class UpdateModuleForm(id: Long, name: String, president: Long, description: String)
+case class UpdateModuleForm(id: Long, name: String, president: Long, description: String, asociacion: Long)

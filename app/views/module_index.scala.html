@@ -11,6 +11,7 @@
         @inputText(row("name"))
         @inputText(row("president"))
         @inputText(row("description"))
+        @select(field = row("asociacion"), options = options(associations))
         <input type="submit" value="Agregar Modulo" class="btn btn-primary"/>
     }
     <div>
@@ -23,6 +24,7 @@
                     <th>Nombre</th>
                     <th>Presidente</th>
                     <th>Descripcion</th>
+                    <th>Asociacion</th>
                     <th>---</th>
                 </tr>
             </thead>

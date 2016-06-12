@@ -20,7 +20,7 @@ import play.api.data.format.Formats._
 class ProductorController @Inject() (repo: ProductorRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
-  val asociaciones = scala.collection.immutable.Map[String, String]("1" -> "Asociacion 1", "2" -> "Asociacion 2")
+  val modules = scala.collection.immutable.Map[String, String]("1" -> "module 1", "2" -> "module 2")
 
   val newForm: Form[CreateProductorForm] = Form {
     mapping(
@@ -29,12 +29,12 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       "telefono" -> number.verifying(min(0), max(9999999)),
       "direccion" -> nonEmptyText,
       "account" -> longNumber,
-      "asociacion" -> longNumber
+      "module" -> longNumber
     )(CreateProductorForm.apply)(CreateProductorForm.unapply)
   }
 
   def index = Action {
-    Ok(views.html.productor_index(newForm, asociaciones))
+    Ok(views.html.productor_index(newForm, modules))
   }
 
   def index_pdf = Action {
@@ -45,10 +45,11 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(errorForm, asociaciones)))
+        Future.successful(Ok(views.html.productor_index(errorForm, modules)))
       },
       productor => {
-        repo.create(productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion).map { _ =>
+        repo.create (productor.nombre, productor.carnet, productor.telefono, productor.direccion,
+                    productor.account, productor.module).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
@@ -78,11 +79,13 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
     mapping(
       "id" -> longNumber,
       "nombre" -> nonEmptyText,
-      "carnet" -> number.verifying(min(0), max(9999999)),
-      "telefono" -> number.verifying(min(0), max(9999999)),
+      "carnet" -> number,
+      "telefono" -> number,
       "direccion" -> nonEmptyText,
       "account" -> longNumber,
-      "asociacion" -> longNumber,
+      "module" -> longNumber,
+      "moduleName" -> text,
+      "asociacionName" -> text,
       "totalDebt" -> of[Double],
       "numberPayment" -> number,
       "position" -> text
@@ -100,9 +103,9 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
       val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre,
         "carnet" -> res.toList(0).carnet.toString(), "telefono" -> res.toList(0).telefono.toString(),
         "direccion" -> res.toList(0).direccion, "account" -> res.toList(0).account.toString(),
-        "asociacion" -> res.toList(0).asociacion.toString(), "asociacion" -> res.toList(0).asociacion.toString(),
-        "totalDebt" -> res.toList(0).totalDebt.toString(), "numberPayment" -> res.toList(0).numberPayment.toString(),
-        "position" -> res.toList(0).position.toString())
+        "module" -> res.toList(0).module.toString(), "moduleName" -> res.toList(0).moduleName.toString(),
+        "asociacionName" -> res.toList(0).asociacionName.toString(), "totalDebt" -> res.toList(0).totalDebt.toString(),
+        "numberPayment" -> res.toList(0).numberPayment.toString(), "position" -> res.toList(0).position.toString())
       Ok(views.html.productor_update(updateForm.bind(anyData)))
     }
   }
@@ -110,7 +113,7 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(newForm, asociaciones))
+      Ok(views.html.productor_index(newForm, modules))
     }
   }
 
@@ -128,16 +131,25 @@ class ProductorController @Inject() (repo: ProductorRepository, val messagesApi:
         Future.successful(Ok(views.html.productor_update(errorForm)))
       },
       productor => {
-        repo.update(productor.id, productor.nombre, productor.carnet, productor.telefono, productor.direccion, productor.account, productor.asociacion, productor.totalDebt, productor.numberPayment, productor.position).map { _ =>
+        repo.update(
+                      productor.id, productor.nombre, productor.carnet, productor.telefono,
+                      productor.direccion, productor.account, productor.module,
+                      productor.moduleName, productor.asociacionName, productor.totalDebt,
+                      productor.numberPayment, productor.position
+                    ).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
     )
   }
-
 }
 
-case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long)
+case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, module: Long)
 
 // Update required
-case class UpdateProductorForm(id: Long, nombre: String, carnet: Int, telefono: Int, direccion: String, account: Long, asociacion: Long, totalDebt: Double, numberPayment: Int, position: String)
+case class UpdateProductorForm(
+                                id: Long, nombre: String, carnet: Int, telefono: Int,
+                                direccion: String, account: Long, module: Long,
+                                moduleName: String, asociacionName: String, totalDebt: Double,
+                                numberPayment: Int, position: String
+                              )
