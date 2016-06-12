@@ -64,6 +64,10 @@ create table transaction (
   description VARCHAR(30),
   createdBy INT,
   createdBy_name VARCHAR(30),
+  autorizedBy INT,
+  autorizedBy_name VARCHAR(30), 
+  recievedBy INT,
+  recievedBy_name VARCHAR(30), 
   updatedBy INT(6),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

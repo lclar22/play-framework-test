@@ -32,6 +32,11 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
       cache.toMap
     }, 3000.millis)
   }
+  def searchByAccount(account: String): Seq[Productor] = {
+    Await.result(repo.getByAccount(account).map{ res => 
+      res
+    }, 1000.millis)
+  }
 
 
   val newForm: Form[CreateProductorForm] = Form {
@@ -47,7 +52,24 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
 
   def index = Action {
     modules = getModuleNamesMap()
-    Ok(views.html.productor_index(newForm, modules))
+    Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]()))
+  }
+
+  def search(search: String) = Action {
+    val productors = searchByAccount(search)
+    modules = getModuleNamesMap()
+    Ok(views.html.productor_index(newForm, searchForm, modules, productors))
+  }
+
+  def searchProduct = Action.async { implicit request =>
+    searchForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]())))
+      },
+      res => {
+          Future.successful(Redirect(routes.ProductorController.search(res.account)))
+      }
+    )
   }
 
   def index_pdf = Action {
@@ -58,7 +80,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   def add = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.productor_index(errorForm, modules)))
+        Future.successful(Ok(views.html.productor_index(errorForm, searchForm, modules, Seq[Productor]())))
       },
       res => {
         repo.create (res.nombre, res.carnet, res.telefono, res.direccion,
@@ -103,6 +125,12 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
     )(UpdateProductorForm.apply)(UpdateProductorForm.unapply)
   }
 
+  val searchForm: Form[SearchProductorForm] = Form {
+    mapping(
+      "account" -> text
+    )(SearchProductorForm.apply)(SearchProductorForm.unapply)
+  }
+
   // to copy
   def show(id: Long) = Action {
     Ok(views.html.productor_show())
@@ -125,7 +153,7 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.productor_index(newForm, modules))
+      Ok(views.html.productor_index(newForm, searchForm, modules, Seq[Productor]()))
     }
   }
 
@@ -146,28 +174,25 @@ class ProductorController @Inject() (repo: ProductorRepository, repoModule: Modu
         repo.update(
                       res.id, res.nombre, res.carnet, res.telefono,
                       res.direccion, res.account, res.module,
-                      modules(res.module.toString), "Asociacion Name", res.totalDebt,
-                      res.numberPayment, res.position
+                      modules(res.module.toString), "Asociacion Name",
+                      res.totalDebt, res.numberPayment, res.position
                     ).map { _ =>
           Redirect(routes.ProductorController.index)
         }
       }
     )
   }
-
-  def searchByAccount(account: String) = Action.async {
-    repo.getByAccount(account).map { res =>
-      Ok(Json.toJson(res))
-    }
-  }
 }
 
-case class CreateProductorForm(nombre: String, carnet: Int, telefono: Int, direccion: String, account: String, module: Long)
+case class CreateProductorForm(
+                                nombre: String, carnet: Int, telefono: Int,
+                                direccion: String, account: String, module: Long
+                              )
 
-// Update required
 case class UpdateProductorForm(
                                 id: Long, nombre: String, carnet: Int, telefono: Int,
                                 direccion: String, account: String, module: Long,
-                                totalDebt: Double,
-                                numberPayment: Int, position: String
+                                totalDebt: Double, numberPayment: Int, position: String
                               )
+
+case class SearchProductorForm (account: String)

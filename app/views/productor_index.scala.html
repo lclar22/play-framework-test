@@ -1,4 +1,4 @@
-@(row: Form[CreateProductorForm], modules: Map[String, String])(implicit messages: Messages)
+@(row: Form[CreateProductorForm], rowSearch: Form[SearchProductorForm], modules: Map[String, String], productors: Seq[Productor])(implicit messages: Messages)
 
 @import helper._
 
@@ -17,6 +17,39 @@
 
         <input type="submit" value="Guardar" class="btn btn-primary"/>
     }
+    <div>
+     @form(routes.ProductorController.searchProduct()) {
+        @inputText(rowSearch("account"))
+        <input type="submit" value="Buscar" class="btn btn-primary"/>
+    }   
+    </div>
+
+     <div class="table-responsive">
+        <table class="table" id="searchProducts">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Carnet</th>
+                    <th>Telefono</th>
+                    <th>Cuenta</th>
+                    <th>Modulo</th>
+                    <th>---</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(productor <- productors) {
+                <tr>
+                    <td>@productor.nombre</td>
+                    <td>@productor.carnet</td>
+                    <td>@productor.telefono</td>
+                    <td>@productor.account</td>
+                    <td>@productor.module</td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
     <div class="table-responsive">
         <table class="table" id="rows">
             <thead>
