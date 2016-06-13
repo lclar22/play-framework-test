@@ -19,7 +19,7 @@ import play.api.data.format.Formats._
 
 import javax.inject._
 
-class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository,
+class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoProductReq: ProductRequestRepository, repoUnit: UnitMeasureRepository,
                                       repoInsum: ProductRepository, repoProductor: ProductorRepository, val messagesApi: MessagesApi)
                                       (implicit ec: ExecutionContext) extends Controller with I18nSupport {
 
@@ -28,14 +28,33 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
       "requestId" -> longNumber,
       "productId" -> longNumber,
       "quantity" -> number,
-      "precio" -> of[Double],
-      "status" -> text
+      "status" -> text,
+      "unitMeasure" -> longNumber
     )(CreateRequestRowByInsumoForm.apply)(CreateRequestRowByInsumoForm.unapply)
   }
 
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  //val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
   var productReqsMap = getProductReqsMapMap()
   var productsMap = getproductsMapMap()
+  var unidades = getUnitMeasuresMap()
+  var productPrice = 0.0
+  
+  def getProductPrice(id: Long): Double = {
+    Await.result(repoInsum.getById(id).map{ case (res1) => 
+      res1(0).price
+    }, 3000.millis)
+  }
+
+  def getUnitMeasuresMap(): Map[String, String] = {
+    Await.result(repoUnit.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
 
   def index = Action {
     productReqsMap = getProductReqsMapMap()
@@ -44,9 +63,10 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
   }
 
   def addGet = Action {
+    unidades = getUnitMeasuresMap()
     productReqsMap = getProductReqsMapMap()
     productsMap = getproductsMapMap()
-    Ok(views.html.requestRowByInsumo_add(newForm, productReqsMap, productsMap))
+    Ok(views.html.requestRowByInsumo_add(newForm, productReqsMap, productsMap, unidades))
   }
 
   def add = Action.async { implicit request =>
@@ -55,7 +75,8 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         Future.successful(Ok(views.html.requestRowByInsumo_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, res.precio, res.status).map { _ =>
+        productPrice = getProductPrice(res.productId)
+        repo.create(res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, res.quantity * productPrice , res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }
@@ -82,7 +103,8 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
       "productId" -> longNumber,
       "quantity" -> number,
       "precio" -> of[Double],
-      "status" -> text
+      "status" -> text,
+      "unitMeasure" -> longNumber
     )(UpdateRequestRowByInsumoForm.apply)(UpdateRequestRowByInsumoForm.unapply)
   }
 
@@ -93,13 +115,18 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
 
   // update required
   def getUpdate(id: Long) = Action.async {
+    unidades = getUnitMeasuresMap()
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
                                 "productId" -> res.toList(0).productId.toString(),
-                                "quantity" -> res.toList(0).quantity.toString(), "precio" -> res.toList(0).precio.toString(), "status" -> res.toList(0).status.toString())
+                                "quantity" -> res.toList(0).quantity.toString(), 
+                                "precio" -> res.toList(0).precio.toString(), 
+                                "status" -> res.toList(0).status.toString(),
+                                "unitMeasure" -> res.toList(0).status.toString()
+                        )
       productReqsMap = getProductReqsMapMap()
       productsMap = getproductsMapMap()
-      Ok(views.html.requestRowByInsumo_update(updateForm.bind(anyData), productReqsMap, productsMap))
+      Ok(views.html.requestRowByInsumo_update(updateForm.bind(anyData), productReqsMap, productsMap, unidades))
     }
   }
 
@@ -177,10 +204,15 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.requestRowByInsumo_update(errorForm, Map[String, String](), Map[String, String]())))
+        Future.successful(Ok(views.html.requestRowByInsumo_update(errorForm, Map[String, String](), Map[String, String](), unidades)))
       },
       res => {
-        repo.update(res.id, res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, res.precio, res.status).map { _ =>
+        var new_precio = res.precio
+        if (res.precio == 0) {
+            productPrice = getProductPrice(res.productId)
+            new_precio = res.quantity * productPrice
+        }
+        repo.update(res.id, res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, new_precio , res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }
@@ -189,6 +221,6 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
 
 }
 
-case class CreateRequestRowByInsumoForm(requestId: Long, productId: Long, quantity: Int, precio: Double, status: String)
+case class CreateRequestRowByInsumoForm(requestId: Long, productId: Long, quantity: Int, status: String, unitMeasure: Long)
 
-case class UpdateRequestRowByInsumoForm(id: Long, requestId: Long, productId: Long, quantity: Int, precio: Double, status: String)
+case class UpdateRequestRowByInsumoForm(id: Long, requestId: Long, productId: Long, quantity: Int, precio: Double, status: String, unitMeasure: Long)

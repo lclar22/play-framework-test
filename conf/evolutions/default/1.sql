@@ -191,6 +191,7 @@ create table requestRow (
   quantity INT,
   precio double,
   unitMeasure INT,
+  unitMeasureName VARCHAR(30),
   paid INT,
   debt INT,
   cuota INT,

@@ -24,15 +24,14 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
       "nombre" -> nonEmptyText,
       "cost" -> of[Double],
       "percent" -> of[Double],
-      "price" -> of[Double],
       "descripcion" -> text,
       "unitMeasure" -> longNumber,
       "currentAmount" -> number
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
-  var unidades = getModuleNamesMap()
-  def getModuleNamesMap(): Map[String, String] = {
+  var unidades = getUnitMeasuresMap()
+  def getUnitMeasuresMap(): Map[String, String] = {
     Await.result(repoUnit.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -44,7 +43,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
   }
 
   def index = Action {
-    unidades = getModuleNamesMap()
+    unidades = getUnitMeasuresMap()
     Ok(views.html.product_index(newForm, unidades))
   }
 
@@ -59,7 +58,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
       },
       res => {
         repo.create(
-                      res.nombre, res.cost, res.percent, res.price, res.descripcion,
+                      res.nombre, res.cost, res.percent,res.cost + res.cost * res.percent, res.descripcion,
                       res.unitMeasure, unidades(res.unitMeasure.toString),
                       res.currentAmount
                     ).map { _ =>
@@ -170,8 +169,7 @@ class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasur
 
 case class CreateProductForm(
                               nombre: String, cost: Double, percent: Double,
-                              price: Double, descripcion: String,
-                              unitMeasure: Long, currentAmount: Int
+                              descripcion: String, unitMeasure: Long, currentAmount: Int
                             )
 
 case class UpdateProductForm(
