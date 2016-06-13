@@ -9,7 +9,7 @@
     @form(routes.ProductRequestByInsumoController.add()) {
         @inputText(row("date"))
         @select(field = row("user"), options = options(insumoUsers))
-        @select(field = row("modulo"), options = options(modulos))
+        @select(field = row("module"), options = options(modulos))
         @select(field = row("status"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("detail"))
         <input type="submit" value="Guardar Pedido" class="btn btn-primary"/> <a href="/" class="btn btn-primary"> Cancelar</a>

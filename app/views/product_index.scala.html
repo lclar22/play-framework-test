@@ -1,4 +1,4 @@
-@(row: Form[CreateProductForm])(implicit messages: Messages)
+@(row: Form[CreateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -11,12 +11,13 @@
         <div class="container">
         <div class="col-md-6">
             @inputText(row("nombre"))
-            @inputText(row("costo"))
-            @inputText(row("porcentage"))
+            @inputText(row("cost"))
+            @inputText(row("percent"))
+            @inputText(row("price"))
             @textarea(row("descripcion"), 'rows -> 3, 'cols -> 100)
         </div>
         <div class="col-md-6">
-            @inputText(row("unidad"))
+            @select(field = row("unitMeasure"), options = options(unitMeasures))
             @inputText(row("currentAmount"))
         </div>
         <div class="col-md-12">
@@ -34,8 +35,9 @@
                     <th>Nombre</th>
                     <th>Costo</th>
                     <th>Porcentage</th>
+                    <th>Precio</th>
                     <th>Descripcion</th>
-                    <th>Unidad</th>
+                    <th>Unidad de Medida</th>
                     <th>En Inventario</th>
                     <th>-----------</th>
                 </tr>

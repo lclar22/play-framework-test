@@ -18,27 +18,30 @@ import scala.collection.mutable.ArrayBuffer
 
 import javax.inject._
 
-class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRepository, repoVete: UserRepository,
-                                          repoSto: ModuleRepository, repoInsUser: UserRepository,
-                                          val messagesApi: MessagesApi)
+class ProductRequestByInsumoController @Inject() (
+                                                    repo: ProductRequestByInsumoRepository,
+                                                    repoVete: UserRepository,
+                                                    repoModule: ModuleRepository,
+                                                    repoInsUser: UserRepository,
+                                                    val messagesApi: MessagesApi
+                                                  )
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductRequestByInsumoForm] = Form {
     mapping(
       "date" -> text,
       "user" -> longNumber,
-      "modulo" -> longNumber,
+      "module" -> longNumber,
       "status" -> text,
       "detail" -> text
     )(CreateProductRequestByInsumoForm.apply)(CreateProductRequestByInsumoForm.unapply)
   }
-
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad", "2" -> "Caja")
+  var modules = getmodulesNamesMap()
 
   def index = Action { implicit request =>
     val usersNames = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    val storeNames = getModulosNamesMap()
-    Ok(views.html.productRequestByInsumo_index(usersNames, storeNames))
+    modules = getmodulesNamesMap()
+    Ok(views.html.productRequestByInsumo_index(usersNames, modules))
   }
 
   def add = Action.async { implicit request =>
@@ -47,7 +50,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
         Future.successful(Ok(views.html.productRequestByInsumo_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.date, res.user, res.modulo, res.status, res.detail, "veterinaria").map { _ =>
+        repo.create(res.date, res.user, res.module, modules(res.module.toString), res.status, res.detail, "veterinaria").map { _ =>
           Redirect(routes.UserController.profileById(res.user))
         }
       }
@@ -56,8 +59,8 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
 
   def addGet = Action { implicit request =>
     val veterinariosNames = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    val storeNames = getModulosNamesMap()
-    Ok(views.html.productRequestByInsumo_add(newForm, veterinariosNames, storeNames))
+    modules = getmodulesNamesMap()
+    Ok(views.html.productRequestByInsumo_add(newForm, veterinariosNames, modules))
   }
 
   def getProductRequestByInsumosByUser(id: Long) = Action.async {
@@ -66,8 +69,8 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
     }
   }
 
-  def getProductRequestByInsumosByModulo(id: Long) = Action.async {
-    repo.listByModulo(id).map { res =>
+  def getProductRequestByInsumosBymodule(id: Long) = Action.async {
+    repo.listByModule(id).map { res =>
       Ok(Json.toJson(res))
     }
   }
@@ -78,14 +81,13 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
     }
   }
 
-
   // update required
   val updateForm: Form[UpdateProductRequestByInsumoForm] = Form {
     mapping(
       "id" -> longNumber,
       "date" -> text,
       "user" -> longNumber,
-      "modulo" -> longNumber,
+      "module" -> longNumber,
       "status" -> text,
       "detail" -> text
     )(UpdateProductRequestByInsumoForm.apply)(UpdateProductRequestByInsumoForm.unapply)
@@ -99,9 +101,9 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
   // update required
   def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
-      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "user" -> res.toList(0).user.toString(), "modulo" -> res.toList(0).modulo.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
+      val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "user" -> res.toList(0).user.toString(), "module" -> res.toList(0).module.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
       val insumosMap = getUserNamesMap(request.session.get("userId").getOrElse("0").toLong)
-      val storeMap = getModulosNamesMap()
+      val storeMap = getmodulesNamesMap()
       Ok(views.html.productRequestByInsumo_update(updateForm.bind(anyData), insumosMap, storeMap))
     }
   }
@@ -157,8 +159,8 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
     }, 3000.millis)
   }
 
-  def getModulosNamesMap(): Map[String, String] = {
-    Await.result(repoSto.list().map{ case (res1) => 
+  def getmodulesNamesMap(): Map[String, String] = {
+    Await.result(repoModule.list().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.name)
@@ -190,7 +192,7 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
         Future.successful(Ok(views.html.productRequestByInsumo_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.date, res.user, res.modulo, res.status, res.detail, "insumo").map { _ =>
+        repo.update(res.id, res.date, res.user, res.module, modules(res.module.toString), res.status, res.detail, "insumo").map { _ =>
           Redirect(routes.UserController.profile())
         }
       }
@@ -198,6 +200,6 @@ class ProductRequestByInsumoController @Inject() (repo: ProductRequestByInsumoRe
   }
 }
 
-case class CreateProductRequestByInsumoForm(date: String, user: Long, modulo: Long, status: String, detail: String)
+case class CreateProductRequestByInsumoForm(date: String, user: Long, module: Long, status: String, detail: String)
 
-case class UpdateProductRequestByInsumoForm(id: Long, date: String, user: Long, modulo: Long, status: String, detail: String)
+case class UpdateProductRequestByInsumoForm(id: Long, date: String, user: Long, module: Long, status: String, detail: String)

@@ -26,20 +26,22 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def date = column[String]("date")
     def veterinario = column[Long]("veterinario")
+    def veterinarioName = column[String]("veterinarioName")
     def storekeeper = column[Long]("storekeeper")
+    def storekeeperName = column[String]("storekeeperName")
     def status = column[String]("status")
     def detail = column[String]("detail")
     def type_1 = column[String]("type")
-    def * = (id, date, veterinario, storekeeper, status, detail, type_1) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
+    def * = (id, date, veterinario, veterinarioName, storekeeper, storekeeperName, status, detail, type_1) <> ((ProductRequest.apply _).tupled, ProductRequest.unapply)
   }
 
   private val tableQ = TableQuery[ProductRequestTable]
 
-  def create(date: String, veterinario: Long, storekeeper: Long, status: String, detail: String, type_1: String): Future[ProductRequest] = db.run {
-    (tableQ.map(p => (p.date, p.veterinario, p.storekeeper, p.status, p.detail, p.type_1))
+  def create(date: String, veterinario: Long, veterinarioName: String, storekeeper: Long, storekeeperName: String, status: String, detail: String, type_1: String): Future[ProductRequest] = db.run {
+    (tableQ.map(p => (p.date, p.veterinario, p.veterinarioName, p.storekeeper, p.storekeeperName, p.status, p.detail, p.type_1))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (date, veterinario, storekeeper, status, detail, type_1)
+      into ((nameAge, id) => ProductRequest(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7, nameAge._8))
+    ) += (date, veterinario, veterinarioName, storekeeper, storekeeperName, status, detail, type_1)
   }
 
   def list(): Future[Seq[ProductRequest]] = db.run {
@@ -68,13 +70,17 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
   }
 
   // update required to copy
-  def update(id: Long, date: String, veterinario: Long, storekeeper: Long, status: String, detail: String, type_1: String): Future[Seq[ProductRequest]] = db.run {
+  def update(id: Long, date: String, veterinario: Long, veterinarioName: String, storekeeper: Long, storekeeperName: String, status: String, detail: String, type_1: String): Future[Seq[ProductRequest]] = db.run {
     val q = for { c <- tableQ if c.id === id } yield c.date
     db.run(q.update(date))
     val q2 = for { c <- tableQ if c.id === id } yield c.veterinario
     db.run(q2.update(veterinario))
+    val q21 = for { c <- tableQ if c.id === id } yield c.veterinarioName
+    db.run(q21.update(veterinarioName))
     val q3 = for { c <- tableQ if c.id === id } yield c.storekeeper
     db.run(q3.update(storekeeper))
+    val q31 = for { c <- tableQ if c.id === id } yield c.storekeeperName
+    db.run(q31.update(storekeeperName))
     val q4 = for { c <- tableQ if c.id === id } yield c.status
     db.run(q4.update(status))
     val q5 = for { c <- tableQ if c.id === id } yield c.detail
@@ -134,7 +140,6 @@ class ProductRequestRepository @Inject() (dbConfigProvider: DatabaseConfigProvid
     val q = tableQ.filter(_.id === id)
     val action = q.delete
     val affectedRowsCount: Future[Int] = db.run(action)
-    println("removed " + affectedRowsCount);
     tableQ.result
   }
 }

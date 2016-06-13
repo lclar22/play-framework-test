@@ -25,20 +25,21 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
     def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
     def requestId = column[Long]("requestId")
     def productId = column[Long]("productId")
+    def productName = column[String]("productName")
     def quantity = column[Int]("quantity")
     def precio = column[Double]("precio")
     def paid = column[Int]("paid")
     def status = column[String]("status")
-    def * = (id, requestId, productId, quantity, precio, paid, status) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
+    def * = (id, requestId, productId, productName, quantity, precio, paid, status) <> ((RequestRow.apply _).tupled, RequestRow.unapply)
   }
 
   private val tableQ = TableQuery[RequestRowTable]
 
-  def create(requestId: Long, productId: Long, quantity: Int, precio: Double, status: String): Future[RequestRow] = db.run {
-    (tableQ.map(p => (p.requestId, p.productId, p.quantity, p.precio, p.paid, p.status))
+  def create(requestId: Long, productId: Long, productName: String, quantity: Int, precio: Double, status: String): Future[RequestRow] = db.run {
+    (tableQ.map(p => (p.requestId, p.productId, p.productName, p.quantity, p.precio, p.paid, p.status))
       returning tableQ.map(_.id)
-      into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6))
-    ) += (requestId, productId, quantity, precio, 0, status)
+      into ((nameAge, id) => RequestRow(id, nameAge._1, nameAge._2, nameAge._3, nameAge._4, nameAge._5, nameAge._6, nameAge._7))
+    ) += (requestId, productId, productName, quantity, precio, 0, status)
   }
 
   def list(): Future[Seq[RequestRow]] = db.run {
@@ -64,11 +65,13 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
   }
 
   // update required to copy
-  def update(id: Long, requestId: Long, productId: Long, quantity: Int, precio: Double, status: String): Future[Seq[RequestRow]] = db.run {
+  def update(id: Long, requestId: Long, productId: Long, productName: String, quantity: Int, precio: Double, status: String): Future[Seq[RequestRow]] = db.run {
     val q2 = for { c <- tableQ if c.id === id } yield c.requestId
     db.run(q2.update(requestId))
     val q3 = for { c <- tableQ if c.id === id } yield c.productId
     db.run(q3.update(productId))
+    val q31 = for { c <- tableQ if c.id === id } yield c.productName
+    db.run(q31.update(productName))
     val q4 = for { c <- tableQ if c.id === id } yield c.quantity
     db.run(q4.update(quantity))
     val q5 = for { c <- tableQ if c.id === id } yield c.precio
@@ -121,7 +124,6 @@ class RequestRowRepository @Inject() (dbConfigProvider: DatabaseConfigProvider, 
       val q = tableQ.filter(_.id === id)
       val action = q.delete
       val affectedRowsCount: Future[Int] = db.run(action)
-      println("removed " + affectedRowsCount);
     }
     tableQ.result
   }

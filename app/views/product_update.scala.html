@@ -1,4 +1,4 @@
-@(row: Form[UpdateProductForm])(implicit messages: Messages)
+@(row: Form[UpdateProductForm], unitMeasures: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -6,10 +6,11 @@
     @form(routes.ProductController.updatePost()) {
         @inputText(row("id"), 'hidden -> "true", '_label -> "")
         @inputText(row("nombre"))
-        @inputText(row("costo"))
-        @inputText(row("porcentage"))
+        @inputText(row("cost"))
+        @inputText(row("percent"))
+        @inputText(row("price"))
         @inputText(row("descripcion"))
-        @inputText(row("unidad"))
+        @select(field = row("unitMeasure"), options = options(unitMeasures))
         @inputText(row("currentAmount"))
         <input type="submit" class="btn btn-primary" value="Actualizar"/>
         <a href="/products_view" class="btn btn-primary">Cancel</a>

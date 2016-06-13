@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.duration._
 import play.api._
 import play.api.mvc._
 import play.api.i18n._
@@ -10,12 +11,12 @@ import play.api.libs.json.Json
 import models._
 import dal._
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future, Await }
 
 import javax.inject._
 import play.api.data.format.Formats._ 
 
-class ProductController @Inject() (repo: ProductRepository, val messagesApi: MessagesApi)
+class ProductController @Inject() (repo: ProductRepository, repoUnit: UnitMeasureRepository, val messagesApi: MessagesApi)
                                  (implicit ec: ExecutionContext) extends Controller with I18nSupport{
 
   val newForm: Form[CreateProductForm] = Form {
@@ -25,15 +26,26 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
       "percent" -> of[Double],
       "price" -> of[Double],
       "descripcion" -> text,
-      "unidad" -> longNumber,
+      "unitMeasure" -> longNumber,
       "currentAmount" -> number
     )(CreateProductForm.apply)(CreateProductForm.unapply)
   }
 
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  var unidades = getModuleNamesMap()
+  def getModuleNamesMap(): Map[String, String] = {
+    Await.result(repoUnit.getListNames().map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach{ case (key: Long, value: String) => 
+        cache put (key.toString(), value)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
 
   def index = Action {
-    Ok(views.html.product_index(newForm))
+    unidades = getModuleNamesMap()
+    Ok(views.html.product_index(newForm, unidades))
   }
 
   def list = Action {
@@ -43,10 +55,14 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
   def addProduct = Action.async { implicit request =>
     newForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_index(errorForm)))
+        Future.successful(Ok(views.html.product_index(errorForm, unidades)))
       },
       res => {
-        repo.create(res.nombre, res.cost, res.percent, res.price, res.descripcion, res.unidad, res.currentAmount).map { _ =>
+        repo.create(
+                      res.nombre, res.cost, res.percent, res.price, res.descripcion,
+                      res.unitMeasure, unidades(res.unitMeasure.toString),
+                      res.currentAmount
+                    ).map { _ =>
           Redirect(routes.ProductController.list)
         }
       }
@@ -68,7 +84,7 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
       "percent" -> of[Double],
       "price" -> of[Double],
       "descripcion" -> text,
-      "unidad" -> longNumber,
+      "unitMeasure" -> longNumber,
       "currentAmount" -> number
     )(UpdateProductForm.apply)(UpdateProductForm.unapply)
   }
@@ -81,17 +97,25 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
   // update required
   def getUpdate(id: Long) = Action.async {
     repo.getById(id).map { res =>
-      val anyData = Map("id" -> id.toString().toString(), "nombre" -> res.toList(0).nombre, "cost" -> res.toList(0).cost.toString(),
-        "percent" -> res.toList(0).percent.toString(), "price" -> res.toList(0).price.toString(), "descripcion" -> res.toList(0).descripcion,
-        "unidad" -> res.toList(0).unidad.toString(), "currentAmount" -> res.toList(0).currentAmount.toString())
-      Ok(views.html.product_update(updateForm.bind(anyData)))
+      val anyData = Map(
+                        "id" -> id.toString().toString(),
+                        "nombre" -> res.toList(0).nombre,
+                        "cost" -> res.toList(0).cost.toString(),
+                        "percent" -> res.toList(0).percent.toString(),
+                        "price" -> res.toList(0).price.toString(),
+                        "descripcion" -> res.toList(0).descripcion,
+                        "unitMeasure" -> res.toList(0).unitMeasure.toString(),
+                        "unitMeasureName" -> res.toList(0).unitMeasureName.toString(),
+                        "currentAmount" -> res.toList(0).currentAmount.toString()
+                        )
+      Ok(views.html.product_update(updateForm.bind(anyData), unidades))
     }
   }
 
   // delete required
   def delete(id: Long) = Action.async {
     repo.delete(id).map { res =>
-      Ok(views.html.product_index(newForm))
+      Ok(views.html.product_index(newForm, unidades))
     }
   }
 
@@ -106,10 +130,14 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
   def updatePost = Action.async { implicit request =>
     updateForm.bindFromRequest.fold(
       errorForm => {
-        Future.successful(Ok(views.html.product_update(errorForm)))
+        Future.successful(Ok(views.html.product_update(errorForm, unidades)))
       },
       res => {
-        repo.update(res.id, res.nombre, res.cost, res.percent, res.price, res.descripcion, res.unidad, res.currentAmount).map { _ =>
+        repo.update(
+                      res.id, res.nombre, res.cost, res.percent, res.price,
+                      res.descripcion, res.unitMeasure, unidades(res.unitMeasure.toString),
+                      res.currentAmount
+                    ).map { _ =>
           Redirect(routes.ProductController.index)
         }
       }
@@ -140,6 +168,14 @@ class ProductController @Inject() (repo: ProductRepository, val messagesApi: Mes
 
 }
 
-case class CreateProductForm(nombre: String, cost: Double, percent: Double, price: Double, descripcion: String, unidad: Long, currentAmount: Int)
+case class CreateProductForm(
+                              nombre: String, cost: Double, percent: Double,
+                              price: Double, descripcion: String,
+                              unitMeasure: Long, currentAmount: Int
+                            )
 
-case class UpdateProductForm(id: Long, nombre: String, cost: Double, percent: Double, price: Double, descripcion: String, unidad: Long, currentAmount: Int)
+case class UpdateProductForm(
+                              id: Long, nombre: String, cost: Double,
+                              percent: Double, price: Double, descripcion: String,
+                              unitMeasure: Long, currentAmount: Int
+                            )

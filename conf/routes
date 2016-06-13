@@ -64,12 +64,23 @@ GET     /modules         			controllers.ModuleController.getModules
 GET     /modules_report    			controllers.ModuleController.getModulesReport
 GET     /modules_view         		controllers.ModuleController.index
 
+# unit Measure routes
+GET     /unitMeasure_show/:id 			controllers.UnitMeasureController.show(id: Long)
+GET     /unitMeasure_update/:id        	controllers.UnitMeasureController.getUpdate(id: Long)
+GET     /unitMeasure_remove/:id        	controllers.UnitMeasureController.delete(id: Long)
+GET     /unitMeasures/:id 				controllers.UnitMeasureController.getById(id: Long)
+POST    /unitMeasure_update             controllers.UnitMeasureController.updatePost
+
+POST    /unitMeasure                 	controllers.UnitMeasureController.add
+GET     /unitMeasures         			controllers.UnitMeasureController.getUnitMeasures
+GET     /unitMeasures_view         		controllers.UnitMeasureController.index
+
 # Now for veterinarios
 GET     /veterinario_show/:id 			controllers.VeterinarioController.show(id: Long)
 GET     /veterinario_update/:id        	controllers.VeterinarioController.getUpdate(id: Long)
 GET     /veterinario_remove/:id        	controllers.VeterinarioController.delete(id: Long)
 GET     /veterinarios/:id 				controllers.VeterinarioController.getById(id: Long)
-POST    /veterinario_update             	controllers.VeterinarioController.updatePost
+POST    /veterinario_update             controllers.VeterinarioController.updatePost
 
 POST    /veterinario                 	controllers.VeterinarioController.add
 GET     /veterinarios         			controllers.VeterinarioController.getVeterinarios

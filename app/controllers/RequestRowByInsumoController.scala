@@ -34,17 +34,19 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
   }
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  var productReqsMap = getProductReqsMapMap()
+  var productsMap = getproductsMapMap()
 
   def index = Action {
-    val productReqNames = getProductReqNamesMap()
-    val insumoNames = getInsumoNamesMap()
-    Ok(views.html.requestRowByInsumo_index(productReqNames, insumoNames))
+    productReqsMap = getProductReqsMapMap()
+    productsMap = getproductsMapMap()
+    Ok(views.html.requestRowByInsumo_index(productReqsMap, productsMap))
   }
 
   def addGet = Action {
-    val productReqNames = getProductReqNamesMap()
-    val insumoNames = getInsumoNamesMap()
-    Ok(views.html.requestRowByInsumo_add(newForm, productReqNames, insumoNames))
+    productReqsMap = getProductReqsMapMap()
+    productsMap = getproductsMapMap()
+    Ok(views.html.requestRowByInsumo_add(newForm, productReqsMap, productsMap))
   }
 
   def add = Action.async { implicit request =>
@@ -53,7 +55,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         Future.successful(Ok(views.html.requestRowByInsumo_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.requestId, res.productId, res.quantity, res.precio, res.status).map { _ =>
+        repo.create(res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, res.precio, res.status).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }
@@ -95,13 +97,13 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
       val anyData = Map("id" -> id.toString().toString(), "requestId" -> res.toList(0).requestId.toString(),
                                 "productId" -> res.toList(0).productId.toString(),
                                 "quantity" -> res.toList(0).quantity.toString(), "precio" -> res.toList(0).precio.toString(), "status" -> res.toList(0).status.toString())
-      val productReqNames = getProductReqNamesMap()
-      val insumoNames = getInsumoNamesMap()
-      Ok(views.html.requestRowByInsumo_update(updateForm.bind(anyData), productReqNames, insumoNames))
+      productReqsMap = getProductReqsMapMap()
+      productsMap = getproductsMapMap()
+      Ok(views.html.requestRowByInsumo_update(updateForm.bind(anyData), productReqsMap, productsMap))
     }
   }
 
-  def getProductReqNamesMap(): Map[String, String] = {
+  def getProductReqsMapMap(): Map[String, String] = {
     Await.result(repoProductReq.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -112,7 +114,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
     }, 3000.millis)
   }
 
-  def getInsumoNamesMap(): Map[String, String] = {
+  def getproductsMapMap(): Map[String, String] = {
     Await.result(repoInsum.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -178,7 +180,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         Future.successful(Ok(views.html.requestRowByInsumo_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.requestId, res.productId, res.quantity, res.precio, res.status).map { _ =>
+        repo.update(res.id, res.requestId, res.productId, productsMap(res.productId.toString), res.quantity, res.precio, res.status).map { _ =>
           Redirect(routes.ProductRequestByInsumoController.show(res.requestId))
         }
       }

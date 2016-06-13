@@ -33,17 +33,26 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
     )(CreateProductRequestForm.apply)(CreateProductRequestForm.unapply)
   }
 
-  val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad", "2" -> "Caja")
+  var veterinariosNames = getVeterinarioListNamesMap()
+  var storeNames = getStorekeepersNamesMap()
 
   def index = Action { implicit request =>
-    val veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    val storeNames = getStorekeepersNamesMap()
+    if (request.session.get("role").getOrElse("0").toLowerCase == "veterinario") {
+      veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
+    } else {
+      veterinariosNames = getVeterinarioListNamesMap()
+    }
+    storeNames = getStorekeepersNamesMap()
     Ok(views.html.productRequest_index(veterinariosNames, storeNames))
   }
 
   def addGet = Action { implicit request =>
-    val veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
-    val storeNames = getStorekeepersNamesMap()
+    if (request.session.get("role").getOrElse("0").toLowerCase == "veterinario") {
+      veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
+    } else {
+      veterinariosNames = getVeterinarioListNamesMap()
+    }
+    storeNames = getStorekeepersNamesMap()
     Ok(views.html.productRequest_add(newForm, veterinariosNames, storeNames))
   }
 
@@ -53,7 +62,7 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
         Future.successful(Ok(views.html.productRequest_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.date, res.veterinario, res.storekeeper, res.status, res.detail, "veterinaria").map { _ =>
+        repo.create(res.date, res.veterinario, veterinariosNames(res.veterinario.toString), res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "veterinaria").map { _ =>
           Redirect(routes.VeterinarioController.profile(res.veterinario))
         }
       }
@@ -111,9 +120,13 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
   def getUpdate(id: Long) = Action.async { implicit request =>
     repo.getById(id).map {case (res) =>
       val anyData = Map("id" -> id.toString().toString(), "date" -> res.toList(0).date.toString(), "veterinario" -> res.toList(0).veterinario.toString(), "storekeeper" -> res.toList(0).storekeeper.toString(), "status" -> res.toList(0).status.toString(), "detail" -> res.toList(0).detail.toString())
-      val insumosMap = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
-      val storeMap = getStorekeepersNamesMap()
-      Ok(views.html.productRequest_update(updateForm.bind(anyData), insumosMap, storeMap))
+      if (request.session.get("role").getOrElse("0").toLowerCase == "veterinario") {
+        veterinariosNames = getVeterinarioNamesMap(request.session.get("userId").getOrElse("0").toLong)
+      } else {
+        veterinariosNames = getVeterinarioListNamesMap()
+      }
+      storeNames = getStorekeepersNamesMap()
+      Ok(views.html.productRequest_update(updateForm.bind(anyData), veterinariosNames, storeNames))
     }
   }
 
@@ -141,6 +154,17 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
 
   def getVeterinarioNamesMap(id: Long): Map[String, String] = {
     Await.result(repoVete.getById(id).map{ case (res1) => 
+      val cache = collection.mutable.Map[String, String]()
+      res1.foreach { user => 
+        cache put (user.id.toString, user.nombre)
+      }
+      println(cache)
+      cache.toMap
+    }, 3000.millis)
+  }
+
+  def getVeterinarioListNamesMap(): Map[String, String] = {
+    Await.result(repoVete.listVeterinarios().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach { user => 
         cache put (user.id.toString, user.nombre)
@@ -193,7 +217,10 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
         Future.successful(Ok(views.html.productRequest_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.date, res.veterinario, res.storekeeper, res.status, res.detail, "veterinaria").map { _ =>
+        repo.update(
+                    res.id, res.date, res.veterinario, veterinariosNames(res.veterinario.toString()),
+                    res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "veterinaria"
+                    ).map { _ =>
           Redirect(routes.ProductRequestController.index)
         }
       }
@@ -207,7 +234,10 @@ class ProductRequestController @Inject() (repo: ProductRequestRepository, repoVe
         Future.successful(Ok(views.html.productRequest_update(errorForm, Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.date, res.veterinario, res.storekeeper, res.status, res.detail, "insumo").map { _ =>
+        repo.update(
+                      res.id, res.date, res.veterinario, veterinariosNames(res.veterinario.toString),
+                      res.storekeeper, storeNames(res.storekeeper.toString), res.status, res.detail, "insumo"
+                    ).map { _ =>
           Redirect(routes.ProductRequestController.index)
         }
       }

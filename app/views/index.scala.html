@@ -17,11 +17,20 @@
             @restrict(roles = List(Array("product"))) {
                 <tr>
                     <td>
+                        Unidades de Medida
+                    </td>
+                    <td>
+                        <a href="/unitMeasures_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
+                    </td>
+                </tr>
+            }
+            @restrict(roles = List(Array("product"))) {
+                <tr>
+                    <td>
                         Productos
                     </td>
                     <td>
                         <a href="/product_list"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/products"><span class="glyphicon glyphicon-th-list"></span></a>
                     </td>
                 </tr>
             }
@@ -32,18 +41,6 @@
                     </td>
                     <td>
                         <a href="/proveedores_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/proveedores"><span class="glyphicon glyphicon-th-list"></span></a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("productor"))) {
-                <tr>
-                    <td>
-                        Productores
-                    </td>
-                    <td>
-                        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
-                        <a href="/productores"><span class="glyphicon glyphicon-th-list"></span></a>
                     </td>
                 </tr>
             }
@@ -54,18 +51,16 @@
                     </td>
                     <td>
                         <a href="/modules_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
-                        <a href="/modules"><span class="glyphicon glyphicon-th-list"></span></a>
                     </td>
                 </tr>
             }
-            @restrict(roles = List(Array("veterinario"))) {
+            @restrict(roles = List(Array("productor"))) {
                 <tr>
                     <td>
-                        Veterinarios
+                        Productores
                     </td>
                     <td>
-                        <a href="/veterinarios_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/veterinarios"><span class="glyphicon glyphicon-th-list"></span></a>
+                        <a href="/productores_view"><span class="glyphicon glyphicon-plus">Lista</span></a>
                     </td>
                 </tr>
             }
@@ -76,29 +71,6 @@
                     </td>
                     <td>
                         <a href="/users_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/users"><span class="glyphicon glyphicon-th-list"></span></a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("storekeeper"))) {
-                <tr>
-                    <td>
-                        Almacen
-                    </td>
-                    <td>
-                        <a href="/storekeepers_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/storekeepers"><span class="glyphicon glyphicon-th-list"></span></a>
-                    </td>
-                </tr>
-            }
-            @restrict(roles = List(Array("insumo"))) {
-                <tr>
-                    <td>
-                        Insumos
-                    </td>
-                    <td>
-                        <a href="/insumoUsers_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                        <a href="/insumoUsers"><span class="glyphicon glyphicon-th-list"></span></a>
                     </td>
                 </tr>
             }
@@ -109,7 +81,6 @@
                 </td>
                 <td>
                     <a href="/accounts_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    <a href="/accounts"><span class="glyphicon glyphicon-th-list"></span></a>
                 </td>
             </tr>
             }
@@ -120,7 +91,6 @@
                 </td>
                 <td>
                     <a href="/transactions_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    <a href="/transactions_list"><span class="glyphicon glyphicon-th-list"></span></a>
                 </td>
             </tr>
             }
@@ -131,12 +101,9 @@
                 </td>
                 <td>
                     <a href="/reportes_view"><span class="glyphicon glyphicon-plus"></span>Lista</a>
-                    <a href="/reportes"><span class="glyphicon glyphicon-th-list"></span></a>
                 </td>
             </tr>
             }
         </table>
     </div>
 }
-
-<p>roles:</p>

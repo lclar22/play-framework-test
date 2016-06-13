@@ -36,17 +36,20 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
   }
 
   val unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
+  var productReqNames = getProductReqNamesMap()
+  var insumoNames = getInsumoNamesMap()
+  var productorNames = getProductorNamesMap()
 
   def index = Action {
-    val productReqNames = getProductReqNamesMap()
-    val insumoNames = getInsumoNamesMap()
+    productReqNames = getProductReqNamesMap()
+    insumoNames = getInsumoNamesMap()
     Ok(views.html.requestRowProductor_index(productReqNames, insumoNames))
   }
 
   def addGet = Action {
-    val productReqNames = getProductReqNamesMap()
-    val insumoNames = getInsumoNamesMap()
-    val productorNames = getProductorNamesMap()
+    productReqNames = getProductReqNamesMap()
+    insumoNames = getInsumoNamesMap()
+    productorNames = getProductorNamesMap()
     Ok(views.html.requestRowProductor_add(newForm, productReqNames, insumoNames, productorNames))
   }
 
@@ -56,7 +59,11 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
         Future.successful(Ok(views.html.requestRowProductor_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.create(res.requestRowId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
+        repo.create(  
+                      res.requestRowId, res.productId, insumoNames(res.productId.toString()),
+                      res.productorId, productorNames(res.productorId.toString()),
+                      res.quantity, res.precio, res.status
+                    ).map { _ =>
           repoProductor.updateTotalDebt(res.productorId, res.precio);
           Redirect(routes.RequestRowController.show(res.requestRowId))
         }
@@ -94,9 +101,9 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
       val anyData = Map("id" -> id.toString().toString(), "requestRowId" -> res.toList(0).requestRowId.toString(),
                                 "productId" -> res.toList(0).productId.toString(), "productorId" -> res.toList(0).productorId.toString(),
                                 "quantity" -> res.toList(0).quantity.toString(), "precio" -> res.toList(0).precio.toString(), "status" -> res.toList(0).status.toString())
-      val productReqNames = getProductReqNamesMap()
-      val insumoNames = getInsumoNamesMap()
-      val productorNames = getProductorNamesMap()
+      productReqNames = getProductReqNamesMap()
+      insumoNames = getInsumoNamesMap()
+      productorNames = getProductorNamesMap()
       Ok(views.html.requestRowProductor_update(updateForm.bind(anyData), productReqNames, insumoNames, productorNames))
     }
   }
@@ -184,7 +191,7 @@ class RequestRowProductorController @Inject() (repo: RequestRowProductorReposito
         Future.successful(Ok(views.html.requestRowProductor_update(errorForm, Map[String, String](), Map[String, String](), Map[String, String]())))
       },
       res => {
-        repo.update(res.id, res.requestRowId, res.productId, res.productorId, res.quantity, res.precio, res.status).map { _ =>
+        repo.update(res.id, res.requestRowId, res.productId, insumoNames(res.productId.toString), res.productorId, productorNames(res.productorId.toString), res.quantity, res.precio, res.status).map { _ =>
           Redirect(routes.RequestRowController.show(res.requestRowId))
         }
       }

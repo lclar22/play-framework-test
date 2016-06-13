@@ -3,8 +3,9 @@ $ ->
   $.get "/products/" + row_id, (rows) ->
     $.each rows, (index, row) ->
       $("#nombre").html row.nombre
-      $("#costo").html row.costo
-      $("#porcentage").html row.porcentage
+      $("#cost").html row.cost
+      $("#percent").html row.percent
+      $("#price").html row.price
       $("#descripcion").html row.descripcion
-      $("#unidad").html row.unidad
+      $("#unitMeasure").html row.unitMeasureName
       $("#currentAmount").html row.currentAmount
