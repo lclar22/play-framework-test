@@ -34,7 +34,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
   }
 
   //var unidades = scala.collection.immutable.Map[String, String]("1" -> "Unidad 1", "2" -> "Unidad 2")
-  var productRequestsMap = getProductReqquesMap()
+  var productRequestsMap = getProductRequestsMap()
   var productsMap = getProductsMap()
   var productPrice = 0.0
   var unidades = getUnitMeasuresMap()
@@ -50,14 +50,14 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }, 3000.millis)
   }
   def index = Action {
-    productRequestsMap = getProductReqquesMap()
+    productRequestsMap = getProductRequestsMap()
     productsMap = getProductsMap()
     Ok(views.html.requestRow_index(productRequestsMap, productsMap))
   }
 
   def addGet = Action {
     unidades = getUnitMeasuresMap()
-    productRequestsMap = getProductReqquesMap()
+    productRequestsMap = getProductRequestsMap()
     productsMap = getProductsMap()
     Ok(views.html.requestRow_add(newForm, productRequestsMap, productsMap, unidades))
   }
@@ -71,7 +71,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         var product1 = getProductById(res.productId)
         var productUnitMeasure =  getUnitMeasureById(product1.unitMeasure)
         var requestUnitMeasure = getUnitMeasureById(res.unitMeasure)
-        var equivalent = productUnitMeasure.quantity.toDouble / requestUnitMeasure.quantity.toDouble;
+        var equivalent =  requestUnitMeasure.quantity.toDouble / productUnitMeasure.quantity.toDouble;
 
         repo.create(res.requestId, res.productId, productsMap(res.productId.toString()), res.quantity, equivalent * product1.price, res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
           Redirect(routes.ProductRequestController.show(res.requestId))
@@ -123,13 +123,13 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
                           "unitMeasure" -> res.toList(0).unitMeasure.toString()
                         )
       unidades = getUnitMeasuresMap()
-      productRequestsMap = getProductReqquesMap()
+      productRequestsMap = getProductRequestsMap()
       productsMap = getProductsMap()
       Ok(views.html.requestRow_update(updateForm.bind(anyData), productRequestsMap, productsMap, unidades))
     }
   }
 
-  def getProductReqquesMap(): Map[String, String] = {
+  def getProductRequestsMap(): Map[String, String] = {
     Await.result(repoProductReq.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
       res1.foreach{ case (key: Long, value: String) => 
@@ -229,7 +229,7 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
           var product1 = getProductById(res.productId)
           var productUnitMeasure =  getUnitMeasureById(product1.unitMeasure)
           var requestUnitMeasure = getUnitMeasureById(res.unitMeasure)
-          var equivalent = productUnitMeasure.quantity.toDouble / requestUnitMeasure.quantity.toDouble;
+          var equivalent = requestUnitMeasure.quantity.toDouble / productUnitMeasure.quantity.toDouble;
           new_precio = product1.price * equivalent
         }
         repo.update(  
