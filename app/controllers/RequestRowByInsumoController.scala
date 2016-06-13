@@ -223,7 +223,7 @@ class RequestRowByInsumoController @Inject() (repo: RequestRowRepository, repoPr
         Future.successful(Ok(views.html.requestRowByInsumo_update(errorForm, Map[String, String](), Map[String, String](), unidades)))
       },
       res => {
-        var new_precio = 0.0
+        var new_precio = res.precio
         if (res.precio == 0) {
           var product1 = getProductById(res.productId)
           var productUnitMeasure =  getUnitMeasureById(product1.unitMeasure)
