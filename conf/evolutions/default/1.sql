@@ -54,7 +54,7 @@ create table account (
   child boolean,
   debit double,
   credit double,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table transaction (
@@ -63,13 +63,14 @@ create table transaction (
   type VARCHAR(30),
   description VARCHAR(30),
   createdBy INT,
-  createdBy_name VARCHAR(30),
+  createdByName VARCHAR(30),
   autorizedBy INT,
-  autorizedBy_name VARCHAR(30), 
-  recievedBy INT,
-  recievedBy_name VARCHAR(30), 
+  autorizedByName VARCHAR(30), 
+  receivedBy INT,
+  receivedByName VARCHAR(30), 
   updatedBy INT(6),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  updatedByName VARCHAR(30),
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table logEntry (
@@ -89,9 +90,9 @@ create table transactionDetail (
   transactionDate VARCHAR(30),
   accountCode VARCHAR(30),
   accountName VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdBy_name VARCHAR(30)
+  createdByName VARCHAR(30)
 );
 
 create table bancos (
@@ -112,7 +113,7 @@ create table product (
   unitMeasure INT,
   unitMeasureName VARCHAR(30),
   currentAmount int,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table productor (
@@ -128,7 +129,7 @@ create table productor (
   totalDebt double,
   numberPayment int,
   position VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table proveedor (
@@ -138,7 +139,7 @@ create table proveedor (
   direccion VARCHAR(30),
   contacto VARCHAR(30),
   account INT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table reportes (
@@ -146,7 +147,7 @@ create table reportes (
   monto int not null,
   account int not null,
   cliente int not null,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table user (
@@ -159,7 +160,7 @@ create table user (
   type VARCHAR(30),
   login VARCHAR(30),
   password VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table productRequest (
@@ -176,9 +177,12 @@ create table productRequest (
   status VARCHAR(30),
   detail VARCHAR(30),
   type VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdBy_name VARCHAR(30)
+  createdByName VARCHAR(30),
+  acceptedBy INT,
+  acceptedByName VARCHAR(30),
+  acceptedAt Date
 );
 
 create table requestRow (
@@ -196,9 +200,9 @@ create table requestRow (
   debt INT,
   cuota INT,
   status VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdBy_name VARCHAR(30)
+  createdByName VARCHAR(30)
 );
 
 create table requestRowProductor (
@@ -215,9 +219,9 @@ create table requestRowProductor (
   cuota int,
   status VARCHAR(30),
   type VARCHAR(30),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   createdBy INT,
-  createdBy_name VARCHAR(30)
+  createdByName VARCHAR(30)
 );
 
 create table productInv (
@@ -228,7 +232,7 @@ create table productInv (
   amountLeft int,
   cost_unit double,
   total_cost double,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table discountReport (
@@ -238,7 +242,7 @@ create table discountReport (
   status VARCHAR(30),
   total double,
   user_id INT,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 create table discountDetail (

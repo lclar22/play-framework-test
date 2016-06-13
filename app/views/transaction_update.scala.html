@@ -1,4 +1,4 @@
-@(row: Form[UpdateTransactionForm])(implicit messages: Messages)
+@(row: Form[UpdateTransactionForm], users: Map[String, String])(implicit messages: Messages)
 
 @import helper._
 
@@ -9,6 +9,8 @@
         @inputDate(row("date"))
         @select(field = row("type_1"), options = options(Map("borrador" -> "Borrador")))
         @inputText(row("description"))
+        @select(field = row("receivedBy"), options = options(users))
+        @select(field = row("autorizedBy"), options = options(users))
         <input type="submit" value="Actualizar"/>
         <a href="/transactions_view"><span class="glyphicon glyphicon-plus">Cancel</span></a>
     }

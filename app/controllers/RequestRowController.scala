@@ -68,8 +68,12 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
         Future.successful(Ok(views.html.requestRow_index(Map[String, String](), Map[String, String]())))
       },
       res => {
-        productPrice = getProductPrice(res.productId)
-        repo.create(res.requestId, res.productId, productsMap(res.productId.toString()), res.quantity, res.quantity * productPrice, res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
+        var product1 = getProductById(res.productId)
+        var productUnitMeasure =  getUnitMeasureById(product1.unitMeasure)
+        var requestUnitMeasure = getUnitMeasureById(res.unitMeasure)
+        var equivalent = productUnitMeasure.quantity.toDouble / requestUnitMeasure.quantity.toDouble;
+
+        repo.create(res.requestId, res.productId, productsMap(res.productId.toString()), res.quantity, equivalent * product1.price, res.status, res.unitMeasure, res.unitMeasure.toString).map { _ =>
           Redirect(routes.ProductRequestController.show(res.requestId))
         }
       }
@@ -153,6 +157,18 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
     }, 3000.millis)
   }
 
+  def getProductById(id: Long): Product = {
+    Await.result(repoInsum.getById(id).map{ case (res1) => 
+      res1(0)
+    }, 3000.millis)
+  }
+
+  def getUnitMeasureById(id: Long): UnitMeasure = {
+    Await.result(repoUnit.getById(id).map{ case (res1) => 
+      res1(0)
+    }, 3000.millis)
+  }
+
   def getProductorNamesMap(): Map[String, String] = {
     Await.result(repoProductor.getListNames().map{ case (res1) => 
       val cache = collection.mutable.Map[String, String]()
@@ -210,8 +226,11 @@ class RequestRowController @Inject() (repo: RequestRowRepository, repoProductReq
       res => {
         var new_precio = 0.0
         if (res.precio == 0) {
-            productPrice = getProductPrice(res.productId)
-            new_precio = res.quantity * productPrice
+          var product1 = getProductById(res.productId)
+          var productUnitMeasure =  getUnitMeasureById(product1.unitMeasure)
+          var requestUnitMeasure = getUnitMeasureById(res.unitMeasure)
+          var equivalent = productUnitMeasure.quantity.toDouble / requestUnitMeasure.quantity.toDouble;
+          new_precio = product1.price * equivalent
         }
         repo.update(  
                       res.id, res.requestId, res.productId, productsMap(res.productId.toString),
